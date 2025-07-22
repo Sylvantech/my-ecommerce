@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+build/
+dist/
+.react-router/
+
+# Logs
+*.log
+
+# Environment variables
+.env*
+
+# Cache directories
+.cache/
+.vite/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
