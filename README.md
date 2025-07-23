@@ -45,6 +45,33 @@ Pour comprendre comment lancer et utiliser chaque partie du projet :
 - **Backend** : Node.js, Express, MongoDB
 - **Outils** : ESLint, Prettier, Git
 
+## 🔄 Configuration Git - Backup automatique
+
+Pour configurer un système de backup automatique sur plusieurs repositories :
+
+### 1. Ajouter le repository de backup
+```bash
+git remote add clone https://github.com/GusEpitech/e-commerce-clone.git
+```
+
+### 2. Configuration initiale des branches
+```bash
+git push -u origin test
+git push -u clone test
+```
+
+### 3. Créer un alias pour push simultané
+```bash
+git config alias.pushall '!git push origin test && git push clone test'
+```
+
+### 4. Utilisation
+```bash
+git pushall
+```
+
+> 💡 Cette configuration permet de sauvegarder automatiquement sur deux repositories à chaque push.
+
 ---
 
 Développé avec ❤️ par les étudiants d'Epitech
