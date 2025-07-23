@@ -56,8 +56,14 @@ git remote add clone https://github.com/GusEpitech/e-commerce-clone.git
 
 ### 2. Configuration initiale des branches
 ```bash
-git push -u origin test
-git push -u clone test
+git push --set-upstream origin [nom-de-la-branche]
+git push --set-upstream clone [nom-de-la-branche]
+```
+
+**Exemple :**
+```bash
+git push --set-upstream origin feature/user-authentication
+git push --set-upstream clone feature/user-authentication
 ```
 
 ### 3. Vérifier la configuration
@@ -79,6 +85,8 @@ git config alias.pushall '!f() { branch=$(git symbolic-ref --short HEAD); git pu
 ```
 
 ### 5. Utilisation
+
+#### Pour une branche existante
 ```bash
 git pushall
 ```
