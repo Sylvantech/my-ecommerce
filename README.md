@@ -56,16 +56,37 @@ git remote add clone https://github.com/GusEpitech/e-commerce-clone.git
 
 ### 2. Configuration initiale des branches
 ```bash
-git push -u origin test
-git push -u clone test
+git push --set-upstream origin [nom-de-la-branche]
+git push --set-upstream clone [nom-de-la-branche]
 ```
 
-### 3. Créer un alias pour push simultané
+**Exemple :**
 ```bash
-git config alias.pushall '!git push origin test && git push clone test'
+git push --set-upstream origin feature/user-authentication
+git push --set-upstream clone feature/user-authentication
 ```
 
-### 4. Utilisation
+### 3. Vérifier la configuration
+```bash
+git remote -v
+```
+
+**Résultat attendu :**
+```
+clone	https://github.com/GusEpitech/e-commerce-clone.git (fetch)
+clone	https://github.com/GusEpitech/e-commerce-clone.git (push)
+origin	https://github.com/EpitechWebAcademiePromo2026/W-WEB-502-LIL-2-1-ecommerce-brahim.boulahia.git (fetch)
+origin	https://github.com/EpitechWebAcademiePromo2026/W-WEB-502-LIL-2-1-ecommerce-brahim.boulahia.git (push)
+```
+
+### 4. Créer un alias pour push simultané
+```bash
+git config alias.pushall '!f() { branch=$(git symbolic-ref --short HEAD); echo "Pushing to origin..."; git push origin "$branch" || { echo "Failed to push to origin"; exit 1; }; echo "Pushing to clone..."; git push clone "$branch" || { echo "Failed to push to clone"; exit 1; }; echo "Successfully pushed to both repositories"; }; f'
+```
+
+### 5. Utilisation
+
+#### Pour une branche existante
 ```bash
 git pushall
 ```

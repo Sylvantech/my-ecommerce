@@ -10,8 +10,8 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "build": "echo \"Server build completed - ready for production\"",
-    "lint": "eslint **/*.js",
-    "lint:fix": "eslint **/*.js --fix",
+    "lint": "eslint *.js",
+    "lint:fix": "eslint *.js --fix",
     "format": "prettier --write \"**/*.{js,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,json,md}\"",
     "test": "echo \"Error: no test specified\" && exit 1"
