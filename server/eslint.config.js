@@ -3,6 +3,9 @@ const globals = require("globals");
 
 module.exports = [
   {
+    ignores: ["node_modules/**", "build/**", "dist/**", "coverage/**", "*.log"],
+  },
+  {
     files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: 2022,
@@ -21,8 +24,8 @@ module.exports = [
       // General good practices
       "prefer-const": "error",
       "no-var": "error",
-      "eqeqeq": ["error", "always"],
-      "curly": ["error", "all"],
+      eqeqeq: ["error", "always"],
+      curly: ["error", "all"],
       // Async/await best practices
       "require-await": "error",
       "no-return-await": "error",

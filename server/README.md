@@ -61,16 +61,16 @@ server/                 # Application Backend (Node.js/Express.js)
 
 ## 📜 Scripts disponibles
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Lance le serveur en mode développement avec nodemon |
-| `npm run build` | Prépare l'application pour la production |
-| `npm start` | Lance le serveur en mode production |
-| `npm run lint` | Vérifie le code avec ESLint |
-| `npm run lint:fix` | Corrige automatiquement les erreurs ESLint |
-| `npm run format` | Formate le code avec Prettier |
-| `npm run format:check` | Vérifie le formatage sans modifier |
-| `npm test` | Lance les tests |
+| Script                 | Description                                         |
+| ---------------------- | --------------------------------------------------- |
+| `npm run dev`          | Lance le serveur en mode développement avec nodemon |
+| `npm run build`        | Prépare l'application pour la production            |
+| `npm start`            | Lance le serveur en mode production                 |
+| `npm run lint`         | Vérifie le code avec ESLint                         |
+| `npm run lint:fix`     | Corrige automatiquement les erreurs ESLint          |
+| `npm run format`       | Formate le code avec Prettier                       |
+| `npm run format:check` | Vérifie le formatage sans modifier                  |
+| `npm test`             | Lance les tests                                     |
 
 ## 🔧 Variables d'environnement
 
