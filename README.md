@@ -81,7 +81,7 @@ origin	https://github.com/EpitechWebAcademiePromo2026/W-WEB-502-LIL-2-1-ecommerc
 
 ### 4. Créer un alias pour push simultané
 ```bash
-git config alias.pushall '!f() { branch=$(git symbolic-ref --short HEAD); git push origin "$branch" && git push clone "$branch"; }; f'
+git config alias.pushall '!f() { branch=$(git symbolic-ref --short HEAD); echo "Pushing to origin..."; git push origin "$branch" || { echo "Failed to push to origin"; exit 1; }; echo "Pushing to clone..."; git push clone "$branch" || { echo "Failed to push to clone"; exit 1; }; echo "Successfully pushed to both repositories"; }; f'
 ```
 
 ### 5. Utilisation
