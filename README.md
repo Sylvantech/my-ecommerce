@@ -60,12 +60,25 @@ git push -u origin test
 git push -u clone test
 ```
 
-### 3. Créer un alias pour push simultané
+### 3. Vérifier la configuration
+```bash
+git remote -v
+```
+
+**Résultat attendu :**
+```
+clone	https://github.com/GusEpitech/e-commerce-clone.git (fetch)
+clone	https://github.com/GusEpitech/e-commerce-clone.git (push)
+origin	https://github.com/EpitechWebAcademiePromo2026/W-WEB-502-LIL-2-1-ecommerce-brahim.boulahia.git (fetch)
+origin	https://github.com/EpitechWebAcademiePromo2026/W-WEB-502-LIL-2-1-ecommerce-brahim.boulahia.git (push)
+```
+
+### 4. Créer un alias pour push simultané
 ```bash
 git config alias.pushall '!git push origin test && git push clone test'
 ```
 
-### 4. Utilisation
+### 5. Utilisation
 ```bash
 git pushall
 ```
