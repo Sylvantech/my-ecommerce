@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const crypto = require("crypto");
 const Counter = require("./Counter.model");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
@@ -60,7 +60,6 @@ userSchema.pre("save", async function (next) {
   }
 
   if (this.isModified("password")) {
-    const bcrypt = require("bcrypt");
     const saltRounds = 12;
     this.password = await bcrypt.hash(this.password, saltRounds);
   }
