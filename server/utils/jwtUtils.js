@@ -4,16 +4,17 @@ const config = require("../config/jwtConfig");
 function generateJWTToken(user) {
   let today = new Date();
   let expirationDate = new Date(today);
-  expirationDate.setMinutes(today.getMinutes() + 30);
+  expirationDate.setTime(today.getTime() + 2.5 * 60 * 60 * 1000);
   let payload = {
     id: user.id,
     email: user.email,
-    iat: parseInt(today.getTime() / 1000, 10),
-    exp: parseInt(expirationDate.getTime() / 1000, 10),
+    iat: Math.floor(today.getTime() / 1000),
+    exp: Math.floor(expirationDate.getTime() / 1000),
     sub: user.email,
     iss: "ecommerce-chaussettes-api",
     aud: "ecommerce-chaussettes-client",
   };
+
   let token = jwt.sign(payload, config.secretKey);
   return { JWTToken: token, ExpirationDate: expirationDate };
 }
