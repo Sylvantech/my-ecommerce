@@ -60,10 +60,9 @@ userSchema.pre("save", async function (next) {
   }
 
   if (this.isModified("password")) {
-    this.password = crypto
-      .createHash("sha1")
-      .update(this.password)
-      .digest("hex");
+    const bcrypt = require("bcrypt");
+    const saltRounds = 12;
+    this.password = await bcrypt.hash(this.password, saltRounds);
   }
 
   next();
