@@ -66,6 +66,7 @@ git push --set-upstream origin feature/user-authentication
 git push --set-upstream clone feature/user-authentication
 ```
 
+
 ### 3. Vérifier la configuration
 ```bash
 git remote -v
@@ -85,9 +86,9 @@ git config alias.pushall '!f() {
   branch=$(git symbolic-ref --short HEAD);
   echo "\033[1;36m🚀 Pushing branch: $branch\033[0m";
   echo "\033[1;34m➡️  Pushing to origin...\033[0m";
-  git push origin \"$branch\" || { echo "\033[1;31m❌ Failed to push to origin\033[0m"; exit 1; };
+  git push origin "$branch" 2>/dev/null || git push --set-upstream origin "$branch" || { echo "\033[1;31m❌ Failed to push to origin\033[0m"; exit 1; };
   echo "\033[1;34m➡️  Pushing to clone...\033[0m";
-  git push clone \"$branch\" || { echo "\033[1;31m❌ Failed to push to clone\033[0m"; exit 1; };
+  git push clone "$branch" 2>/dev/null || git push --set-upstream clone "$branch" || { echo "\033[1;31m❌ Failed to push to clone\033[0m"; exit 1; };
   echo "\033[1;32m✅ Successfully pushed to both repositories!\033[0m";
 }; f'
 ```
