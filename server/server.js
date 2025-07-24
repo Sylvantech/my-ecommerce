@@ -1,8 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 3000;
-const jwt = require('../utils/jwtUtils');
-
+const jwt = require("../utils/jwtUtils");
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
