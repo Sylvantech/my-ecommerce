@@ -24,6 +24,7 @@ git remote add clone https://github.com/GusEpitech/e-commerce-clone.git
 git remote -v
 ```
 
+
 **Résultat attendu :**
 ```
 clone    https://github.com/GusEpitech/e-commerce-clone.git (fetch)

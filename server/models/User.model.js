@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       maxlength: 100,
+      unique: true,
     },
     email: {
       type: String,
@@ -66,10 +67,6 @@ userSchema.pre("save", async function (next) {
 
   next();
 });
-
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
-userSchema.index({ is_active: 1 });
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
