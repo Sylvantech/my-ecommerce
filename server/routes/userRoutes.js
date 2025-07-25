@@ -37,8 +37,24 @@ router.post("/", async (req, res) => {
   }
 });
 
-// router.get("/", (req, res) => {
-//   res.json({ message: "Route de connexion" });
-// });
+router.delete("/", async (req, res) => {
+  const id = req.body.id;
+  if (!id || !Number.isInteger(Number(id))) {
+    return res.status(400).json({
+      error: "Veuillez fournir un ID valide",
+    });
+  }
+  try {
+    await User.findOneAndDelete({ id: id });
+    res.status(200).json({
+      message: "Utilisateur supprimé avec succès",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la suppression de l'utilisateur ",
+      details: error.message,
+    });
+  }
+});
 
 module.exports = router;
