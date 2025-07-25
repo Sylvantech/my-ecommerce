@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la création de l'utilisateur ",
-      details: error.message
+      details: error.message,
     });
   }
 });
