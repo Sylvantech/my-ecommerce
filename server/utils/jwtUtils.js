@@ -8,6 +8,7 @@ function generateJWTToken(user) {
   let payload = {
     id: user.id,
     email: user.email,
+    role: user.role,
     iat: Math.floor(today.getTime() / 1000),
     exp: Math.floor(expirationDate.getTime() / 1000),
     sub: user.email,

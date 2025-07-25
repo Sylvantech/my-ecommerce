@@ -165,15 +165,15 @@ constants.js
 
 ### Structure Frontend
 ```
-src/
+app/
 ├── components/     # Composants réutilisables
 ├── routes/         # Pages et routes
 ├── hooks/          # Hooks personnalisés
 ├── services/       # Services API
 ├── types/          # Types TypeScript
+├── layout/         # Composant de mise en page
 ├── utils/          # Fonctions utilitaires
-├── assets/         # Images, icônes
-└── styles/         # Fichiers CSS/SCSS
+└── assets/         # Images, icônes
 ```
 
 ### Structure Backend
@@ -183,10 +183,8 @@ src/
 ├── models/         # Schémas base de données
 ├── routes/         # Définition des routes
 ├── middleware/     # Middlewares Express
-├── services/       # Services métier
 ├── utils/          # Fonctions utilitaires
-├── config/         # Configuration
-└── tests/          # Tests unitaires
+└── config/         # Configuration
 ```
 
 ## 🏛️ Norme de nom de classe
