@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 3000;
-const connectDB = require('./config/database');
+const connectDB = require("./config/database");
 
 connectDB();
 
@@ -13,4 +13,3 @@ app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`Example app listening on http://localhost:${port}`);
 });
-
