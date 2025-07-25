@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
     });
     const user = await newUser.save();
 
-    res.status(200).json({
+    res.status(201).json({
       message: "Utilisateur crée avec succès",
       user: {
         id: user.id,
@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la création de l'utilisateur ",
-      error,
+      details: error.message
     });
   }
 });
