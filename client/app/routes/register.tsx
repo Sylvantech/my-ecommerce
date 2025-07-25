@@ -25,7 +25,6 @@ export default function Register() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
