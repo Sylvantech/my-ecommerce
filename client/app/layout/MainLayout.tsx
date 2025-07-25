@@ -9,9 +9,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   return (
     <>
       <Navbar />
-      <main>
-        {children}
-      </main>
+      <main>{children}</main>
     </>
   );
 }
