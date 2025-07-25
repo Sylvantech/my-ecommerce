@@ -46,15 +46,15 @@ router.delete("/", async (req, res) => {
   }
   try {
     await User.findOneAndDelete({ id: id });
-    res.status(200).json({
-      message: "Utilisateur supprimé avec succès",
-    });
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la suppression de l'utilisateur ",
       details: error.message,
     });
   }
+  res.status(200).json({
+    message: "Utilisateur supprimé avec succès",
+  });
 });
 
 module.exports = router;
