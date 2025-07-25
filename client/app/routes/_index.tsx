@@ -1,13 +1,9 @@
-import type { Route } from "./+types/_index";
-import { Welcome } from "./welcome/welcome";
+import React from "react";
 
-export function meta(): Route.MetaFunction {
-  return () => [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
-}
-
-export default function Home() {
-  return <Welcome />;
-}
+export default function Index() {
+  return (
+    <section>
+      <h1>Bienvenue sur la page d'accueil !</h1>
+    </section>
+  );
+} 
