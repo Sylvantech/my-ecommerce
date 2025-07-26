@@ -44,6 +44,27 @@ const verifyToken = (req, res, next) => {
   }
 };
 
+const verifyAdmin = (req, res, next) => {
+  const authHeader = req.header("Authorization");
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
+      message: "Accès refusé - Token requis",
+    });
+  }
+
+  const token = authHeader.substring(7);
+
+  if (!jwtUtils.isAdmin(token)) {
+    return res.status(403).json({
+      message: "Accès refusé - Droits administrateur requis",
+    });
+  }
+
+  next();
+};
+
 module.exports = {
   verifyToken,
+  verifyAdmin,
 };

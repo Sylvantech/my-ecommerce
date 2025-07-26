@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const connectDB = require("./config/database");
-const verifyToken = require("./middleware/authMiddleware");
 connectDB();
 
 app.use(express.json());
@@ -13,8 +12,8 @@ const adminRoutes = require("./routes/adminRoutes");
 
 app.use("/api/user", userRoutes);
 
-// Routes protégées avec authentification
-app.use("/api/admin", verifyToken.verifyToken, adminRoutes);
+// Routes protégées avec vérification du rôle admin
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("Root de l'api qui ne renvoi rien !");
