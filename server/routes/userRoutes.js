@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const userUtils = require("../utils/userApiUtils");
 const User = require("../models/User.model");
+const bcrypt = require("bcrypt");
+const jwtUtils = require("../utils/jwtUtils");
 
 router.post("/", async (req, res) => {
   const { username, email, password } = req.body;
@@ -37,24 +39,59 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
-  const id = req.body.id;
-  if (!id || !Number.isInteger(Number(id))) {
+router.get("/", async (req, res) => {
+  const { email, password } = req.body;
+
+  const isValid = userUtils.checkInputLogin(req);
+
+  if (!isValid) {
     return res.status(400).json({
-      error: "Veuillez fournir un ID valide",
+      error: "Données invalides",
     });
   }
+
   try {
-    await User.findOneAndDelete({ id: id });
+    const existingUser = await User.findOne({ email: email });
+
+    if (!existingUser) {
+      return res.status(404).json({
+        error: "Utilisateur non trouvé",
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        error: "Mot de passe incorrect",
+      });
+    }
+
+    const tokenData = jwtUtils.generateJWTToken(existingUser);
+
+    res.status(200).json({
+      message: "Utilisateur authentifié avec succès",
+      user: {
+        id: existingUser.id,
+        username: existingUser.username,
+        email: existingUser.email,
+        role: existingUser.role,
+        reduction: existingUser.reduction,
+        is_active: existingUser.is_active,
+        updated_at: existingUser.updated_at,
+      },
+      token: tokenData.JWTToken,
+      expiresAt: tokenData.ExpirationDate,
+    });
   } catch (error) {
     return res.status(500).json({
-      error: "Erreur lors de la suppression de l'utilisateur ",
+      error: "Erreur lors de l'authentification",
       details: error.message,
     });
   }
-  res.status(200).json({
-    message: "Utilisateur supprimé avec succès",
-  });
 });
 
 router.put("/", async (req, res) => {
@@ -120,6 +157,26 @@ router.put("/", async (req, res) => {
       details: error.message,
     });
   }
+});
+
+router.delete("/", async (req, res) => {
+  const id = req.body.id;
+  if (!id || !Number.isInteger(Number(id))) {
+    return res.status(400).json({
+      error: "Veuillez fournir un ID valide",
+    });
+  }
+  try {
+    await User.findOneAndDelete({ id: id });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la suppression de l'utilisateur ",
+      details: error.message,
+    });
+  }
+  res.status(200).json({
+    message: "Utilisateur supprimé avec succès",
+  });
 });
 
 module.exports = router;
