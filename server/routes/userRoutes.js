@@ -57,4 +57,69 @@ router.delete("/", async (req, res) => {
   });
 });
 
+router.put("/", async (req, res) => {
+  const { id, username, email, password, role, reduction, is_active } =
+    req.body;
+
+  if (!id || !Number.isInteger(Number(id))) {
+    return res.status(400).json({
+      error: "ID utilisateur requis et valide",
+    });
+  }
+
+  try {
+    const existingUser = await User.findOne({ id: id });
+    if (!existingUser) {
+      return res.status(404).json({
+        error: "Utilisateur non trouvé",
+      });
+    }
+
+    const updateData = {};
+    if (username) updateData.username = username;
+    if (email) updateData.email = email;
+    if (password) updateData.password = password;
+    if (role && ["user", "admin"].includes(role)) updateData.role = role;
+    if (reduction !== undefined)
+      updateData.reduction = Math.max(0, Number(reduction));
+    if (is_active !== undefined) updateData.is_active = Boolean(is_active);
+
+    const updatedUser = await User.findOneAndUpdate({ id: id }, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      message: "Utilisateur mis à jour avec succès",
+      user: {
+        id: updatedUser.id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        reduction: updatedUser.reduction,
+        is_active: updatedUser.is_active,
+        updated_at: updatedUser.updated_at,
+      },
+    });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        error: "Email ou nom d'utilisateur déjà utilisé",
+      });
+    }
+
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        error: "Données invalides",
+        details: Object.values(error.errors).map(err => err.message),
+      });
+    }
+
+    return res.status(500).json({
+      error: "Erreur lors de la mise à jour",
+      details: error.message,
+    });
+  }
+});
+
 module.exports = router;
