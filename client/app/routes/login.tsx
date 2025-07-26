@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 
 export function meta() {
   return [
@@ -25,12 +25,16 @@ export default function Login() {
     setDataForm(stateCopy);
   };
 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <div>
       <h1 className="flex justify-center p-10 text-2xl">Connexion</h1>
       <form
         className="flex flex-col items-center gap-5"
-        onSubmit={e => e.preventDefault()}
+        onSubmit={handleSubmit}
       >
         <label htmlFor="email">Email</label>
         <input
@@ -41,6 +45,7 @@ export default function Login() {
           name="email"
           id="email"
           placeholder="votre@email.com"
+          required
         />
         <label htmlFor="password">Mot de passe</label>
         <input
@@ -52,6 +57,7 @@ export default function Login() {
           onChange={handleChange}
           value={formData.password}
           placeholder="....."
+          required
         />
         <button className="mt-10 border bg-black text-white w-sm p-3 font-bold rounded-lg">
           Se connecter
