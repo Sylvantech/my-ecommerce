@@ -8,11 +8,27 @@ const jwtUtils = require("../utils/jwtUtils");
 router.post("/", async (req, res) => {
   const { username, email, password } = req.body;
   const isValid = userUtils.checkInputRegister(req);
+  const isValidEmail = userUtils.isValidEmail(email);
+  const isValidPassword = userUtils.isValidPassword(password);
+
   if (!isValid) {
     return res.status(400).json({
       error: "Données invalides",
     });
   }
+
+  if (!isValidEmail) {
+    return res.status(400).json({
+      error: "L'email est invalide",
+    });
+  }
+
+  if (!isValidPassword) {
+    return res.status(400).json({
+      error: "Le mot de passe est invalide",
+    });
+  }
+
   try {
     const newUser = new User({
       username,
