@@ -5,6 +5,65 @@ const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const jwtUtils = require("../utils/jwtUtils");
 
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: Gestion des utilisateurs
+ */
+
+/**
+ * @swagger
+ * /api/user:
+ *   post:
+ *     summary: Créer un nouvel utilisateur
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - email
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 example: "john_doe"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "john@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "motdepasse123"
+ *     responses:
+ *       201:
+ *         description: Utilisateur créé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/UserResponse'
+ *       400:
+ *         description: Données invalides
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.post("/", async (req, res) => {
   const { username, email, password } = req.body;
   const isValid = userUtils.checkInputRegister(req);
@@ -39,6 +98,56 @@ router.post("/", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/user:
+ *   get:
+ *     summary: Authentifier un utilisateur (login)
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "john@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "motdepasse123"
+ *     responses:
+ *       200:
+ *         description: Authentification réussie
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/UserResponse'
+ *                 token:
+ *                   type: string
+ *                   description: JWT Token
+ *                 expiresAt:
+ *                   type: string
+ *                   format: date-time
+ *       400:
+ *         description: Données invalides
+ *       401:
+ *         description: Mot de passe incorrect
+ *       404:
+ *         description: Utilisateur non trouvé
+ *       500:
+ *         description: Erreur serveur
+ */
 router.get("/", async (req, res) => {
   const { email, password } = req.body;
 
@@ -94,6 +203,66 @@ router.get("/", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/user:
+ *   put:
+ *     summary: Mettre à jour un utilisateur
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 1
+ *               username:
+ *                 type: string
+ *                 example: "john_doe_updated"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "john_updated@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "nouveaumotdepasse123"
+ *               role:
+ *                 type: string
+ *                 enum: [user, admin]
+ *                 example: "user"
+ *               reduction:
+ *                 type: number
+ *                 minimum: 0
+ *                 example: 10
+ *               is_active:
+ *                 type: boolean
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Utilisateur mis à jour avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   $ref: '#/components/schemas/UserResponse'
+ *       400:
+ *         description: Données invalides
+ *       404:
+ *         description: Utilisateur non trouvé
+ *       409:
+ *         description: Email ou nom d'utilisateur déjà utilisé
+ *       500:
+ *         description: Erreur serveur
+ */
 router.put("/", async (req, res) => {
   const { id, username, email, password, role, reduction, is_active } =
     req.body;
@@ -159,6 +328,40 @@ router.put("/", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/user:
+ *   delete:
+ *     summary: Supprimer un utilisateur
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Utilisateur supprimé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Utilisateur supprimé avec succès"
+ *       400:
+ *         description: ID invalide
+ *       500:
+ *         description: Erreur serveur
+ */
 router.delete("/", async (req, res) => {
   const id = req.body.id;
   if (!id || !Number.isInteger(Number(id))) {

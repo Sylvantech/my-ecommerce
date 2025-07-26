@@ -6,9 +6,13 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Routes
 const userRoutes = require("./routes/userRoutes");
+const swaggerRoute = require("./routes/swaggerRoute");
 
 app.use("/api/user", userRoutes);
+app.use("/api-docs", swaggerRoute);
 
 app.get("/", (req, res) => {
   res.send("Root de l'api qui ne renvoi rien !");
