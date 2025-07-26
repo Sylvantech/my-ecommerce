@@ -5,7 +5,7 @@ const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const jwtUtils = require("../utils/jwtUtils");
 
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   const isValid = userUtils.checkInputRegister(req);
   if (!isValid) {
@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   const isValid = userUtils.checkInputLogin(req);
