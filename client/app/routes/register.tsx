@@ -23,20 +23,25 @@ export default function Register() {
   });
 
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [messageError, setMessageError] = useState("");
+  const [messageSuccess, setMessageSuccess] = useState("");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.password !== confirmPassword) {
-      alert("Les mots de passe ne correspondent pas");
+      setMessageError("Les mots de passe ne correspondent pas");
+      setMessageSuccess("");
       return;
     }
 
     const result = await authService.register(formData);
 
     if (result.success) {
-      alert("Inscription réussie !");
+      setMessageError("");
+      setMessageSuccess("Inscription réussie !");
     } else {
-      alert(result.error);
+      setMessageError(result.error || "Une erreur est survenue");
+      setMessageSuccess("");
     }
   };
 
@@ -49,6 +54,12 @@ export default function Register() {
   return (
     <div className="">
       <h1 className="flex justify-center p-10 text-2xl">Inscription</h1>
+      {messageError && (
+        <div className="text-red-500 text-center mb-4">{messageError}</div>
+      )}
+      {messageSuccess && (
+        <div className="text-green-500 text-center mb-4">{messageSuccess}</div>
+      )}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center gap-5"
