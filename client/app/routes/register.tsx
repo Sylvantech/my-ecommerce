@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { authService } from "~/services/authService";
 
 export function meta() {
   return [
@@ -9,22 +10,39 @@ export function meta() {
 }
 
 interface FormData {
-  userName: string;
+  username: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 export default function Register() {
   const [formData, setFormData] = useState<FormData>({
-    userName: "",
+    username: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [messageError, setMessageError] = useState("");
+  const [messageSuccess, setMessageSuccess] = useState("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (formData.password !== confirmPassword) {
+      setMessageError("Les mots de passe ne correspondent pas");
+      setMessageSuccess("");
+      return;
+    }
+
+    const result = await authService.register(formData);
+
+    if (result.success) {
+      setMessageError("");
+      setMessageSuccess("Inscription réussie !");
+    } else {
+      setMessageError(result.error || "Une erreur est survenue");
+      setMessageSuccess("");
+    }
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,18 +54,24 @@ export default function Register() {
   return (
     <div className="">
       <h1 className="flex justify-center p-10 text-2xl">Inscription</h1>
+      {messageError && (
+        <div className="text-red-500 text-center mb-4">{messageError}</div>
+      )}
+      {messageSuccess && (
+        <div className="text-green-500 text-center mb-4">{messageSuccess}</div>
+      )}
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center gap-5"
       >
-        <label htmlFor="userName">Nom d&apos;utilisateur</label>
+        <label htmlFor="username">Nom d&apos;utilisateur</label>
         <input
           type="text"
-          id="userName"
-          value={formData.userName}
+          id="username"
+          value={formData.username}
           onChange={handleChange}
           className="border-gray-300 border p-3 rounded-sm  w-sm"
-          name="userName"
+          name="username"
           placeholder="utilisateur123"
         />
         <label htmlFor="email">Email</label>
@@ -74,8 +98,8 @@ export default function Register() {
         <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
         <input
           minLength={6}
-          value={formData.confirmPassword}
-          onChange={handleChange}
+          value={confirmPassword}
+          onChange={e => setConfirmPassword(e.target.value)}
           className="border-gray-300 border p-3 rounded-sm  w-sm"
           type="password"
           name="confirmPassword"
