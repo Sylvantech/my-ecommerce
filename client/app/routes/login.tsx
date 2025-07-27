@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { authService } from "~/services/authService";
+import { setToken } from "../utils/cookieHelper";
 
 export function meta() {
   return [
@@ -14,19 +16,26 @@ interface FormData {
 }
 
 export default function Login() {
-  const [formData, setDataForm] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const stateCopy = { ...formData };
-    stateCopy[e.target.name as keyof FormData] = e.target.value;
-    setDataForm(stateCopy);
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const result = await authService.login(formData);
+
+    if (result.success && result.data) {
+      setToken(result.data.token);
+    } else {
+      alert(result.error || "Une erreur est survenue lors de la connexion.");
+    }
   };
 
   return (
