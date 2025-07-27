@@ -116,7 +116,7 @@ router.post("/login", async (req, res) => {
         is_active: existingUser.is_active,
         updated_at: existingUser.updated_at,
       },
-      token: accessToken.JWTToken,
+      accessToken: accessToken.JWTToken,
       expiresAt: accessToken.ExpirationDate,
       refreshToken: refreshTokenData.refreshToken,
       refreshTokenExpiresAt: refreshTokenData.expiresAt,
