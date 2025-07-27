@@ -1,0 +1,275 @@
+openapi: 3.0.0
+info:
+  title: E-commerce API - Schemas
+  version: 1.0.0
+  description: Schémas partagés pour l'API e-commerce
+
+components:
+  schemas:
+    # Schémas utilisateur
+    User:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        id:
+          type: integer
+          description: ID unique de l'utilisateur
+          readOnly: true
+        username:
+          type: string
+          description: Nom d'utilisateur unique
+          minLength: 3
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          description: Adresse email de l'utilisateur
+        password:
+          type: string
+          description: Mot de passe de l'utilisateur
+          minLength: 6
+          writeOnly: true
+        role:
+          type: string
+          enum: [user, admin]
+          default: user
+          description: Rôle de l'utilisateur
+        reduction:
+          type: number
+          minimum: 0
+          maximum: 100
+          default: 0
+          description: Pourcentage de réduction accordé à l'utilisateur
+        is_active:
+          type: boolean
+          default: true
+          description: Statut actif de l'utilisateur
+        created_at:
+          type: string
+          format: date-time
+          description: Date de création du compte
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Date de dernière mise à jour
+          readOnly: true
+
+    UserResponse:
+      type: object
+      description: Réponse utilisateur basique (création)
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "john_doe"
+        email:
+          type: string
+          example: "john@example.com"
+        role:
+          type: string
+          example: "user"
+        created_at:
+          type: string
+          format: date-time
+
+    UserResponseWithReduction:
+      type: object
+      description: Réponse utilisateur avec réduction (connexion)
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "john_doe"
+        email:
+          type: string
+          example: "john@example.com"
+        role:
+          type: string
+          example: "user"
+        reduction:
+          type: number
+          example: 0
+        is_active:
+          type: boolean
+          example: true
+        updated_at:
+          type: string
+          format: date-time
+
+    UserResponseComplete:
+      type: object
+      description: Réponse utilisateur complète (mise à jour)
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "john_doe_updated"
+        email:
+          type: string
+          example: "john_updated@example.com"
+        role:
+          type: string
+          example: "user"
+        reduction:
+          type: number
+          example: 10
+        is_active:
+          type: boolean
+          example: true
+        updated_at:
+          type: string
+          format: date-time
+
+    AdminUser:
+      type: object
+      description: Informations de l'utilisateur administrateur authentifié
+      properties:
+        id:
+          type: integer
+          description: ID unique de l'administrateur
+          example: 1
+        email:
+          type: string
+          format: email
+          description: Adresse email de l'administrateur
+          example: "admin@example.com"
+        role:
+          type: string
+          enum: [admin]
+          description: Rôle de l'utilisateur (toujours 'admin' pour cet endpoint)
+          example: "admin"
+        iat:
+          type: integer
+          description: Timestamp de création du token JWT
+          example: 1640995200
+        exp:
+          type: integer
+          description: Timestamp d'expiration du token JWT
+          example: 1641081600
+        sub:
+          type: string
+          description: Sujet du token (email de l'utilisateur)
+          example: "admin@example.com"
+        iss:
+          type: string
+          description: Émetteur du token
+          example: "ecommerce-chaussettes-api"
+        aud:
+          type: string
+          description: Audience du token
+          example: "ecommerce-chaussettes-client"
+
+    # Schémas d'erreur
+    Error:
+      type: object
+      description: Erreur simple
+      properties:
+        error:
+          type: string
+          description: Message d'erreur
+          example: "Données invalides"
+
+    ErrorWithDetails:
+      type: object
+      description: Erreur avec détails
+      properties:
+        error:
+          type: string
+          description: Message d'erreur principal
+          example: "Erreur lors de la création de l'utilisateur"
+        details:
+          type: string
+          description: Détails de l'erreur
+          example: "Validation failed: email already exists"
+
+    AuthError:
+      type: object
+      description: Erreur d'authentification
+      properties:
+        message:
+          type: string
+          description: Message d'erreur d'authentification
+        error:
+          type: string
+          description: Détails de l'erreur (optionnel)
+
+    ForbiddenError:
+      type: object
+      description: Erreur d'autorisation - privilèges insuffisants
+      properties:
+        message:
+          type: string
+          description: Message d'erreur d'autorisation
+          example: "Accès refusé - Droits administrateur requis"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Token JWT obtenu via l'endpoint de connexion `/api/user/login`.
+        
+        **Format:** `Bearer <token>`
+        
+        **Exemple:** `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+        
+        **Note:** Certains endpoints nécessitent des privilèges spécifiques (ex: rôle 'admin' pour les endpoints d'administration).
+
+  examples:
+    # Exemples de requêtes utilisateur
+    RegisterRequest:
+      summary: Exemple de création d'utilisateur
+      value:
+        username: "john_doe"
+        email: "john@example.com"
+        password: "motdepasse123"
+
+    LoginRequest:
+      summary: Exemple de connexion
+      value:
+        email: "john@example.com"
+        password: "motdepasse123"
+
+    UpdateRequest:
+      summary: Exemple de mise à jour d'utilisateur
+      value:
+        id: 1
+        username: "john_doe_updated"
+        email: "john_updated@example.com"
+        reduction: 10
+        is_active: true
+
+    DeleteRequest:
+      summary: Exemple de suppression d'utilisateur
+      value:
+        id: 1
+
+    # Exemples d'authentification admin
+    AuthHeader:
+      summary: En-tête d'autorisation
+      description: Format correct pour l'en-tête Authorization
+      value: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2NDA5OTUyMDAsImV4cCI6MTY0MTA4MTYwMH0.signature"
+
+    AdminSuccessResponse:
+      summary: Réponse de succès admin
+      description: Réponse retournée quand l'utilisateur est authentifié en tant qu'admin
+      value:
+        message: "Authentifié en tant qu'administrateur"
+        user:
+          id: 1
+          username: "admin"
+          email: "admin@example.com"
+          role: "admin"
+          iat: 1640995200
+          exp: 1641081600

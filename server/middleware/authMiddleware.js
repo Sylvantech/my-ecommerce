@@ -55,13 +55,30 @@ const verifyAdmin = (req, res, next) => {
 
   const token = authHeader.substring(7);
 
-  if (!jwtUtils.isAdmin(token)) {
-    return res.status(403).json({
-      message: "Accès refusé - Droits administrateur requis",
+  try {
+    const verified = jwtUtils.verifyJWTToken(token);
+
+    if (!verified.valid) {
+      return res.status(401).json({
+        message: "Token invalide",
+        error: verified.error,
+      });
+    }
+
+    if (!jwtUtils.isAdmin(token)) {
+      return res.status(403).json({
+        message: "Accès refusé - Droits administrateur requis",
+      });
+    }
+
+    req.user = verified.decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      message: "Token invalide",
+      error: error.message,
     });
   }
-
-  next();
 };
 
 module.exports = {

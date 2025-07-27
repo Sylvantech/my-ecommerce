@@ -1,0 +1,279 @@
+paths:
+  /api/user/register:
+    post:
+      summary: Créer un nouveau compte utilisateur
+      description: Créer un nouveau compte utilisateur avec validation des données
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  description: Nom d'utilisateur unique
+                  example: "john_doe"
+                email:
+                  type: string
+                  format: email
+                  description: Adresse email de l'utilisateur
+                  example: "john@example.com"
+                password:
+                  type: string
+                  description: Mot de passe de l'utilisateur
+                  example: "motdepasse123"
+      responses:
+        '201':
+          description: Utilisateur créé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Utilisateur crée avec succès"
+                  user:
+                    $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Données invalides, email invalide ou mot de passe invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalid_data:
+                  value:
+                    error: "Données invalides"
+                invalid_email:
+                  value:
+                    error: "L'email est invalide"
+                invalid_password:
+                  value:
+                    error: "Le mot de passe est invalide"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetails'
+
+  /api/user/login:
+    post:
+      summary: Authentifier un utilisateur
+      description: Authentifier un utilisateur avec email et mot de passe
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Adresse email de l'utilisateur
+                  example: "john@example.com"
+                password:
+                  type: string
+                  description: Mot de passe de l'utilisateur
+                  example: "motdepasse123"
+      responses:
+        '200':
+          description: Utilisateur authentifié avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Utilisateur authentifié avec succès"
+                  user:
+                    $ref: '#/components/schemas/UserResponseWithReduction'
+                  token:
+                    type: string
+                    description: Token JWT pour l'authentification
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  expiresAt:
+                    type: string
+                    format: date-time
+                    description: Date d'expiration du token
+        '400':
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Mot de passe incorrect
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Mot de passe incorrect"
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Utilisateur non trouvé"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetails'
+
+  /api/user:
+    put:
+      summary: Mettre à jour un utilisateur
+      description: Mettre à jour les informations d'un utilisateur existant
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  description: ID unique de l'utilisateur
+                  example: 1
+                username:
+                  type: string
+                  description: Nouveau nom d'utilisateur (optionnel)
+                  example: "john_doe_updated"
+                email:
+                  type: string
+                  format: email
+                  description: Nouvelle adresse email (optionnel)
+                  example: "john_updated@example.com"
+                password:
+                  type: string
+                  description: Nouveau mot de passe (optionnel)
+                  example: "nouveaumotdepasse123"
+                role:
+                  type: string
+                  enum: [user, admin]
+                  description: Rôle de l'utilisateur (optionnel)
+                  example: "user"
+                reduction:
+                  type: number
+                  minimum: 0
+                  description: Pourcentage de réduction (optionnel)
+                  example: 10
+                is_active:
+                  type: boolean
+                  description: Statut actif de l'utilisateur (optionnel)
+                  example: true
+      responses:
+        '200':
+          description: Utilisateur mis à jour avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Utilisateur mis à jour avec succès"
+                  user:
+                    $ref: '#/components/schemas/UserResponseComplete'
+        '400':
+          description: ID utilisateur requis et valide ou données invalides
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "ID utilisateur requis et valide"
+                  details:
+                    type: array
+                    items:
+                      type: string
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Email ou nom d'utilisateur déjà utilisé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Email ou nom d'utilisateur déjà utilisé"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetails'
+
+    delete:
+      summary: Supprimer un utilisateur
+      description: Supprimer un utilisateur existant par son ID
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                  description: ID unique de l'utilisateur à supprimer
+                  example: 1
+      responses:
+        '200':
+          description: Utilisateur supprimé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Utilisateur supprimé avec succès"
+        '400':
+          description: ID invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Veuillez fournir un ID valide"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetails'
