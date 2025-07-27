@@ -11,8 +11,12 @@ app.use(express.urlencoded({ extended: true }));
 
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
+
+// Routes protégées avec vérification du rôle admin
 app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
