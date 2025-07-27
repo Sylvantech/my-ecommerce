@@ -1,0 +1,60 @@
+paths:
+  /api/admin:
+    get:
+      summary: Vérifier l'authentification administrateur
+      description: Endpoint pour vérifier si l'utilisateur authentifié possède les privilèges administrateur
+      tags:
+        - Admin
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Authentifié en tant qu'administrateur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Authentifié en tant qu'administrateur"
+                  user:
+                    $ref: '#/components/schemas/AdminUser'
+        '401':
+          description: Non autorisé - Token manquant ou format invalide
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                no_token:
+                  summary: Aucun token fourni
+                  value:
+                    message: "Accès refusé - Token requis"
+        '403':
+          description: Interdit - Privilèges administrateur requis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              example:
+                message: "Accès refusé - Droits administrateur requis"
+
+x-errors:
+  authentication:
+    description: |
+      ## Erreurs d'authentification courantes
+      
+      ### 401 - Non autorisé
+      - **Token requis** : L'en-tête Authorization est manquant ou le format Bearer n'est pas respecté
+      
+      ### 403 - Interdit
+      - **Privilèges insuffisants** : L'utilisateur est authentifié mais n'a pas le rôle 'admin'
+      
+  solutions:
+    description: |
+      ## Solutions aux problèmes courants
+      
+      1. **Vérifiez le format de l'en-tête** : `Authorization: Bearer <token>`
+      2. **Vérifiez le rôle de l'utilisateur** : Seuls les admins peuvent accéder à ces endpoints
+      3. **Connectez-vous avec un compte admin** : Utilisez les endpoints de connexion avec un utilisateur ayant le rôle 'admin'

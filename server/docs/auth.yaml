@@ -1,0 +1,95 @@
+paths:
+  /api/auth/refresh-token:
+    post:
+      summary: Renouveler un token d'accès
+      description: Renouveler un token d'accès en utilisant un refresh token valide
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  description: Token de rafraîchissement valide
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        '200':
+          description: Token renouvelé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Token renouvelé avec succès"
+                  token:
+                    type: string
+                    description: Nouveau token JWT
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  expiresAt:
+                    type: string
+                    format: date-time
+                    description: Date d'expiration du nouveau token
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      username:
+                        type: string
+                        example: "john_doe"
+                      email:
+                        type: string
+                        example: "john@example.com"
+                      role:
+                        type: string
+                        example: "user"
+        '401':
+          description: Accès refusé - Aucun token fourni
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Accès refusé - Aucun token fourni"
+        '403':
+          description: Token invalide ou expiré
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Le token n'existe pas ou a expiré"
+        '404':
+          description: Utilisateur non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Utilisateur non trouvé"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Erreur serveur lors du renouvellement du token"
+                  error:
+                    type: string
+                    example: "Database connection failed"

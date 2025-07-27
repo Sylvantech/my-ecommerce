@@ -12,7 +12,9 @@ app.use(express.urlencoded({ extended: true }));
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const authRoutes = require("./routes/authRoutes");
+const swaggerRoute = require("./routes/swaggerRoute");
 
+app.use("/docs", swaggerRoute);
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 
@@ -25,5 +27,7 @@ app.get("/", (req, res) => {
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`Example app listening on http://localhost:${port}`);
+  console.log(
+    `La documentation de l'API est disponible sur http://localhost:${port}/docs`
+  );
 });
