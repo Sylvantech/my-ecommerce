@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { authService } from "~/services/authService";
-import { CookieHelper } from "../utils/cookieHelper";
+import { setToken } from "../utils/cookieHelper";
 
 export function meta() {
   return [
@@ -16,6 +16,10 @@ interface FormData {
 }
 
 export default function Login() {
+  const [messageError, setMessageError] = useState("");
+  const [messageSuccess, setMessageSuccess] = useState("");
+
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -32,9 +36,10 @@ export default function Login() {
     const result = await authService.login(formData);
 
     if (result.success && result.data) {
-      CookieHelper.setToken(result.data.token);
+      setToken(result.data.token);
     } else {
-      alert(result.error || "Une erreur est survenue lors de la connexion.");
+      setMessageError(result.error ?? "Une erreur est survenue");
+      setMessageSuccess("");    
     }
   };
 
@@ -68,6 +73,13 @@ export default function Login() {
           placeholder="....."
           required
         />
+        {messageError && (
+          <div className="text-red-500 text-center mb-4">{messageError}</div>
+        )}
+        {messageSuccess && (
+          <div className="text-green-500 text-center mb-4">{messageSuccess}</div>
+        )}
+        
         <button className="mt-10 border bg-black text-white w-sm p-3 font-bold rounded-lg">
           Se connecter
         </button>

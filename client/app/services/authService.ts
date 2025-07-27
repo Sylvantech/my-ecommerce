@@ -66,7 +66,7 @@ export const authService = {
       return { success: false, error: errorMessage };
     }
   },
-
+  
   async validateToken(token: string): Promise<boolean> {
     try {
       const res = await fetch("http://localhost:3000/api/user/validate", {
