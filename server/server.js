@@ -6,9 +6,14 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 const userRoutes = require("./routes/userRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 app.use("/api/user", userRoutes);
+
+// Routes protégées avec vérification du rôle admin
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("Root de l'api qui ne renvoi rien !");
