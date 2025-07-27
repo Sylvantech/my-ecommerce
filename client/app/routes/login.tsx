@@ -19,7 +19,6 @@ export default function Login() {
   const [messageError, setMessageError] = useState("");
   const [messageSuccess, setMessageSuccess] = useState("");
 
-
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -40,13 +39,19 @@ export default function Login() {
       console.log(result);
     } else {
       setMessageError(result.error ?? "Une erreur est survenue");
-      setMessageSuccess("");    
+      setMessageSuccess("");
     }
   };
 
   return (
     <div>
       <h1 className="flex justify-center p-10 text-2xl">Connexion</h1>
+      {messageError && (
+        <div className="text-red-500 text-center mb-4">{messageError}</div>
+      )}
+      {messageSuccess && (
+        <div className="text-green-500 text-center mb-4">{messageSuccess}</div>
+      )}
       <form
         className="flex flex-col items-center gap-5"
         onSubmit={handleSubmit}
@@ -74,13 +79,7 @@ export default function Login() {
           placeholder="....."
           required
         />
-        {messageError && (
-          <div className="text-red-500 text-center mb-4">{messageError}</div>
-        )}
-        {messageSuccess && (
-          <div className="text-green-500 text-center mb-4">{messageSuccess}</div>
-        )}
-        
+
         <button className="mt-10 border bg-black text-white w-sm p-3 font-bold rounded-lg">
           Se connecter
         </button>
