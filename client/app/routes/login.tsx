@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { authService } from "~/services/authService";
-import { setToken } from "../utils/cookieHelper";
+import { CookieHelper } from "../utils/cookieHelper";
 
 export function meta() {
   return [
@@ -32,7 +32,7 @@ export default function Login() {
     const result = await authService.login(formData);
 
     if (result.success && result.data) {
-      setToken(result.data.token);
+      CookieHelper.setToken(result.data.token);
     } else {
       alert(result.error || "Une erreur est survenue lors de la connexion.");
     }
