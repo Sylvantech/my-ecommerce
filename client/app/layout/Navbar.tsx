@@ -60,7 +60,7 @@ const Navbar = () => {
           </a>
           <a
             className="text-[#615e5ec0] text-xl hover:text-[#141313c0]"
-            href="#register"
+            href="/register"
           >
             Inscription
           </a>

@@ -14,7 +14,9 @@ export const authService = {
       });
 
       if (!res.ok) {
-        throw new Error(`Erreur HTTP ${res.status}`);
+        const errorData = await res.json();
+        const serverErrorMessage = errorData.error || `Erreur HTTP ${res.status}`;
+        throw new Error(serverErrorMessage);
       }
 
       const data = await res.json();
