@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userUtils = require("../utils/userApiUtils");
 const User = require("../models/User.model");
+const RefreshToken = require("../models/refreshToken.model");
 const bcrypt = require("bcrypt");
 const jwtUtils = require("../utils/jwtUtils");
 
@@ -86,7 +87,23 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const tokenData = jwtUtils.generateJWTToken(existingUser);
+    const accessToken = jwtUtils.generateJWTToken(existingUser);
+
+    const existingRefreshToken = await RefreshToken.findOne({
+      user_id: existingUser.id,
+      expires_at: { $gt: new Date() },
+    });
+
+    let refreshTokenData;
+    if (existingRefreshToken) {
+      refreshTokenData = {
+        refreshToken: existingRefreshToken.token,
+        expiresAt: existingRefreshToken.expires_at,
+        id: existingRefreshToken.id,
+      };
+    } else {
+      refreshTokenData = await jwtUtils.generateRefreshToken(existingUser.id);
+    }
 
     res.status(200).json({
       message: "Utilisateur authentifié avec succès",
@@ -99,8 +116,10 @@ router.post("/login", async (req, res) => {
         is_active: existingUser.is_active,
         updated_at: existingUser.updated_at,
       },
-      token: tokenData.JWTToken,
-      expiresAt: tokenData.ExpirationDate,
+      token: accessToken.JWTToken,
+      expiresAt: accessToken.ExpirationDate,
+      refreshToken: refreshTokenData.refreshToken,
+      refreshTokenExpiresAt: refreshTokenData.expiresAt,
     });
   } catch (error) {
     return res.status(500).json({
