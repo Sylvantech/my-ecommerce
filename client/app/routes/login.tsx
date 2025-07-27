@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { authService } from "~/services/authService";
-import { setToken } from "../utils/cookieHelper";
+//import { authService } from "~/services/authService";
+//import { setToken } from "../utils/cookieHelper";
 
 export function meta() {
   return [
@@ -16,6 +16,8 @@ interface FormData {
 }
 
 export default function Login() {
+  //const [messageError, setMessageError] = useState("");
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -26,7 +28,7 @@ export default function Login() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  /*const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const result = await authService.login(formData);
@@ -34,16 +36,17 @@ export default function Login() {
     if (result.success && result.data) {
       setToken(result.data.token);
     } else {
-      alert(result.error || "Une erreur est survenue lors de la connexion.");
+      setMessageError(result.error);
+      setMessageSuccess("");    
     }
-  };
+  };*/
 
   return (
     <div>
       <h1 className="flex justify-center p-10 text-2xl">Connexion</h1>
       <form
         className="flex flex-col items-center gap-5"
-        onSubmit={handleSubmit}
+        //onSubmit={handleSubmit}
       >
         <label htmlFor="email">Email</label>
         <input
