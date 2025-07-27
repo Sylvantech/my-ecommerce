@@ -2,17 +2,21 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const connectDB = require("./config/database");
+const corsMiddleware = require("./middleware/corsMiddleware");
 connectDB();
+app.use(corsMiddleware);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const authRoutes = require("./routes/authRoutes");
 const swaggerRoute = require("./routes/swaggerRoute");
 
-app.use("/api/user", userRoutes);
 app.use("/docs", swaggerRoute);
+app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
 
 // Routes protégées avec vérification du rôle admin
 app.use("/api/admin", adminRoutes);
