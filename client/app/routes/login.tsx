@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-//import { authService } from "~/services/authService";
+import { authService } from "~/services/authService";
 //import { setToken } from "../utils/cookieHelper";
 
 export function meta() {
@@ -16,7 +16,9 @@ interface FormData {
 }
 
 export default function Login() {
-  //const [messageError, setMessageError] = useState("");
+  const [messageError, setMessageError] = useState("");
+  const [messageSuccess, setMessageSuccess] = useState("");
+
 
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -28,25 +30,26 @@ export default function Login() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  /*const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const result = await authService.login(formData);
 
     if (result.success && result.data) {
-      setToken(result.data.token);
+      //setToken(result.data.token);
+      console.log(result);
     } else {
-      setMessageError(result.error);
+      setMessageError(result.error ?? "Une erreur est survenue");
       setMessageSuccess("");    
     }
-  };*/
+  };
 
   return (
     <div>
       <h1 className="flex justify-center p-10 text-2xl">Connexion</h1>
       <form
         className="flex flex-col items-center gap-5"
-        //onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         <label htmlFor="email">Email</label>
         <input
@@ -71,6 +74,13 @@ export default function Login() {
           placeholder="....."
           required
         />
+        {messageError && (
+          <div className="text-red-500 text-center mb-4">{messageError}</div>
+        )}
+        {messageSuccess && (
+          <div className="text-green-500 text-center mb-4">{messageSuccess}</div>
+        )}
+        
         <button className="mt-10 border bg-black text-white w-sm p-3 font-bold rounded-lg">
           Se connecter
         </button>
