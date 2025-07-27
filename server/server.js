@@ -2,7 +2,9 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const connectDB = require("./config/database");
+const corsMiddleware = require("./middleware/corsMiddleware");
 connectDB();
+app.use(corsMiddleware);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
