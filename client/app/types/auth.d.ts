@@ -21,4 +21,4 @@ export interface LoginResponse {
 export interface AuthError {
   error: string;
   details?: string;
-} 
+}

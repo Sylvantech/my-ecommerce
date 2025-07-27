@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { authService } from '../services/authService';
-import { CookieHelper } from '../utils/cookieHelper';
-import type { LoginCredentials } from '../types/auth';
+import { useState } from "react";
+import { authService } from "../services/authService";
+import { CookieHelper } from "../utils/cookieHelper";
+import type { LoginCredentials } from "../types/auth";
 
 export function useAuth() {
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export function useAuth() {
       if (e instanceof Error) {
         setErr(e.message);
       } else {
-        setErr('Erreur');
+        setErr("Erreur");
       }
       return false;
     } finally {
