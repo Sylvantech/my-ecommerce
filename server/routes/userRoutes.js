@@ -5,73 +5,30 @@ const User = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const jwtUtils = require("../utils/jwtUtils");
 
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: Gestion des utilisateurs
- */
-
-/**
- * @swagger
- * /api/user:
- *   post:
- *     summary: Créer un nouvel utilisateur
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - username
- *               - email
- *               - password
- *             properties:
- *               username:
- *                 type: string
- *                 example: "john_doe"
- *               email:
- *                 type: string
- *                 format: email
- *                 example: "john@example.com"
- *               password:
- *                 type: string
- *                 example: "motdepasse123"
- *     responses:
- *       201:
- *         description: Utilisateur créé avec succès
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 user:
- *                   $ref: '#/components/schemas/UserResponse'
- *       400:
- *         description: Données invalides
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *       500:
- *         description: Erreur serveur
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   const isValid = userUtils.checkInputRegister(req);
+  const isValidEmail = userUtils.isValidEmail(email);
+  const isValidPassword = userUtils.isValidPassword(password);
+
   if (!isValid) {
     return res.status(400).json({
       error: "Données invalides",
     });
   }
+
+  if (!isValidEmail) {
+    return res.status(400).json({
+      error: "L'email est invalide",
+    });
+  }
+
+  if (!isValidPassword) {
+    return res.status(400).json({
+      error: "Le mot de passe est invalide",
+    });
+  }
+
   try {
     const newUser = new User({
       username,
@@ -98,57 +55,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/user:
- *   get:
- *     summary: Authentifier un utilisateur (login)
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: "john@example.com"
- *               password:
- *                 type: string
- *                 example: "motdepasse123"
- *     responses:
- *       200:
- *         description: Authentification réussie
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 user:
- *                   $ref: '#/components/schemas/UserResponse'
- *                 token:
- *                   type: string
- *                   description: JWT Token
- *                 expiresAt:
- *                   type: string
- *                   format: date-time
- *       400:
- *         description: Données invalides
- *       401:
- *         description: Mot de passe incorrect
- *       404:
- *         description: Utilisateur non trouvé
- *       500:
- *         description: Erreur serveur
- */
-router.get("/", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   const isValid = userUtils.checkInputLogin(req);

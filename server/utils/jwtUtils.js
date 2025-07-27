@@ -32,4 +32,12 @@ function verifyJWTToken(token) {
   }
 }
 
-module.exports = { generateJWTToken, verifyJWTToken };
+function isAdmin(token) {
+  const verification = verifyJWTToken(token);
+  if (!verification.valid) {
+    return false;
+  }
+  return verification.decoded.role === "admin";
+}
+
+module.exports = { generateJWTToken, verifyJWTToken, isAdmin };
