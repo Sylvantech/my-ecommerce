@@ -1,5 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { authService } from "~/services/authService";
+//import { setToken } from "../utils/cookieHelper";
 
 export function meta() {
   return [
@@ -14,24 +16,42 @@ interface FormData {
 }
 
 export default function Login() {
-  const [formData, setDataForm] = useState({
+  const [messageError, setMessageError] = useState("");
+  const [messageSuccess, setMessageSuccess] = useState("");
+
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const stateCopy = { ...formData };
-    stateCopy[e.target.name as keyof FormData] = e.target.value;
-    setDataForm(stateCopy);
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const result = await authService.login(formData);
+
+    if (result.success && result.data) {
+      //setToken(result.data.token);
+      console.log(result);
+    } else {
+      setMessageError(result.error ?? "Une erreur est survenue");
+      setMessageSuccess("");
+    }
   };
 
   return (
     <div>
       <h1 className="flex justify-center p-10 text-2xl">Connexion</h1>
+      {messageError && (
+        <div className="text-red-500 text-center mb-4">{messageError}</div>
+      )}
+      {messageSuccess && (
+        <div className="text-green-500 text-center mb-4">{messageSuccess}</div>
+      )}
       <form
         className="flex flex-col items-center gap-5"
         onSubmit={handleSubmit}
@@ -59,6 +79,7 @@ export default function Login() {
           placeholder="....."
           required
         />
+
         <button className="mt-10 border bg-black text-white w-sm p-3 font-bold rounded-lg">
           Se connecter
         </button>
