@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "react-router";
 import { authService } from "~/services/authService";
-//import { setToken } from "../utils/cookieHelper";
+import { CookieHelper } from "../utils/cookieHelper";
 
 export function meta() {
   return [
@@ -16,8 +17,10 @@ interface FormData {
 }
 
 export default function Login() {
+  const navigate = useNavigate();
   const [messageError, setMessageError] = useState("");
   const [messageSuccess, setMessageSuccess] = useState("");
+
 
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -35,8 +38,14 @@ export default function Login() {
     const result = await authService.login(formData);
 
     if (result.success && result.data) {
-      //setToken(result.data.token);
-      console.log(result);
+      CookieHelper.setToken(result.data.accessToken, "AccesToken");
+      CookieHelper.setToken(result.data.refreshToken, "RefreshToken");
+      setMessageSuccess("Connexion réussie !");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+
     } else {
       setMessageError(result.error ?? "Une erreur est survenue");
       setMessageSuccess("");
