@@ -10,7 +10,8 @@ interface LoginData {
 }
 
 interface LoginResponse {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
   user: {
     id: string;
     email: string;

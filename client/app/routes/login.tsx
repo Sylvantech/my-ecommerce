@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { useNavigate } from "react-router";
 import { authService } from "~/services/authService";
 import { CookieHelper } from "../utils/cookieHelper";
 
@@ -16,6 +17,7 @@ interface FormData {
 }
 
 export default function Login() {
+  const navigate = useNavigate();
   const [messageError, setMessageError] = useState("");
   const [messageSuccess, setMessageSuccess] = useState("");
 
@@ -36,16 +38,29 @@ export default function Login() {
     const result = await authService.login(formData);
 
     if (result.success && result.data) {
-      CookieHelper.setToken(result.data.token);
+      CookieHelper.setToken(result.data.accessToken, "AccesToken");
+      CookieHelper.setToken(result.data.refreshToken, "RefreshToken");
+      setMessageSuccess("Connexion réussie !");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+
     } else {
       setMessageError(result.error ?? "Une erreur est survenue");
-      setMessageSuccess("");    
+      setMessageSuccess("");
     }
   };
 
   return (
     <div>
       <h1 className="flex justify-center p-10 text-2xl">Connexion</h1>
+      {messageError && (
+        <div className="text-red-500 text-center mb-4">{messageError}</div>
+      )}
+      {messageSuccess && (
+        <div className="text-green-500 text-center mb-4">{messageSuccess}</div>
+      )}
       <form
         className="flex flex-col items-center gap-5"
         onSubmit={handleSubmit}
@@ -73,13 +88,7 @@ export default function Login() {
           placeholder="....."
           required
         />
-        {messageError && (
-          <div className="text-red-500 text-center mb-4">{messageError}</div>
-        )}
-        {messageSuccess && (
-          <div className="text-green-500 text-center mb-4">{messageSuccess}</div>
-        )}
-        
+
         <button className="mt-10 border bg-black text-white w-sm p-3 font-bold rounded-lg">
           Se connecter
         </button>
