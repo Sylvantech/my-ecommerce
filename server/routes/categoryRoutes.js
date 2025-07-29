@@ -54,6 +54,26 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/getById", async (req, res) => {
+  const id = req.query.id;
+  try {
+    const category = await Category.findOne({ id: id });
+    if (!category) {
+      return res.status(404).json({
+        error: "La catégorie n'a pas été trouvée",
+      });
+    }
+    return res.status(200).json({
+      category: category,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération d'une catégorie",
+      details: error.message,
+    });
+  }
+});
+
 router.put("/", async (req, res) => {
   const { id, name, description } = req.body;
   if (!id || !Number.isInteger(Number(id))) {
@@ -89,26 +109,6 @@ router.put("/", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la mise à jour de la catégorie",
-      details: error.message,
-    });
-  }
-});
-
-router.get("/getById", async (req, res) => {
-  const id = req.query.id;
-  try {
-    const category = await Category.findOne({ id: id });
-    if (!category) {
-      return res.status(404).json({
-        error: "La catégorie n'a pas été trouvée",
-      });
-    }
-    return res.status(200).json({
-      category: category,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      error: "Erreur lors de la récupération d'une catégorie",
       details: error.message,
     });
   }
