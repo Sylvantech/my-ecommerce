@@ -35,6 +35,45 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const allCategory = await Category.find();
+    if (!allCategory || allCategory.length === 0) {
+      return res.status(404).json({
+        error: "Il n'y a pas de catégorie",
+      });
+    }
+    return res.status(200).json({
+      categories: allCategory,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération des catégories",
+      details: error.message,
+    });
+  }
+});
+
+router.get("/getById", async (req, res) => {
+  const id = req.query.id;
+  try {
+    const category = await Category.findOne({ id: id });
+    if (!category) {
+      return res.status(404).json({
+        error: "La catégorie n'a pas été trouvée",
+      });
+    }
+    return res.status(200).json({
+      category: category,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération d'une catégorie",
+      details: error.message,
+    });
+  }
+});
+
 router.delete("/", async (req, res) => {
   const id = req.body.id;
   if (!id || !Number.isInteger(Number(id))) {
