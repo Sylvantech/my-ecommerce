@@ -165,7 +165,7 @@ export default function Login() {
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              Vous n&apos;avez pas encore de compte ?{' '}
+              Vous n&apos;avez pas encore de compte ?{" "}
               <a
                 href="/register"
                 className="text-purple-600 hover:text-purple-700 font-semibold underline transition-colors"
