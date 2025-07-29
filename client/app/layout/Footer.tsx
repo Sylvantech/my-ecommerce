@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="relative bg-gray-900 text-white">
+    <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="flex flex-col gap-8">
           <div className="flex items-center justify-center space-x-2">
@@ -28,7 +28,7 @@ export default function Footer() {
                 <li>
                   <a
                     href="/collections"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-white transition-colors "
                   >
                     Toutes les Collections
                   </a>
@@ -57,7 +57,7 @@ export default function Footer() {
                     Promotions
                   </a>
                 </li>
-                <li>
+                <li className="mb-5">
                   <a
                     href="/carte-cadeau"
                     className="hover:text-white transition-colors"
@@ -121,11 +121,11 @@ export default function Footer() {
                 className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500 text-white"
                 type="email"
               ></input>
-              <button className="ring-offset-background focus-visible:outline-hidden focus-visible:ring-ring inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground hover:bg-primary/90 h-10 py-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 px-6 rounded-lg">
+              <button className="focus-visible:outline-none focus-visible:ring-2 text-sm font-medium transition-colors h-10 py-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 px-6 rounded-lg">
                 OK
               </button>
             </div>
-            <div className="flex items-center space-x-2 text-sm text-gray-400">
+            <div className="space-x-2 text-sm text-gray-400">
               <label htmlFor="newsletter-consent">
                 J&apos;accepte de recevoir des communications marketing
               </label>
