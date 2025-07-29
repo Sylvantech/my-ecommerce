@@ -33,7 +33,9 @@ const Navbar = () => {
           <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
             <span className="text-white font-bold text-sm">🧦</span>
           </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">SockLand</span>
+          <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            SockLand
+          </span>
         </a>
 
         {/* Bouton menu mobile */}
@@ -64,24 +66,24 @@ const Navbar = () => {
 
         {/* Menu principal */}
         <div className="hidden lg:flex items-center space-x-8" id="navbarNav">
-            <a
+          <a
             className="text-gray-900 text-base font-medium hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 hover:bg-clip-text hover:text-transparent transition-colors"
             href="#produits"
-            >
+          >
             Produits
-            </a>
-            <a
+          </a>
+          <a
             className="text-gray-900 text-base font-medium hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 hover:bg-clip-text hover:text-transparent transition-colors"
             href="#personnaliser"
-            >
+          >
             Personnaliser
-            </a>
-            <a
+          </a>
+          <a
             className="text-gray-900 text-base font-medium hover:bg-gradient-to-r hover:from-purple-400 hover:to-pink-400 hover:bg-clip-text hover:text-transparent transition-colors"
             href="#collections"
-            >
+          >
             Collections
-            </a>
+          </a>
         </div>
 
         {/* Section droite avec favoris et panier */}
