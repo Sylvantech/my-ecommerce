@@ -55,6 +55,7 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    assets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Asset" }],
   },
   {
     timestamps: {
