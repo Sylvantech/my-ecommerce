@@ -1,5 +1,4 @@
 export class CookieHelper {
-
   static setToken(t: string, key: string) {
     document.cookie = `${key}=${t}; max-age=7200; path=/; secure; samesite=Strict`;
   }

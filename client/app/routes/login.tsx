@@ -21,7 +21,6 @@ export default function Login() {
   const [messageError, setMessageError] = useState("");
   const [messageSuccess, setMessageSuccess] = useState("");
 
-
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -45,7 +44,6 @@ export default function Login() {
       setTimeout(() => {
         navigate("/");
       }, 1000);
-
     } else {
       setMessageError(result.error ?? "Une erreur est survenue");
       setMessageSuccess("");
