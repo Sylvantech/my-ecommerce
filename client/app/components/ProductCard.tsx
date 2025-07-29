@@ -28,7 +28,7 @@ const ProductCard = () => {
               </span>
             </div>
             <button className="text-white font-semibold text-sm px-4 py-1 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 shadow-md hover:scale-105 transition-transform">
-              Détail
+              Voir
             </button>
           </div>
         </div>
