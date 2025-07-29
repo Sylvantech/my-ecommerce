@@ -74,6 +74,46 @@ router.get("/getById", async (req, res) => {
   }
 });
 
+router.put("/", async (req, res) => {
+  const { id, name, description } = req.body;
+  if (!id || !Number.isInteger(Number(id))) {
+    return res.status(400).json({
+      error: "Veuillez fournir un ID valide",
+    });
+  }
+  const updateData = {};
+  if (name) updateData.name = name;
+  if (description) updateData.description = description;
+
+  if (await Category.findOne({ name: name })) {
+    return res.status(400).json({
+      error: "Ce nom de catégorie est deja pris",
+    });
+  }
+
+  try {
+    const updatedCategory = await Category.findOneAndUpdate(
+      { id: id },
+      updateData,
+      { new: true }
+    );
+    if (!updatedCategory) {
+      return res.status(404).json({
+        error: "La catégorie n'a pas été trouvée",
+      });
+    }
+    return res.status(200).json({
+      message: "Catégorie mise à jour avec succès",
+      category: updatedCategory,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la mise à jour de la catégorie",
+      details: error.message,
+    });
+  }
+});
+
 router.delete("/", async (req, res) => {
   const id = req.body.id;
   if (!id || !Number.isInteger(Number(id))) {
