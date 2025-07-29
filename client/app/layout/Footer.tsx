@@ -15,12 +15,6 @@ export default function Footer() {
             Créateur de chaussettes personnalisées depuis 2020. Exprimez votre
             style unique avec nos créations originales et confortables.
           </p>
-          <div className="flex space-x-4">
-            <span className="text-xl">🐦</span>
-            <span className="text-xl">📘</span>
-            <span className="text-xl">📷</span>
-          </div>
-
           <div className="sm:flex sm:flex-row sm:justify-evenly">
             <div className="space-y-4 flex flex-col">
               <h4 className="text-lg font-bold">Boutique</h4>
