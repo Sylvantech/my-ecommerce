@@ -13,4 +13,7 @@ export default [
     index("routes/_index.tsx"),
     //Ajouter les routes qui utilisent le layout ici
   ]),
+
+  // Layout Admin & route admin
+  layout("layout/AdminLayout.tsx", [route("admin", "routes/admin/admin.tsx")]),
 ] satisfies RouteConfig;
