@@ -18,9 +18,7 @@ const productSchema = new mongoose.Schema(
       maxlength: 200,
       default: "",
     },
-    // category_id: {
-    //     type: Number,
-    // },
+    category_id: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
     price: {
       type: mongoose.Types.Decimal128,
       required: true,
