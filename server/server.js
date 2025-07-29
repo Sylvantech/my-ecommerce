@@ -11,19 +11,17 @@ app.use(express.urlencoded({ extended: true }));
 
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 const authRoutes = require("./routes/authRoutes");
 const swaggerRoute = require("./routes/swaggerRoute");
 
 app.use("/docs", swaggerRoute);
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
-
-// Routes protégées avec vérification du rôle admin
 app.use("/api/admin", adminRoutes);
+app.use("/api/category", categoryRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Root de l'api qui ne renvoi rien !");
-});
+
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
