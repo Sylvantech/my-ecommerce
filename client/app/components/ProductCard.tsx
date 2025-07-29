@@ -13,22 +13,24 @@ const ProductCard = () => {
             ✨Les Originales
           </div>
         </div>
-        <h2 className="text-purple-800 text-xl font-baloo font-bold mt-3 truncate">
-          Poutou en Gants
-        </h2>
-        <h3 className="text-black text-sm font-baloo mt-2 line-clamp-2">
-          Car même vos pieds méritent d&aposêtre au chaud, adoptez les gants
-          pour pied !
-        </h3>
-        <div className="flex justify-between mb10 items-center mb-3 -mt-3 pt-4">
-          <div className="flex flex-col">
-            <span className="text-purple-800 font-extrabold text-xl font-baloo">
-              15€99
-            </span>
+        <div className="ml-3 mr-3">
+          <h2 className="text-purple-800 text-xl font-baloo font-bold mt-3 truncate">
+            Poutou en Gants
+          </h2>
+          <h3 className="text-black text-sm font-baloo mt-2 line-clamp-2">
+            Car même vos pieds méritent d&aposêtre au chaud, adoptez les gants
+            pour pied !
+          </h3>
+          <div className="flex justify-between mb10 items-center mb-3 -mt-3 pt-4">
+            <div className="flex flex-col">
+              <span className="text-purple-800 font-extrabold text-xl font-baloo">
+                15€99
+              </span>
+            </div>
+            <button className="text-white font-semibold text-sm px-4 py-1 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 shadow-md hover:scale-105 transition-transform">
+              Détail
+            </button>
           </div>
-          <button className="text-white font-semibold text-sm px-4 py-1 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 shadow-md hover:scale-105 transition-transform">
-            Détail
-          </button>
         </div>
       </div>
     </section>
