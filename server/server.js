@@ -21,8 +21,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/category", categoryRoutes);
 
-
-
 app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(
