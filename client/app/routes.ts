@@ -10,7 +10,7 @@ export default [
   route("register", "routes/register.tsx"),
   route("login", "routes/login.tsx"),
   layout("./layout/MainLayout.tsx", [
-    index("routes/_index.tsx"),
+    index("routes/index/_index.tsx"),
     //Ajouter les routes qui utilisent le layout ici
   ]),
 
