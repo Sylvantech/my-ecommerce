@@ -246,7 +246,7 @@ export default function Register() {
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              Vous avez déjà un compte ?{' '}
+              Vous avez déjà un compte ?{" "}
               <a
                 href="/login"
                 className="text-purple-600 hover:text-purple-700 font-semibold underline transition-colors"

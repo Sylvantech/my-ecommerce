@@ -1,3 +1,6 @@
+import { CookieHelper } from "~/utils/cookieHelper";
+import { apiClient } from "./apiClient";
+
 interface RegisterData {
   username: string;
   email: string;
@@ -67,41 +70,27 @@ export const authService = {
       return { success: false, error: errorMessage };
     }
   },
+  async refreshToken(token: string) {
+    const res = await fetch("http://localhost:3000/api/auth/refresh-token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken: token }),
+    });
 
-  async validateToken(token: string): Promise<boolean> {
-    try {
-      const res = await fetch("http://localhost:3000/api/user/validate", {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-      });
+    if (!res.ok) throw new Error("Refresh failed");
 
-      return res.ok;
-    } catch {
-      return false;
-    }
+    const data = await res.json();
+    CookieHelper.setToken(data.token, "AccesToken");
+    return data.token;
   },
+  async getUser() {
+    const res = await apiClient("http://localhost:3000/api/user/me");
+    const data = await res.json();
 
-  async getCurrentUser(token: string) {
-    try {
-      const res = await fetch("http://localhost:3000/api/user/profile", {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error("Impossible de récupérer l'utilisateur");
-      }
-
-      return await res.json();
-    } catch (error: unknown) {
-      console.error("Erreur lors de la récupération de l'utilisateur :", error);
-      throw new Error("Erreur réseau ou jeton invalide");
+    if (!res.ok) {
+      throw new Error(data.error || `Erreur HTTP ${res.status}`);
     }
+
+    return { success: true, data };
   },
 };

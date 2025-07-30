@@ -5,6 +5,7 @@ const User = require("../models/User.model");
 const RefreshToken = require("../models/refreshToken.model");
 const bcrypt = require("bcrypt");
 const jwtUtils = require("../utils/jwtUtils");
+const { verifyToken } = require("../middleware/authMiddleware");
 
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
@@ -211,6 +212,20 @@ router.delete("/", async (req, res) => {
   }
   res.status(200).json({
     message: "Utilisateur supprimé avec succès",
+  });
+});
+
+router.get("/me", verifyToken, (req, res) => {
+  // Fake user data for demonstration
+  return res.status(200).json({
+    id: 1,
+    username: "fakeuser",
+    email: "fakeuser@example.com",
+    role: "user",
+    reduction: 0,
+    is_active: true,
+    updated_at: new Date().toISOString(),
+    message: "Authentifié en tant qu'utilisateur (fake data)"
   });
 });
 
