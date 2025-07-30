@@ -65,7 +65,7 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", async function (next) {
+productSchema.pre("save", async function (next) {
   if (this.isNew) {
     const counter = await Counter.findByIdAndUpdate(
       { _id: "productId" },
