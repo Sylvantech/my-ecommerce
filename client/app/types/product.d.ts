@@ -15,3 +15,12 @@ export interface Product {
   category?: string;
   image: string;
 }
+
+type RawProduct = {
+  id: number;
+  title: string;
+  description: string;
+  price: { $numberDecimal: string };
+  category_id: { name: string } | null;
+  assets: { url: string }[];
+};

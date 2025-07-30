@@ -1,43 +1,26 @@
+import { useEffect, useState } from "react";
 import ProductsCard from "../components/ProductsCard";
 import type { Product } from "../types/product";
-import { useEffect, useState } from "react";
-
-type RawProduct = {
-  id: number;
-  title: string;
-  description: string;
-  price: { $numberDecimal: string };
-  category_id: { name: string } | null;
-  assets: { url: string }[];
-};
+import { productService } from "../services/productService";
 
 const ProductsList = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/product");
-        const data = await res.json();
+      const result = await productService.getAll();
 
-        const formatted: Product[] = data.product.map((item: RawProduct) => ({
-          id: item.id,
-          title: item.title,
-          description: item.description,
-          price: parseFloat(item.price.$numberDecimal),
-          image: item.assets?.[0]?.url || "",
-          category: item.category_id?.name || "Sans catégorie",
-        }));
-
-        setProducts(formatted);
-      } catch (err) {
-        setError("Erreur lors du chargement des produits.");
-        console.error(err);
-      } finally {
-        setLoading(false);
+      if (result.success && result.data) {
+        setProducts(result.data);
+      } else {
+        setError(result.error || "Une erreur est survenue");
       }
+
+      setLoading(false);
     };
+
     fetchProducts();
   }, []);
 
