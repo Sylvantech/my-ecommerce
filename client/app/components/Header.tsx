@@ -5,7 +5,9 @@ export default function Header() {
         Chaussettes
       </h1>
       <br></br>
-      <h1 className="text-7xl -mb-5 font-weight: 900 text-shadow-lg text-yellow-300 ">Créatives</h1>
+      <h1 className="text-7xl -mb-5 font-weight: 900 text-shadow-lg text-yellow-300 ">
+        Créatives
+      </h1>
       <br></br>
       <p className="text-black font-bold">
         Exprimez votre personnalité avec style et confort
