@@ -109,4 +109,59 @@ router.get("/getById", async (req, res) => {
   }
 });
 
+router.patch("/", async (req, res) => {
+  const {
+    id,
+    title,
+    description,
+    category_id,
+    price,
+    color,
+    size,
+    in_stock,
+    stock,
+    weight_in_gr,
+    is_promo,
+    is_new,
+    assetsData,
+  } = req.body;
+
+  try {
+    const product = await Product.findOne({ id: id });
+    if (!product) {
+      return res.status(404).json({ error: "Produit non trouvé" });
+    }
+
+    if (Array.isArray(assetsData)) {
+      await Asset.deleteMany({ _id: { $in: product.assets } });
+      const newAssets = [];
+      for (const asset of assetsData) {
+        const createdAsset = await Asset.create(asset);
+        newAssets.push(createdAsset._id);
+      }
+      product.assets = newAssets;
+    }
+
+    if (title !== undefined) product.title = title;
+    if (description !== undefined) product.description = description;
+    if (category_id !== undefined) product.category_id = category_id;
+    if (price !== undefined) product.price = price;
+    if (color !== undefined) product.color = color;
+    if (size !== undefined) product.size = size;
+    if (in_stock !== undefined) product.in_stock = in_stock;
+    if (stock !== undefined) product.stock = stock;
+    if (weight_in_gr !== undefined) product.weight_in_gr = weight_in_gr;
+    if (is_promo !== undefined) product.is_promo = is_promo;
+    if (is_new !== undefined) product.is_new = is_new;
+
+    await product.save();
+    res.status(200).json({ message: "Produit mis à jour avec succès" });
+  } catch (error) {
+    res.status(500).json({
+      error: "Erreur lors de la mise à jour du produit",
+      details: error.message,
+    });
+  }
+});
+
 module.exports = router;
