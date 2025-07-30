@@ -1,12 +1,12 @@
 import chaussetteImg from "../assets/mockup/test.webp";
 
-const ProductCard = ({name = 'Poutou en Gants'}) => {
+const ProductCard = () => {
   return (
     <section id="catalogue" className="p-5">
-      <div className="bg-white w-40 hover:bg-violet-100 transition duration-300 rounded-lg p-1 shadow-lg cursor-pointer">
+      <div className="bg-white w-90 hover:bg-violet-100 transition duration-300 rounded-lg p-1 shadow-lg cursor-pointer">
         <div
           id="image"
-          className="relative w-40 h-40 bg-center rounded-t-lg bg-cover"
+          className="relative w-88 h-85 bg-center rounded-t-lg bg-cover"
           style={{ backgroundImage: `url(${chaussetteImg})` }}
         >
           <div className="absolute top-2 left-2 bg-white px-2 py-1 ring-2 ring-gray-300 rounded-xl text-xs font-baloo font-semibold text-black shadow-sm">
@@ -15,7 +15,7 @@ const ProductCard = ({name = 'Poutou en Gants'}) => {
         </div>
         <div className="ml-3 mr-3">
           <h2 className="text-purple-800 text-xl font-baloo font-bold mt-3 truncate">
-            {name}
+            Poutou en Gants
           </h2>
           <h3 className="text-black text-sm font-baloo mt-2 line-clamp-2">
             Car même vos pieds méritent d&aposêtre au chaud, adoptez les gants
