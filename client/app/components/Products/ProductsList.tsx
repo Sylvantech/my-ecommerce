@@ -1,28 +1,8 @@
-import { useEffect, useState } from "react";
 import ProductsCard from "./ProductsCard";
-import type { Product } from "../../types/product";
-import { productService } from "../../services/productService";
+import useProductListHook from "../../hooks/useProductListHook";
 
 const ProductsList = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const result = await productService.getAll();
-
-      if (result.success && result.data) {
-        setProducts(result.data);
-      } else {
-        setError(result.error || "Une erreur est survenue");
-      }
-
-      setLoading(false);
-    };
-
-    fetchProducts();
-  }, []);
+  const { products, loading, error } = useProductListHook();
 
   if (loading) return <div className="text-center p-6">Chargement...</div>;
   if (error) return <div className="text-center text-red-500 p-6">{error}</div>;
