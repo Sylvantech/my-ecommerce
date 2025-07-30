@@ -87,4 +87,26 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/getById", async (req, res) => {
+  const id = req.query.id;
+  try {
+    const product = await Product.findOne({ id: id })
+      .populate("assets")
+      .populate("category_id");
+    if (!product) {
+      return res.status(404).json({
+        error: "La produt n'a pas été trouvée",
+      });
+    }
+    return res.status(200).json({
+      product: product,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération d'un produit",
+      details: error.message,
+    });
+  }
+});
+
 module.exports = router;
