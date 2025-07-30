@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: Category API
+  version: 1.0.0
+paths:
+  /api/categories:
+    post:
+      summary: Créer une catégorie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryInput'
+      responses:
+        '201':
+          description: Catégorie créée
+        '500':
+          description: Erreur serveur
+    get:
+      summary: Liste des catégories
+      responses:
+        '200':
+          description: Liste des catégories
+        '500':
+          description: Erreur serveur
+    patch:
+      summary: Mettre à jour une catégorie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryUpdate'
+      responses:
+        '200':
+          description: Catégorie mise à jour
+        '404':
+          description: Catégorie non trouvée
+        '500':
+          description: Erreur serveur
+components:
+  schemas:
+    CategoryInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    CategoryUpdate:
+      allOf:
+        - $ref: '#/components/schemas/CategoryInput'
+        - type: object
+          properties:
+            id:
+              type: string
