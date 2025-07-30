@@ -17,10 +17,8 @@ export default function AdminLayout() {
   }
 
   return (
-    <>
-      <main>
-        <Outlet />
-      </main>
-    </>
+    <main>
+      <Outlet />
+    </main>
   );
 }
