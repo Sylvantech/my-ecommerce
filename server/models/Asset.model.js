@@ -27,7 +27,7 @@ const assetSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", async function (next) {
+assetSchema.pre("save", async function (next) {
   if (this.isNew) {
     const counter = await Counter.findByIdAndUpdate(
       { _id: "assetId" },
