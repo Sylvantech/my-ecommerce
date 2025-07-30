@@ -238,31 +238,4 @@ router.patch("/", verifyAdmin, async (req, res) => {
   }
 });
 
-router.delete("/", verifyAdmin, async (req, res) => {
-  const id = req.body.id;
-  if (!id) {
-    return res.status(400).json({
-      error: "Veuillez fournir un ID de produit valide",
-    });
-  }
-  const productExists = await Product.findOne({ id: id });
-  if (!productExists) {
-    return res.status(404).json({
-      error: "Ce produit n'existe pas",
-    });
-  }
-  try {
-    await Asset.deleteMany({ _id: { $in: productExists.assets } });
-    await Product.findOneAndDelete({ id: id });
-    res.status(200).json({
-      message: "Produit supprimé avec succès",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      error: "Erreur lors de la suppression du produit",
-      details: error.message,
-    });
-  }
-});
-
 module.exports = router;
