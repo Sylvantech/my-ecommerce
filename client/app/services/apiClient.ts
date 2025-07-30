@@ -26,7 +26,6 @@ export async function apiClient(input: string, options: RequestInit = {}) {
       };
       response = await fetch(input, { ...options, headers: retryHeaders });
     } catch {
-      console.log("expirée");
       window.location.href = "/login";
       throw new Error("Session expirée");
     }

@@ -1,6 +1,4 @@
 import { CookieHelper } from "~/utils/cookieHelper";
-import { apiClient } from "./apiClient";
-
 interface RegisterData {
   username: string;
   email: string;
@@ -82,15 +80,5 @@ export const authService = {
     const data = await res.json();
     CookieHelper.setToken(data.token, "AccesToken");
     return data.token;
-  },
-  async getUser() {
-    const res = await apiClient("http://localhost:3000/api/user/me");
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || `Erreur HTTP ${res.status}`);
-    }
-
-    return { success: true, data };
-  },
+  }
 };

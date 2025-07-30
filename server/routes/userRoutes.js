@@ -215,18 +215,4 @@ router.delete("/", async (req, res) => {
   });
 });
 
-router.get("/me", verifyToken, (req, res) => {
-  // Fake user data for demonstration
-  return res.status(200).json({
-    id: 1,
-    username: "fakeuser",
-    email: "fakeuser@example.com",
-    role: "user",
-    reduction: 0,
-    is_active: true,
-    updated_at: new Date().toISOString(),
-    message: "Authentifié en tant qu'utilisateur (fake data)"
-  });
-});
-
 module.exports = router;
