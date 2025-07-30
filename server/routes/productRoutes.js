@@ -68,7 +68,9 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const allProduct = await Product.find().populate("assets").populate("category_id");
+    const allProduct = await Product.find()
+      .populate("assets")
+      .populate("category_id");
     if (!allProduct || allProduct.length === 0) {
       return res.status(404).json({
         error: "Il n'y a pas de produit",
@@ -84,6 +86,5 @@ router.get("/", async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;
