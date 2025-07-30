@@ -66,4 +66,24 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const allProduct = await Product.find().populate("assets").populate("category_id");
+    if (!allProduct || allProduct.length === 0) {
+      return res.status(404).json({
+        error: "Il n'y a pas de produit",
+      });
+    }
+    return res.status(200).json({
+      products: allProduct,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération des produits",
+      details: error.message,
+    });
+  }
+});
+
+
 module.exports = router;
