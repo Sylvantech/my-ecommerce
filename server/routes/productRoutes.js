@@ -127,7 +127,7 @@ router.patch("/", async (req, res) => {
   } = req.body;
 
   try {
-    const product = await Product.findById(id);
+    const product = await Product.findOne({ id: id });
     if (!product) {
       return res.status(404).json({ error: "Produit non trouvé" });
     }
