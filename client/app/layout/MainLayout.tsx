@@ -1,7 +1,8 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import Header from "./Header";
+import Header from "../components/Header";
+import ProductsList from "../routes/products";
 
 import { authService } from "../services/authService";
 import { useCallback } from "react";
@@ -33,6 +34,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       </button>
       <main>{children}</main>
       <Header />
+      <ProductsList />
       <Footer />
     </div>
   );
