@@ -1,7 +1,8 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import Header from "./Header";
+import Header from "../components/Header";
+import ProductsList from "../routes/products";
 
 type MainLayoutProps = {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       <Navbar />
       <main>{children}</main>
       <Header />
+      <ProductsList />
       <Footer />
     </div>
   );
