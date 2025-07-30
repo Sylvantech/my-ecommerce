@@ -3,8 +3,9 @@ const router = express.Router();
 const Product = require("../models/Product.model");
 const Category = require("../models/Category.model");
 const Asset = require("../models/Asset.model");
+const { verifyAdmin, verifyToken } = require("../middleware/authMiddleware");
 
-router.post("/", async (req, res) => {
+router.post("/", verifyAdmin, async (req, res) => {
   const {
     title,
     description,
@@ -109,7 +110,7 @@ router.get("/getById", async (req, res) => {
   }
 });
 
-router.patch("/", async (req, res) => {
+router.patch("/", verifyAdmin, async (req, res) => {
   const {
     id,
     title,

@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const categoryUtils = require("../utils/categoryApiUtils");
 const Category = require("../models/Category.model");
+const { verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", async (req, res) => {
+router.post("/", verifyAdmin, async (req, res) => {
   const { name, description } = req.body;
   const isValid = categoryUtils.checkInput(req);
   if (!isValid) {
@@ -74,7 +75,7 @@ router.get("/getById", async (req, res) => {
   }
 });
 
-router.put("/", async (req, res) => {
+router.put("/", verifyAdmin, async (req, res) => {
   const { id, name, description } = req.body;
   if (!id || !Number.isInteger(Number(id))) {
     return res.status(400).json({
@@ -114,7 +115,7 @@ router.put("/", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/", verifyAdmin, async (req, res) => {
   const id = req.body.id;
   if (!id || !Number.isInteger(Number(id))) {
     return res.status(400).json({

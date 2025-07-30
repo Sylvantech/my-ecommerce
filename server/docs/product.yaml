@@ -1,0 +1,106 @@
+openapi: 3.0.0
+info:
+  title: Product API
+  version: 1.0.0
+paths:
+  /api/products:
+    post:
+      summary: Créer un produit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInput'
+      responses:
+        '201':
+          description: Produit créé
+        '400':
+          description: Catégorie inexistante
+        '500':
+          description: Erreur serveur
+    get:
+      summary: Liste des produits
+      responses:
+        '200':
+          description: Liste des produits
+        '404':
+          description: Aucun produit trouvé
+        '500':
+          description: Erreur serveur
+    patch:
+      summary: Mettre à jour un produit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdate'
+      responses:
+        '200':
+          description: Produit mis à jour
+        '404':
+          description: Produit non trouvé
+        '500':
+          description: Erreur serveur
+  /api/products/getById:
+    get:
+      summary: Récupérer un produit par son id
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Produit trouvé
+        '404':
+          description: Produit non trouvé
+        '500':
+          description: Erreur serveur
+components:
+  schemas:
+    Asset:
+      type: object
+      properties:
+        url:
+          type: string
+        alt:
+          type: string
+    ProductInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category_id:
+          type: string
+        price:
+          type: number
+        color:
+          type: string
+        size:
+          type: string
+        in_stock:
+          type: boolean
+        stock:
+          type: integer
+        weight_in_gr:
+          type: integer
+        is_promo:
+          type: boolean
+        is_new:
+          type: boolean
+        assetsData:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+    ProductUpdate:
+      allOf:
+        - $ref: '#/components/schemas/ProductInput'
+        - type: object
+          properties:
+            id:
+              type: string
