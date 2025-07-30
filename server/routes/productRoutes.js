@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
     is_new,
     assetsData,
   } = req.body;
-  let assetsId = [];
+  const assetsId = [];
 
   const category = await Category.findById(category_id);
   if (!category) {
