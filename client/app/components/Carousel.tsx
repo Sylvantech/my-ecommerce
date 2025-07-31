@@ -1,29 +1,10 @@
 import { useState, useEffect } from "react";
+import useProductListHook from "~/hooks/useProductListHook";
+import ProductsCard from "./Products/ProductsCard";
 
 export default function Carousel() {
-  const articles = [
-    <div style={{ width: 100, height: 100, border: "5px solid black" }} key={0}>
-      Sock 0
-    </div>,
-    <div style={{ width: 100, height: 100, border: "5px solid black" }} key={1}>
-      Sock 1
-    </div>,
-    <div style={{ width: 100, height: 100, border: "5px solid black" }} key={2}>
-      Sock 2
-    </div>,
-    <div style={{ width: 100, height: 100, border: "5px solid black" }} key={3}>
-      Sock 3
-    </div>,
-    <div style={{ width: 100, height: 100, border: "5px solid black" }} key={4}>
-      Sock 4
-    </div>,
-    <div style={{ width: 100, height: 100, border: "5px solid black" }} key={5}>
-      Sock 5
-    </div>,
-  ];
-
+  const { products, loading, error } = useProductListHook();
   const [currentIndex, setCurrentIndex] = useState(0);
-
   const [visibleCount, setVisibleCount] = useState(3);
 
   useEffect(() => {
@@ -40,7 +21,7 @@ export default function Carousel() {
   }, []);
 
   const handleNext = () => {
-    if (currentIndex + visibleCount >= articles.length) {
+    if (currentIndex + visibleCount >= products.length) {
       setCurrentIndex(0);
     } else {
       setCurrentIndex(currentIndex + 1);
@@ -48,22 +29,27 @@ export default function Carousel() {
   };
   const handlePrev = () => {
     if (currentIndex === 0) {
-      setCurrentIndex(articles.length - visibleCount);
+      setCurrentIndex(products.length - visibleCount);
     } else {
       setCurrentIndex(currentIndex - 1);
     }
   };
 
-  const visibleArticles = articles.slice(
+  const visibleproducts = products.slice(
     currentIndex,
     currentIndex + visibleCount
-  );
+  ).map(product => (
+    <ProductsCard key={product.id} product={product} />
+  ));
+
+  if (loading) return <div className="text-center p-6 text-black">Chargement...</div>;
+  if (error) return <div className="text-center text-red-500 p-6">{error}</div>;
 
   return (
     <div className="flex flex-col items-center mt-32">
       <div className="flex gap-4 items-center">
         <button
-          className="mr-16 transition-colors bg-white/80 hover:bg-white rounded-full h-10 w-10 flex items-center justify-center"
+          className="mr-16 transition-colors bg-gray-200 hover:bg-gray-300 rounded-full h-10 w-10 flex items-center justify-center"
           onClick={handlePrev}
         >
           <svg
@@ -81,9 +67,9 @@ export default function Carousel() {
             <path d="m15 18-6-6 6-6"></path>
           </svg>
         </button>
-        {visibleArticles}
+        {visibleproducts}
         <button
-          className="ml-16 transition-colors bg-white/80 hover:bg-white rounded-full h-10 w-10 flex items-center justify-center"
+          className="mr-16 transition-colors bg-gray-200 hover:bg-gray-300 rounded-full h-10 w-10 flex items-center justify-center"
           onClick={handleNext}
         >
           <svg
