@@ -58,7 +58,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen font-nunito bg-gradient-to-br from-purple-100 via-pink-50 to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* En-tête avec emoji et titre */}
         <div className="text-center mb-8">
