@@ -62,7 +62,6 @@ const productSchema = new mongoose.Schema(
     },
     assets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Asset" }],
     sizes: [{ type: mongoose.Schema.Types.ObjectId, ref: "ProductSize" }],
-
   },
   {
     timestamps: {

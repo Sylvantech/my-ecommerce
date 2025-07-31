@@ -33,6 +33,7 @@ router.post("/", verifyAdmin, async (req, res) => {
       });
     }
   }
+
   const category = await Category.findById(category_id);
   if (!category) {
     return res.status(400).json({
