@@ -61,6 +61,8 @@ const productSchema = new mongoose.Schema(
       default: true,
     },
     assets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Asset" }],
+    sizes: [{ type: mongoose.Schema.Types.ObjectId, ref: "ProductSize" }],
+
   },
   {
     timestamps: {

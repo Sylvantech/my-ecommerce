@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product.model");
 const Category = require("../models/Category.model");
+const ProductSize = require("../models/ProductSize.model");
 const Asset = require("../models/Asset.model");
 const { verifyAdmin, verifyToken } = require("../middleware/authMiddleware");
 
@@ -20,9 +21,18 @@ router.post("/", verifyAdmin, async (req, res) => {
     is_promo,
     is_new,
     assetsData,
+    productSizes,
   } = req.body;
   const assetsId = [];
 
+  for (const productSize of productSizes) {
+    const category = await ProductSize.findById(productSize);
+    if (!category) {
+      return res.status(400).json({
+        error: "La taille n'existe pas",
+      });
+    }
+  }
   const category = await Category.findById(category_id);
   if (!category) {
     return res.status(400).json({
