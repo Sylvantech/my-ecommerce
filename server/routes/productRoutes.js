@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product.model");
 const Category = require("../models/Category.model");
+const ProductSize = require("../models/ProductSize.model");
 const Asset = require("../models/Asset.model");
 const { verifyAdmin, verifyToken } = require("../middleware/authMiddleware");
 
@@ -20,8 +21,18 @@ router.post("/", verifyAdmin, async (req, res) => {
     is_promo,
     is_new,
     assetsData,
+    productSizes,
   } = req.body;
   const assetsId = [];
+
+  for (const productSize of productSizes) {
+    const category = await ProductSize.findById(productSize);
+    if (!category) {
+      return res.status(400).json({
+        error: "La taille n'existe pas",
+      });
+    }
+  }
 
   const category = await Category.findById(category_id);
   if (!category) {
@@ -56,6 +67,7 @@ router.post("/", verifyAdmin, async (req, res) => {
       is_promo,
       is_new,
       assets: assetsId,
+      productSizes,
     });
     await newProduct.save();
     res.status(201).json({
@@ -132,6 +144,7 @@ router.patch("/", verifyAdmin, async (req, res) => {
     is_promo,
     is_new,
     assetsData,
+    productSizes,
   } = req.body;
 
   try {
@@ -148,6 +161,18 @@ router.patch("/", verifyAdmin, async (req, res) => {
         newAssets.push(createdAsset._id);
       }
       product.assets = newAssets;
+    }
+
+    if (Array.isArray(productSizes)) {
+      for (const sizeId of productSizes) {
+        const sizeExists = await ProductSize.findById(sizeId);
+        if (!sizeExists) {
+          return res
+            .status(400)
+            .json({ error: `La taille ${sizeId} n'existe pas` });
+        }
+      }
+      product.productSizes = productSizes;
     }
 
     if (title !== undefined) product.title = title;
