@@ -102,33 +102,6 @@ export default function Carousel() {
           </svg>
         </button>
       </div>
-      <div className="mt-8 space-x-2 mb-16">
-        {visibleCount === 0 ? articles.map((_, index) =>
-          index === currentIndex ? (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full transition-colors bg-purple-600`}
-            ></button>
-          ) : (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full transition-colors bg-gray-300`}
-            ></button>
-          )
-        ) : articles.map((_, index) =>
-          index === currentIndex ? (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full transition-colors bg-purple-600`}
-            ></button>
-          ) : (
-            <button
-              key={index}
-              className={`w-3 h-3 rounded-full transition-colors bg-gray-300`}
-            ></button>
-          )
-        )} 
-      </div>
     </div>
   );
 }
