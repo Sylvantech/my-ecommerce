@@ -1,0 +1,159 @@
+paths:
+  /api/product/:
+    post:
+      summary: Créer un nouveau produit
+      tags: [Product]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, category_id, price]
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                category_id:
+                  type: string
+                price:
+                  type: number
+                color:
+                  type: string
+                size:
+                  type: string
+                in_stock:
+                  type: boolean
+                stock:
+                  type: integer
+                weight_in_gr:
+                  type: number
+                is_promo:
+                  type: boolean
+                is_new:
+                  type: boolean
+                assetsData:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        '201':
+          description: Produit créé avec succès
+        '400':
+          description: Données invalides ou catégorie inexistante
+        '500':
+          description: Erreur serveur
+    get:
+      summary: Récupérer tous les produits
+      tags: [Product]
+      responses:
+        '200':
+          description: Liste des produits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+        '404':
+          description: Aucun produit trouvé
+        '500':
+          description: Erreur serveur
+    patch:
+      summary: Mettre à jour un produit
+      tags: [Product]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: integer
+                title:
+                  type: string
+                description:
+                  type: string
+                category_id:
+                  type: string
+                price:
+                  type: number
+                color:
+                  type: string
+                size:
+                  type: string
+                in_stock:
+                  type: boolean
+                stock:
+                  type: integer
+                weight_in_gr:
+                  type: number
+                is_promo:
+                  type: boolean
+                is_new:
+                  type: boolean
+                assetsData:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        '200':
+          description: Produit mis à jour avec succès
+        '400':
+          description: Données invalides
+        '404':
+          description: Produit non trouvé
+        '500':
+          description: Erreur serveur
+    delete:
+      summary: Supprimer un produit
+      tags: [Product]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: Produit supprimé avec succès
+        '400':
+          description: ID invalide
+        '404':
+          description: Produit non trouvé
+        '500':
+          description: Erreur serveur
+  /api/product/getById:
+    get:
+      summary: Récupérer un produit par ID
+      tags: [Product]
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produit trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    $ref: '#/components/schemas/Product'
+        '404':
+          description: Produit non trouvé
+        '500':
+          description: Erreur serveur

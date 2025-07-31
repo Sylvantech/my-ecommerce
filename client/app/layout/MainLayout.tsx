@@ -1,18 +1,23 @@
-import React from "react";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
-import Carousel from "~/components/Carousel";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import Header from "~/components/Header";
+import { Outlet } from "react-router";
 
-type MainLayoutProps = {
-  children: React.ReactNode;
-};
+export function meta() {
+  return [
+    { title: "E-commerce" },
+    { name: "description", content: "Site d'e-commerce de chaussette" },
+  ];
+}
 
-export function MainLayout({ children }: MainLayoutProps) {
+export function MainLayout() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 relative overflow-hidden">
+    <div className="min-h-screen font-nunito bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 relative overflow-hidden">
       <Navbar />
-      <Carousel />
-      <main>{children}</main>
+      <Header />
+      <main>
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );

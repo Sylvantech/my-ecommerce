@@ -5,6 +5,7 @@ const User = require("../models/User.model");
 const RefreshToken = require("../models/refreshToken.model");
 const bcrypt = require("bcrypt");
 const jwtUtils = require("../utils/jwtUtils");
+const { verifyToken } = require("../middleware/authMiddleware");
 
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
