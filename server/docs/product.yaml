@@ -21,6 +21,8 @@ paths:
                   type: number
                 color:
                   type: string
+                composition:
+                  type: string
                 size:
                   type: string
                 in_stock:
@@ -85,6 +87,8 @@ paths:
                 price:
                   type: number
                 color:
+                  type: string
+                composition:
                   type: string
                 size:
                   type: string
