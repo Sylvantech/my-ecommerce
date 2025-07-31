@@ -1,9 +1,9 @@
-import ProductsList from "~/components/Products/ProductsList";
+import Carousel from "~/components/Carousel";
 
 export default function Index() {
   return (
     <div>
-      <ProductsList></ProductsList>
+      <Carousel></Carousel>
     </div>
   );
 }
