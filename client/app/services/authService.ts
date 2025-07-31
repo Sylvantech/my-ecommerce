@@ -1,24 +1,5 @@
 import { CookieHelper } from "~/utils/cookieHelper";
-interface RegisterData {
-  username: string;
-  email: string;
-  password: string;
-}
-
-interface LoginData {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: {
-    id: string;
-    email: string;
-    username: string;
-  };
-}
+import type { RegisterData, LoginData, LoginResponse } from "~/types/auth";
 
 export const authService = {
   async register(userData: RegisterData) {
@@ -80,5 +61,5 @@ export const authService = {
     const data = await res.json();
     CookieHelper.setToken(data.token, "AccesToken");
     return data.token;
-  }
+  },
 };

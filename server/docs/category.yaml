@@ -1,57 +1,124 @@
-openapi: 3.0.0
-info:
-  title: Category API
-  version: 1.0.0
 paths:
-  /api/categories:
+  /api/category/:
     post:
-      summary: Créer une catégorie
+      summary: Créer une nouvelle catégorie
+      tags: [Category]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CategoryInput'
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  description: Nom de la catégorie
+                description:
+                  type: string
+                  description: Description de la catégorie
       responses:
         '201':
-          description: Catégorie créée
+          description: Catégorie créée avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  category:
+                    $ref: '#/components/schemas/Category'
+        '400':
+          description: Données invalides
         '500':
           description: Erreur serveur
     get:
-      summary: Liste des catégories
+      summary: Récupérer toutes les catégories
+      tags: [Category]
       responses:
         '200':
           description: Liste des catégories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+        '404':
+          description: Aucune catégorie trouvée
         '500':
           description: Erreur serveur
-    patch:
+    put:
       summary: Mettre à jour une catégorie
+      tags: [Category]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CategoryUpdate'
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                description:
+                  type: string
       responses:
         '200':
-          description: Catégorie mise à jour
+          description: Catégorie mise à jour avec succès
+        '400':
+          description: Données invalides
         '404':
           description: Catégorie non trouvée
         '500':
           description: Erreur serveur
-components:
-  schemas:
-    CategoryInput:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-    CategoryUpdate:
-      allOf:
-        - $ref: '#/components/schemas/CategoryInput'
-        - type: object
-          properties:
-            id:
-              type: string
+    delete:
+      summary: Supprimer une catégorie
+      tags: [Category]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: integer
+      responses:
+        '200':
+          description: Catégorie supprimée avec succès
+        '400':
+          description: ID invalide
+        '500':
+          description: Erreur serveur
+  /api/category/getById:
+    get:
+      summary: Récupérer une catégorie par ID
+      tags: [Category]
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Catégorie trouvée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    $ref: '#/components/schemas/Category'
+        '404':
+          description: Catégorie non trouvée
+        '500':
+          description: Erreur serveur

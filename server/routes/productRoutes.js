@@ -22,7 +22,7 @@ router.post("/", verifyAdmin, async (req, res) => {
   } = req.body;
   const assetsId = [];
 
-  const category = await Category.findById(category_id);
+  const category = await Category.findOne({ id: category_id });
   if (!category) {
     return res.status(400).json({
       error: "La catégorie n'existe pas",
@@ -44,7 +44,7 @@ router.post("/", verifyAdmin, async (req, res) => {
     const newProduct = new Product({
       title,
       description,
-      category_id,
+      category_id: category._id,
       price,
       color,
       size,

@@ -10,10 +10,10 @@ export default [
   route("register", "routes/register.tsx"),
   route("login", "routes/login.tsx"),
   layout("./layout/MainLayout.tsx", [
-    index("routes/_index.tsx"),
+    index("routes/index/_index.tsx"),
     //Ajouter les routes qui utilisent le layout ici
   ]),
 
   // Layout Admin & route admin
-  layout("layout/AdminLayout.tsx", [route("admin", "routes/admin/admin.tsx")]),
+  layout("layout/AdminLayout.tsx", [route("admin", "routes/admin/_index.tsx")]),
 ] satisfies RouteConfig;

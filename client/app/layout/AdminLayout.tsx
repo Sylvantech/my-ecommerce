@@ -1,6 +1,13 @@
 import { Outlet } from "react-router";
 import useAdminHook from "~/hooks/useAdminHook";
 
+export function meta() {
+  return [
+    { title: "E-commerce - Admin" },
+    { name: "description", content: "Site d'e-commerce de chaussette" },
+  ];
+}
+
 export default function AdminLayout() {
   const { isLoading, isAuthorized } = useAdminHook();
 
@@ -17,10 +24,8 @@ export default function AdminLayout() {
   }
 
   return (
-    <>
-      <main>
-        <Outlet />
-      </main>
-    </>
+    <main>
+      <Outlet />
+    </main>
   );
 }

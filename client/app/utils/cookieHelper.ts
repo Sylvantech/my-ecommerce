@@ -5,8 +5,8 @@ export class CookieHelper {
 
   static getToken(key: string) {
     const parts = document.cookie.split(";");
-    for (let i = 0; i < parts.length; i++) {
-      const cookie = parts[i].trim();
+    for (const part of parts) {
+      const cookie = part.trim();
       if (cookie.startsWith(key + "=")) {
         return cookie.substring(key.length + 1);
       }
