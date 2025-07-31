@@ -67,6 +67,7 @@ router.post("/", verifyAdmin, async (req, res) => {
       is_promo,
       is_new,
       assets: assetsId,
+      productSizes,
     });
     await newProduct.save();
     res.status(201).json({
@@ -143,12 +144,35 @@ router.patch("/", verifyAdmin, async (req, res) => {
     is_promo,
     is_new,
     assetsData,
+    productSizes,
   } = req.body;
 
   try {
     const product = await Product.findOne({ id: id });
     if (!product) {
       return res.status(404).json({ error: "Produit non trouvé" });
+    }
+
+    if (Array.isArray(assetsData)) {
+      await Asset.deleteMany({ _id: { $in: product.assets } });
+      const newAssets = [];
+      for (const asset of assetsData) {
+        const createdAsset = await Asset.create(asset);
+        newAssets.push(createdAsset._id);
+      }
+      product.assets = newAssets;
+    }
+
+    if (Array.isArray(productSizes)) {
+      for (const sizeId of productSizes) {
+        const sizeExists = await ProductSize.findById(sizeId);
+        if (!sizeExists) {
+          return res
+            .status(400)
+            .json({ error: `La taille ${sizeId} n'existe pas` });
+        }
+      }
+      product.productSizes = productSizes;
     }
 
     if (Array.isArray(assetsData)) {
