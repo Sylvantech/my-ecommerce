@@ -80,5 +80,5 @@ export const authService = {
     const data = await res.json();
     CookieHelper.setToken(data.token, "AccesToken");
     return data.token;
-  }
+  },
 };
