@@ -12,6 +12,7 @@ router.post("/", verifyAdmin, async (req, res) => {
     category_id,
     price,
     color,
+    composition,
     size,
     in_stock,
     stock,
@@ -22,7 +23,7 @@ router.post("/", verifyAdmin, async (req, res) => {
   } = req.body;
   const assetsId = [];
 
-  const category = await Category.findOne({ id: category_id });
+  const category = await Category.findById(category_id);
   if (!category) {
     return res.status(400).json({
       error: "La catégorie n'existe pas",
@@ -47,6 +48,7 @@ router.post("/", verifyAdmin, async (req, res) => {
       category_id: category._id,
       price,
       color,
+      composition,
       size,
       in_stock,
       stock,
@@ -122,6 +124,7 @@ router.patch("/", verifyAdmin, async (req, res) => {
     category_id,
     price,
     color,
+    composition,
     size,
     in_stock,
     stock,
@@ -152,6 +155,7 @@ router.patch("/", verifyAdmin, async (req, res) => {
     if (category_id !== undefined) product.category_id = category_id;
     if (price !== undefined) product.price = price;
     if (color !== undefined) product.color = color;
+    if (composition !== undefined) product.comosition = composition;
     if (size !== undefined) product.size = size;
     if (in_stock !== undefined) product.in_stock = in_stock;
     if (stock !== undefined) product.stock = stock;

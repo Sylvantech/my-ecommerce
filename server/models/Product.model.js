@@ -29,6 +29,11 @@ const productSchema = new mongoose.Schema(
       maxlength: 50,
       default: "",
     },
+    composition: {
+      type: String,
+      maxlength: 50,
+      default: "",
+    },
     size: {
       type: String,
       maxlength: 50,
