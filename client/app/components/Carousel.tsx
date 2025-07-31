@@ -17,25 +17,9 @@ export default function Carousel() {
     <div style={{ width: 100, height: 100, border: "5px solid black" }} key={4}>
       Sock 4
     </div>,
-  ];
-
-  const buttons = [
-    <button
-      key={0}
-      className={`w-3 h-3 rounded-full transition-colors bg-purple-600`}
-    ></button>,
-    <button
-      key={1}
-      className={`w-3 h-3 rounded-full transition-colors bg-gray-300`}
-    ></button>,
-    <button
-      key={2}
-      className={`w-3 h-3 rounded-full transition-colors bg-gray-300`}
-    ></button>,
-    <button
-      key={3}
-      className={`w-3 h-3 rounded-full transition-colors bg-gray-300`}
-    ></button>,
+    <div style={{ width: 100, height: 100, border: "5px solid black" }} key={5}>
+      Sock 5
+    </div>,
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -118,7 +102,33 @@ export default function Carousel() {
           </svg>
         </button>
       </div>
-      <div className="mt-8 space-x-2 mb-16">{buttons}</div>
+      <div className="mt-8 space-x-2 mb-16">
+        {visibleCount === 0 ? articles.map((_, index) =>
+          index === currentIndex ? (
+            <button
+              key={index}
+              className={`w-3 h-3 rounded-full transition-colors bg-purple-600`}
+            ></button>
+          ) : (
+            <button
+              key={index}
+              className={`w-3 h-3 rounded-full transition-colors bg-gray-300`}
+            ></button>
+          )
+        ) : articles.map((_, index) =>
+          index === currentIndex ? (
+            <button
+              key={index}
+              className={`w-3 h-3 rounded-full transition-colors bg-purple-600`}
+            ></button>
+          ) : (
+            <button
+              key={index}
+              className={`w-3 h-3 rounded-full transition-colors bg-gray-300`}
+            ></button>
+          )
+        )} 
+      </div>
     </div>
   );
 }
