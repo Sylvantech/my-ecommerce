@@ -175,16 +175,6 @@ router.patch("/", verifyAdmin, async (req, res) => {
       product.productSizes = productSizes;
     }
 
-    if (Array.isArray(assetsData)) {
-      await Asset.deleteMany({ _id: { $in: product.assets } });
-      const newAssets = [];
-      for (const asset of assetsData) {
-        const createdAsset = await Asset.create(asset);
-        newAssets.push(createdAsset._id);
-      }
-      product.assets = newAssets;
-    }
-
     if (title !== undefined) product.title = title;
     if (description !== undefined) product.description = description;
     if (category_id !== undefined) product.category_id = category_id;
