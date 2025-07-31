@@ -68,10 +68,14 @@ router.post("/", verifyAdmin, async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+  const { limit } = req.body;
+
   try {
-    const allProduct = await Product.find()
-      .populate("assets")
-      .populate("category_id");
+    const query = Product.find().populate("assets").populate("category_id");
+    if (limit && limit > 0) {
+      query.limit(limit);
+    }
+    const allProduct = await query.exec();
     if (!allProduct || allProduct.length === 0) {
       return res.status(404).json({
         error: "Il n'y a pas de produit",
