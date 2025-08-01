@@ -12,4 +12,20 @@ function checkInput(req) {
   return true;
 }
 
-module.exports = { checkInput };
+function checkUpdateInput(req) {
+  const { id, rating } = req.body;
+
+  if (!id) {
+    return false;
+  }
+
+  if (rating !== undefined) {
+    if (typeof rating !== "number" || rating < 1 || rating > 5) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+module.exports = { checkInput, checkUpdateInput };
