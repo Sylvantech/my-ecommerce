@@ -35,14 +35,12 @@ export default function Carousel() {
     }
   };
 
-  const visibleproducts = products.slice(
-    currentIndex,
-    currentIndex + visibleCount
-  ).map(product => (
-    <ProductsCard key={product.id} product={product} />
-  ));
+  const visibleproducts = products
+    .slice(currentIndex, currentIndex + visibleCount)
+    .map(product => <ProductsCard key={product.id} product={product} />);
 
-  if (loading) return <div className="text-center p-6 text-black">Chargement...</div>;
+  if (loading)
+    return <div className="text-center p-6 text-black">Chargement...</div>;
   if (error) return <div className="text-center text-red-500 p-6">{error}</div>;
 
   return (
