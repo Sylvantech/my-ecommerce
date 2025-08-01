@@ -67,8 +67,8 @@ router.get("/:id", async (req, res) => {
     const id = req.params.id;
     try {
         const review = await Review.findOne({ id: id })
-            .populate('user_id', 'email')
-            .populate('product_id', 'title');
+            .populate('user_id', '-password')
+            .populate('product_id');
 
         if (!review) {
             return res.status(404).json({
