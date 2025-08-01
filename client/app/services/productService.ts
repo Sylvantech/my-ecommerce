@@ -29,7 +29,6 @@ export const productService = {
         price: item.price,
         in_stock: item.in_stock,
         stock: item.stock,
-        weight_in_gr: item.weight_in_gr,
         is_promo: item.is_promo,
         is_new: item.is_new,
         assets:
