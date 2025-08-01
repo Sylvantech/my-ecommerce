@@ -141,7 +141,7 @@ router.get("/review/:productId", async (req, res) => {
       });
     }
 
-    const reviews = await Review.find({ product_id: product._id })
+    const reviews = await Review.find({ product_id: product._id });
 
     if (!reviews || reviews.length === 0) {
       return res.status(404).json({
@@ -166,7 +166,7 @@ router.get("/review/:productId", async (req, res) => {
       details: error.message,
     });
   }
-})
+});
 
 router.patch("/", verifyAdmin, async (req, res) => {
   const {
