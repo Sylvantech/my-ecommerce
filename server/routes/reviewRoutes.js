@@ -4,7 +4,7 @@ const Review = require("../models/Review.model");
 const User = require("../models/User.model");
 const Product = require("../models/Product.model");
 const reviewUtils = require("../utils/reviewApiUtils");
-const { verifyToken } = require("../middleware/authMiddleware");
+const { verifyToken, verifyAdmin} = require("../middleware/authMiddleware");
 
 router.post("/", verifyToken, async (req, res) => {
   const { user_id, product_id, rating } = req.body;
@@ -82,6 +82,47 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la récupération de la review",
+      details: error.message,
+    });
+  }
+});
+
+router.patch("/", verifyAdmin, async (req, res) => {
+  const { id, rating } = req.body;
+  const isValid = reviewUtils.checkUpdateInput(req);
+  
+  if (!isValid) {
+    return res.status(400).json({
+      error: "Données invalides - ID et rating (1-5) sont requis",
+    });
+  }
+
+  try {
+    const review = await Review.findOne({ id: id });
+    if (!review) {
+      return res.status(404).json({
+        error: "Review non trouvée",
+      });
+    }
+
+    if (rating !== undefined) {
+      review.rating = rating;
+    }
+
+    await review.save();
+    res.status(200).json({
+      message: "Review mise à jour avec succès",
+      review: {
+        id: review.id,
+        user_id: review.user_id,
+        product_id: review.product_id,
+        rating: review.rating,
+        updated_at: review.updated_at,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Erreur lors de la mise à jour de la review",
       details: error.message,
     });
   }
