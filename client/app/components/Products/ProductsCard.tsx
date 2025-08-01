@@ -5,17 +5,40 @@ type ProductCardProps = {
 };
 
 const ProductsCard = ({ product }: ProductCardProps) => {
-  const { title, image, price, category, description } = product;
+  const { title, assets, price, category_id, description } = product;
+
+  const imageUrl =
+    assets && assets.length > 0
+      ? typeof assets[0] === "string"
+        ? assets[0]
+        : assets[0].url
+      : undefined;
+
+  const categoryName =
+    typeof category_id === "string"
+      ? category_id
+      : (category_id?.name ?? "Sans catégorie");
+
+  function handleCLick(id: number) {
+    window.location.href = `/product/${id}`;
+  }
+
   return (
-    <section id="catalogue" className="p-5">
+    <section
+      id="catalogue"
+      className="p-5"
+      onClick={() => handleCLick(product.id)}
+    >
       <div className="bg-white w-90 hover:bg-violet-100 transition duration-300 rounded-lg p-1 shadow-lg cursor-pointer">
         <div
           id="image"
           className="relative w-88 h-85 bg-center rounded-t-lg bg-cover"
-          style={{ backgroundImage: `url(${image})` }}
+          style={{
+            backgroundImage: imageUrl ? `url(${imageUrl})` : "none",
+          }}
         >
           <div className="absolute top-2 left-2 bg-white px-2 py-1 ring-2 ring-gray-300 rounded-xl text-xs font-baloo font-semibold text-black shadow-sm">
-            {category}
+            {categoryName}
           </div>
         </div>
         <div className="ml-3 mr-3">
