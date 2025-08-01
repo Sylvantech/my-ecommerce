@@ -19,8 +19,16 @@ const ProductsCard = ({ product }: ProductCardProps) => {
       ? category_id
       : (category_id?.name ?? "Sans catégorie");
 
+  function handleCLick(id: Number) {
+    window.location.href = `/product/${id}`;
+  }
+
   return (
-    <section id="catalogue" className="p-5">
+    <section
+      id="catalogue"
+      className="p-5"
+      onClick={() => handleCLick(product.id)}
+    >
       <div className="bg-white w-90 hover:bg-violet-100 transition duration-300 rounded-lg p-1 shadow-lg cursor-pointer">
         <div
           id="image"
