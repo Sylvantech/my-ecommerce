@@ -4,7 +4,7 @@ const Review = require("../models/Review.model");
 const User = require("../models/User.model");
 const Product = require("../models/Product.model");
 const reviewUtils = require("../utils/reviewApiUtils");
-const { verifyToken } = require("../middleware/authMiddleware");
+const { verifyToken, verifyAdmin } = require("../middleware/authMiddleware");
 
 router.post("/", verifyToken, async (req, res) => {
   const { user_id, product_id, rating } = req.body;
@@ -82,6 +82,36 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la récupération de la review",
+      details: error.message,
+    });
+  }
+});
+
+router.delete("/", verifyAdmin, async (req, res) => {
+  const { id } = req.body;
+  
+  if (!id) {
+    return res.status(400).json({
+      error: "Veuillez fournir un ID de review valide",
+    });
+  }
+
+  try {
+    const review = await Review.findOne({ id: id });
+    if (!review) {
+      return res.status(404).json({
+        error: "Cette review n'existe pas",
+      });
+    }
+    
+    await Review.findOneAndDelete({ id: id });
+    
+    res.status(200).json({
+      message: "Review supprimée avec succès",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la suppression de la review",
       details: error.message,
     });
   }
