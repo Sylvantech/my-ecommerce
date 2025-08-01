@@ -4,7 +4,7 @@ const Review = require("../models/Review.model");
 const User = require("../models/User.model");
 const Product = require("../models/Product.model");
 const reviewUtils = require("../utils/reviewApiUtils");
-const { verifyToken } = require("../middleware/authMiddleware");
+const { verifyToken, verifyAdmin } = require("../middleware/authMiddleware");
 
 router.post("/", verifyToken, async (req, res) => {
     const { user_id, product_id, rating } = req.body;
@@ -63,12 +63,9 @@ router.post("/", verifyToken, async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
-    const id = req.params.id;
+router.get("/", async (req, res) => {
     try {
-        const review = await Review.findOne({ id: id })
-            .populate('user_id', '-password')
-            .populate('product_id');
+        const review = await Review.find().populate("user_id", "-password").populate("product_id");
 
         if (!review) {
             return res.status(404).json({
@@ -85,6 +82,104 @@ router.get("/:id", async (req, res) => {
             details: error.message,
         });
     }
+});
+
+router.get("/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+        const review = await Review.findOne({ id: id })
+            .populate("user_id", "-password")
+            .populate("product_id");
+
+        if (!review) {
+            return res.status(404).json({
+                error: "Les reviews n'ont pas été trouvées",
+            });
+        }
+
+        return res.status(200).json({
+            review: review,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            error: "Erreur lors de la récupération des reviews",
+            details: error.message,
+        });
+    }
+});
+
+router.patch("/", verifyAdmin, async (req, res) => {
+  const { id, rating } = req.body;
+
+  const isValid = reviewUtils.checkUpdateInput(req);
+
+  if (!isValid) {
+    return res.status(400).json({
+      error: "Données invalides - ID et rating (1-5) sont requis",
+    });
+  }
+
+  try {
+    const review = await Review.findOne({ id: id });
+
+    if (!review) {
+      return res.status(404).json({
+        error: "Review non trouvée",
+      });
+    }
+
+    if (rating !== undefined) {
+      review.rating = rating;
+    }
+
+    await review.save();
+
+    res.status(200).json({
+      message: "Review mise à jour avec succès",
+      review: {
+        id: review.id,
+        user_id: review.user_id,
+        product_id: review.product_id,
+        rating: review.rating,
+        updated_at: review.updated_at,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Erreur lors de la mise à jour de la review",
+      details: error.message,
+    });
+  }
+});
+
+router.delete("/", verifyAdmin, async (req, res) => {
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({
+      error: "Veuillez fournir un ID de review valide",
+    });
+  }
+
+  try {
+    const review = await Review.findOne({ id: id });
+    if (!review) {
+      return res.status(404).json({
+        error: "Cette review n'existe pas",
+      });
+    }
+
+    await Review.findOneAndDelete({ id: id });
+
+    res.status(200).json({
+      message: "Review supprimée avec succès",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la suppression de la review",
+      details: error.message,
+    });
+  }
 });
 
 module.exports = router;
