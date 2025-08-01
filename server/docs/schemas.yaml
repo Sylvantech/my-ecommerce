@@ -212,6 +212,135 @@ components:
           description: Message d'erreur d'autorisation
           example: "Accès refusé - Droits administrateur requis"
 
+    # Schémas produit
+    Product:
+      type: object
+      required:
+        - title
+        - category_id
+        - price
+      properties:
+        id:
+          type: integer
+          description: ID unique du produit
+          readOnly: true
+        title:
+          type: string
+          description: Titre du produit
+        description:
+          type: string
+          description: Description du produit
+        category_id:
+          type: string
+          description: ID de la catégorie
+        price:
+          type: number
+          description: Prix du produit
+        color:
+          type: string
+          description: Couleur du produit
+        composition:
+          type: string
+          description: Composition du produit
+        size:
+          type: string
+          description: Taille du produit
+        in_stock:
+          type: boolean
+          description: Disponibilité en stock
+        stock:
+          type: integer
+          description: Quantité en stock
+        weight_in_gr:
+          type: number
+          description: Poids en grammes
+        is_promo:
+          type: boolean
+          description: Produit en promotion
+        is_new:
+          type: boolean
+          description: Nouveau produit
+        assets:
+          type: array
+          items:
+            type: string
+          description: IDs des assets/images
+        productSizes:
+          type: array
+          items:
+            type: string
+          description: IDs des tailles disponibles
+        created_at:
+          type: string
+          format: date-time
+          description: Date de création
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Date de dernière mise à jour
+          readOnly: true
+
+    # Schémas review
+    Review:
+      type: object
+      required:
+        - user_id
+        - product_id
+        - rating
+      properties:
+        id:
+          type: integer
+          description: ID unique de l'avis
+          readOnly: true
+        user_id:
+          type: string
+          description: ID de l'utilisateur qui a laissé l'avis
+        product_id:
+          type: string
+          description: ID du produit évalué
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Note de 1 à 5
+        created_at:
+          type: string
+          format: date-time
+          description: Date de création
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Date de dernière mise à jour
+          readOnly: true
+
+    # Schémas productSize
+    ProductSize:
+      type: object
+      required:
+        - size
+      properties:
+        id:
+          type: integer
+          description: ID unique de la taille de produit
+          readOnly: true
+        size:
+          type: string
+          description: Taille du produit
+          minLength: 2
+          maxLength: 20
+        created_at:
+          type: string
+          format: date-time
+          description: Date de création
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Date de dernière mise à jour
+          readOnly: true
+
   securitySchemes:
     bearerAuth:
       type: http
