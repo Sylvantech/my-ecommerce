@@ -6,7 +6,7 @@ export interface Asset {
 
 export interface ProductSize {
   _id: string;
-  name: string;
+  size: string;
 }
 
 export interface Category {
@@ -18,8 +18,11 @@ export interface Product {
   id: number;
   title: string;
   description?: string;
-  category_id?: Category | string;
-  price: string;
+  category_id?: {
+    _id: string;
+    name: string;
+  };
+  price: number;
   color?: string;
   composition?: string;
   size?: string;

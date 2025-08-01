@@ -19,7 +19,7 @@ const ProductsCard = ({ product }: ProductCardProps) => {
       ? category_id
       : (category_id?.name ?? "Sans catégorie");
 
-  function handleCLick(id: Number) {
+  function handleCLick(id: number) {
     window.location.href = `/product/${id}`;
   }
 
