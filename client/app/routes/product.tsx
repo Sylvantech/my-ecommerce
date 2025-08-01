@@ -11,11 +11,26 @@ export function meta() {
     ];
 }
 
+
+
+
 export default function Product() {
-    //const data = productService.getOne(Number(id))
+    const { slug } = useParams();
     const [quantity, setQuantity] = useState(1);
-    
-    
+
+
+    useEffect(() => {
+        async function call() {
+            const res = await productService.getOne(Number(slug));
+            console.log(res)
+        }
+        call()
+    }, [slug])
+
+
+
+
+
     const handleSoustraction = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1);
@@ -30,7 +45,7 @@ export default function Product() {
         <div className="w-full min-h-screen bg-white flex flex-col">
             <div className="mt-15 flex flex-col lg:flex-row w-full max-w-6xl mx-auto gap-10 px-4 py-8">
                 <div className="flex flex-col items-center gap-6 w-full lg:w-1/2 relative">
-                    <p className="flex items-center justify-center absolute left-3 top-7 text-xs bg-yellow-400 rounded-full w-24 h-6 font-extrabold border-none shadow">✨ Bestseller</p>
+                    <p className="flex items-center justify-center absolute left-10 top-7 text-xs bg-yellow-400 rounded-full w-24 h-6 font-extrabold border-none shadow">✨ Bestseller</p>
                     <img src="" alt="Produit" className="bg-gray-100 rounded-3xl shadow-lg w-full max-w-xs sm:max-w-md lg:max-w-lg aspect-square object-cover" />
                     <div className="flex space-x-3 justify-center w-full">
                         <div className="bg-gray-100 rounded-xl shadow-lg w-16 h-16 flex items-center justify-center">
