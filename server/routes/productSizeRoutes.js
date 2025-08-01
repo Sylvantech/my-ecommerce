@@ -34,4 +34,18 @@ router.post("/", verifyAdmin, async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const productSizes = await ProductSize.find();
+    res.status(200).json({
+      productSizes: productSizes,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération des produits ",
+      details: error.message,
+    });
+  }
+});
+
 module.exports = router;
