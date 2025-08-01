@@ -64,8 +64,7 @@ export const authService = {
     return data.token;
   },
 
-  async anonymousUserId() {
-    const anonymousUserId = uuidv4();
-    return anonymousUserId;
+  async anonymousUserId() { 
+    return uuidv4();;
   },
 };
