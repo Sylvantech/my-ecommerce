@@ -26,7 +26,16 @@ export const productService = {
               name: item.category_id.name,
             }
           : undefined,
-        price: item.price,
+        price:
+          typeof item.price === "object" &&
+          item.price !== null &&
+          "$numberDecimal" in item.price
+            ? parseFloat(
+                (item.price as { $numberDecimal: string }).$numberDecimal
+              )
+            : typeof item.price === "string"
+              ? parseFloat(item.price)
+              : item.price,
         in_stock: item.in_stock,
         stock: item.stock,
         is_promo: item.is_promo,

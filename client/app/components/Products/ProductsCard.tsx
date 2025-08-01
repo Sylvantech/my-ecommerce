@@ -19,6 +19,26 @@ const ProductsCard = ({ product }: ProductCardProps) => {
       ? category_id
       : (category_id?.name ?? "Sans catégorie");
 
+  const formatPrice = (
+    price: number | string | { $numberDecimal: string } | null | undefined
+  ): string => {
+    if (
+      typeof price === "object" &&
+      price !== null &&
+      "$numberDecimal" in price
+    ) {
+      return `${parseFloat(price.$numberDecimal).toFixed(2)}€`;
+    }
+    if (typeof price === "number") {
+      return `${price.toFixed(2)}€`;
+    }
+    if (typeof price === "string") {
+      const numPrice = parseFloat(price);
+      return isNaN(numPrice) ? "0.00€" : `${numPrice.toFixed(2)}€`;
+    }
+    return "0.00€";
+  };
+
   function handleCLick(id: number) {
     window.location.href = `/product/${id}`;
   }
@@ -51,7 +71,7 @@ const ProductsCard = ({ product }: ProductCardProps) => {
           <div className="flex justify-between mb10 items-center mb-3 -mt-3 pt-4">
             <div className="flex flex-col">
               <span className="text-purple-800 font-extrabold text-xl font-baloo">
-                {price}
+                {formatPrice(price)}
               </span>
             </div>
             <button className="text-white font-semibold text-sm px-4 py-1 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 shadow-md hover:scale-105 transition-transform">
