@@ -1,8 +1,8 @@
 export type StarRatingProps = {
-    reviews: Review[]; 
-    size?: number; 
+  reviews: Review[];
+  size?: number;
 };
 
 export type Review = {
-    rating: number;
+  rating: number;
 };
