@@ -93,7 +93,7 @@ router.get("/:id", async (req, res) => {
 
         if (!review) {
             return res.status(404).json({
-                error: "La review n'a pas été trouvée",
+                error: "Les reviews n'ont pas été trouvées",
             });
         }
 
@@ -102,7 +102,7 @@ router.get("/:id", async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({
-            error: "Erreur lors de la récupération de la review",
+            error: "Erreur lors de la récupération des reviews",
             details: error.message,
         });
     }
