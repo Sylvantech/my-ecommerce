@@ -106,8 +106,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/getById", async (req, res) => {
-  const id = req.query.id;
+router.get("/:id", async (req, res) => {
+  const id = req.params.id;
   try {
     const product = await Product.findOne({ id: id })
       .populate("assets")
