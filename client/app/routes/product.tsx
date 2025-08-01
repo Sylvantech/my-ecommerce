@@ -18,11 +18,21 @@ export default function Product() {
     const { slug } = useParams();
     const [quantity, setQuantity] = useState(1);
 
+    const [product,]
 
     useEffect(() => {
         async function call() {
-            const res = await productService.getOne(Number(slug));
-            console.log(res)
+            try {
+                const res = await productService.getOne(Number(slug));
+                const data = await res.json()
+                if (data) {
+
+                }
+            }
+            catch (err) {
+
+            }
+
         }
         call()
     }, [slug])
@@ -63,7 +73,7 @@ export default function Product() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-6 w-full lg:w-1/2">
-                    <h1 className="text-2xl sm:text-3xl mt-2 mb-2 font-bold text-gray-900">Chaussettes Arc-en-ciel Prenium</h1>
+                    <h1 className="text-2xl sm:text-3xl mt-2 mb-2 font-bold text-gray-900"></h1>
                     {/* REMPLACER PAR LE composant des étoiles */}
                     <div className="flex flex-row items-center gap-4">
                         <p className="text-purple-700 text-2xl sm:text-3xl font-semibold">12.99€</p>
