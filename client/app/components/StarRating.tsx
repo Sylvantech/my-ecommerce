@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Star, StarHalf, Star as StarEmpty } from "lucide-react";
+import { fetchAverageRating } from "../services/ratingService";
 import type { StarRatingProps } from "../types/star";
 
-const StarRating = ({ reviews, size = 24 }: StarRatingProps) => {
-  const averageRating =
-    reviews.length === 0
-      ? 0
-      : reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+const StarRating = ({ productId, size = 24 }: StarRatingProps) => {
+  const [average, setAverage] = useState<number>(0);
 
-  const fullStars = Math.floor(averageRating);
-  const decimalPart = averageRating - fullStars;
-  const hasHalfStar = decimalPart >= 0.25 && decimalPart <= 0.75;
+  useEffect(() => {
+    fetchAverageRating(productId).then(setAverage);
+  }, [productId]);
+
+  const fullStars = Math.floor(average);
+  const decimalPart = average - fullStars;
+  const hasHalfStar = decimalPart >= 0.25;
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   return (
