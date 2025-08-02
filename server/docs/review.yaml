@@ -1,0 +1,364 @@
+paths:
+  /api/review/:
+    post:
+      summary: Créer un nouvel avis
+      tags: [Review]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id, product_id, rating]
+              properties:
+                user_id:
+                  type: string
+                  description: ID de l'utilisateur
+                product_id:
+                  type: string
+                  description: ID du produit
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  description: Note de 1 à 5
+            examples:
+              example1:
+                summary: Exemple de création d'avis
+                value:
+                  user_id: "507f1f77bcf86cd799439011"
+                  product_id: "507f1f77bcf86cd799439012"
+                  rating: 4
+      responses:
+        '201':
+          description: Avis créé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Review créée avec succès"
+                  review:
+                    $ref: '#/components/schemas/Review'
+        '400':
+          description: Données invalides ou avis déjà existant
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    examples:
+                      - "Données invalides - user_id, product_id et rating (1-5) sont obligatoires"
+                      - "L'utilisateur n'existe pas"
+                      - "Le produit n'existe pas"
+                      - "Vous avez déjà laissé une review pour ce produit"
+        '401':
+          description: Non autorisé - Token manquant ou invalide
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erreur lors de la création de la review"
+                  details:
+                    type: string
+
+    get:
+      summary: Récupérer tous les avis
+      tags: [Review]
+      responses:
+        '200':
+          description: Liste des avis
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  review:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReviewWithPopulation'
+        '404':
+          description: Aucun avis trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "La review n'a pas été trouvée"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erreur lors de la récupération de la review"
+                  details:
+                    type: string
+
+    patch:
+      summary: Mettre à jour un avis
+      tags: [Review]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id, rating]
+              properties:
+                id:
+                  type: integer
+                  description: ID de l'avis
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  description: Nouvelle note de 1 à 5
+            examples:
+              example1:
+                summary: Exemple de mise à jour d'avis
+                value:
+                  id: 1
+                  rating: 5
+      responses:
+        '200':
+          description: Avis mis à jour avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Review mise à jour avec succès"
+                  review:
+                    $ref: '#/components/schemas/Review'
+        '400':
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Données invalides - ID et rating (1-5) sont requis"
+        '401':
+          description: Non autorisé - Token manquant ou invalide
+        '403':
+          description: Accès refusé - Droits administrateur requis
+        '404':
+          description: Avis non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Review non trouvée"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erreur lors de la mise à jour de la review"
+                  details:
+                    type: string
+
+    delete:
+      summary: Supprimer un avis
+      tags: [Review]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: integer
+                  description: ID de l'avis à supprimer
+            examples:
+              example1:
+                summary: Exemple de suppression d'avis
+                value:
+                  id: 1
+      responses:
+        '200':
+          description: Avis supprimé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Review supprimée avec succès"
+        '400':
+          description: ID manquant ou invalide
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Veuillez fournir un ID de review valide"
+        '401':
+          description: Non autorisé - Token manquant ou invalide
+        '403':
+          description: Accès refusé - Droits administrateur requis
+        '404':
+          description: Avis non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cette review n'existe pas"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erreur lors de la suppression de la review"
+                  details:
+                    type: string
+
+  /api/review/{id}:
+    get:
+      summary: Récupérer un avis par ID
+      tags: [Review]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de l'avis
+      responses:
+        '200':
+          description: Avis trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  review:
+                    $ref: '#/components/schemas/ReviewWithPopulation'
+        '404':
+          description: Avis non trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Les reviews n'ont pas été trouvées"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erreur lors de la récupération des reviews"
+                  details:
+                    type: string
+
+components:
+  schemas:
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique de l'avis
+          readOnly: true
+        user_id:
+          type: string
+          description: ID de l'utilisateur qui a laissé l'avis
+        product_id:
+          type: string
+          description: ID du produit évalué
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Note de 1 à 5
+        created_at:
+          type: string
+          format: date-time
+          description: Date de création
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Date de dernière mise à jour
+          readOnly: true
+      required:
+        - user_id
+        - product_id
+        - rating
+
+    ReviewWithPopulation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique de l'avis
+          readOnly: true
+        user_id:
+          $ref: '#/components/schemas/User'
+        product_id:
+          $ref: '#/components/schemas/Product'
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Note de 1 à 5
+        created_at:
+          type: string
+          format: date-time
+          description: Date de création
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Date de dernière mise à jour
+          readOnly: true
