@@ -32,8 +32,8 @@ export function meta() {
 export default function Product() {
   const { slug } = useParams();
   const [quantity, setQuantity] = useState<number>(1);
-
   const [product, setProduct] = useState<Product | null>(null);
+  const [actualImage, setActualImage] = useState<number>(0);
 
   useEffect(() => {
     async function call() {
@@ -48,6 +48,13 @@ export default function Product() {
     }
     call();
   }, [slug]);
+
+
+  const updateActualImage = (index: number) => {
+
+    setActualImage(index);
+
+  };
 
   const handleSoustraction = () => {
     if (quantity > 1) {
@@ -76,7 +83,7 @@ export default function Product() {
             {product.assets && product.assets.length > 0 ? (
               <div className="relative group">
                 <img
-                  src={product.assets[0].url}
+                  src={product.assets[actualImage].url}
                   alt={product.title}
                   className="bg-white rounded-3xl shadow-2xl w-full max-w-xs sm:max-w-md lg:max-w-lg aspect-square object-cover border-4 border-white group-hover:shadow-3xl transition-all duration-500 transform group-hover:scale-105"
                 />
@@ -96,18 +103,19 @@ export default function Product() {
           <div className="flex space-x-4 justify-center w-full overflow-x-auto pb-2">
             {product.assets &&
               product.assets.map((value, index) => (
-                <div
-                  key={value._id}
-                  className={`bg-white rounded-2xl shadow-lg w-20 h-20 flex-shrink-0 flex items-center justify-center border-2 transition-all duration-300 cursor-pointer hover:border-purple-400 hover:shadow-xl transform hover:scale-110 ${
-                    index === 0 ? 'border-purple-400 ring-2 ring-purple-100' : 'border-gray-200'
-                  }`}
-                >
-                  <img
-                    src={value.url}
-                    alt={product.title}
-                    className="object-cover w-full h-full rounded-xl"
-                  />
-                </div>
+              <div
+                key={value._id}
+                className={`bg-white rounded-2xl shadow-lg w-20 h-20 flex-shrink-0 flex items-center justify-center border-2 transition-all duration-300 cursor-pointer hover:border-purple-400 hover:shadow-xl transform hover:scale-110 ${
+                index === actualImage ? 'border-purple-400 ring-2 ring-purple-100' : 'border-gray-200'
+                }`}
+                onClick={() => updateActualImage(index)}
+              >
+                <img
+                src={value.url}
+                alt={product.title}
+                className="object-cover w-full h-full rounded-xl"
+                />
+              </div>
               ))}
           </div>
         </div>
