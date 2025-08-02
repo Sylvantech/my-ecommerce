@@ -1,7 +1,26 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
-
 import { productService } from "~/services/productService";
+
+interface ProductAsset {
+  _id: string;
+  url: string;
+  alt: string;
+}
+
+interface Product {
+  title: string;
+  description: string;
+  price: string;
+  color: string;
+  composition: string;
+  size?: string;
+  sizes?: string[];
+  in_stock: boolean;
+  stock: number;
+  is_promo: boolean;
+  assets: ProductAsset[];
+}
 
 export function meta() {
   return [
@@ -12,23 +31,23 @@ export function meta() {
 
 export default function Product() {
   const { slug } = useParams();
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number>(1);
 
-  const [product, setProduct] = useState(null);
-
-  console.log(product);
+  const [product, setProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     async function call() {
       const res = await productService.getOne(Number(slug));
-      if (res.success) setProduct(res.data);
+      if (res.success && res.data) {
+        const fixedData = {
+          ...res.data,
+          price: String(res.data.price),
+        };
+        setProduct(fixedData as Product);
+      }
     }
     call();
   }, [slug]);
-
-  if (!product) {
-    return <div>Chargement...</div>;
-  }
 
   const handleSoustraction = () => {
     if (quantity > 1) {
@@ -37,7 +56,7 @@ export default function Product() {
   };
 
   const handleAddition = () => {
-    if (quantity < product.stock) {
+    if (quantity < product!.stock) {
       setQuantity(quantity + 1);
     }
   };
@@ -50,20 +69,20 @@ export default function Product() {
             ✨ Bestseller
           </p>
           <img
-            src={product.assets[0].url && product.assets[0].url}
-            alt="Produit"
+            src={product!.assets[0].url && product!.assets[0].url}
+            alt={product!.title}
             className="bg-gray-100 rounded-3xl shadow-lg w-full max-w-xs sm:max-w-md lg:max-w-lg aspect-square object-cover"
           />
           <div className="flex space-x-3 justify-center w-full">
-            {product.assets &&
-              product.assets.map((value, index) => (
+            {product!.assets &&
+              product!.assets.map(value => (
                 <div
-                  key={index}
+                  key={value._id}
                   className="bg-gray-100 rounded-xl shadow-lg w-16 h-16 flex items-center justify-center"
                 >
                   <img
                     src={value.url}
-                    alt={product.title}
+                    alt={product!.title}
                     className="object-cover w-full h-full rounded-xl"
                   />
                 </div>
@@ -72,14 +91,14 @@ export default function Product() {
         </div>
         <div className="flex flex-col gap-6 w-full lg:w-1/2">
           <h1 className="text-2xl sm:text-3xl mt-2 mb-2 font-bold text-gray-900">
-            {product.title}
+            {product!.title}
           </h1>
           {/* REMPLACER PAR LE composant des étoiles */}
           <div className="flex flex-row items-center gap-4">
             <p className="text-purple-700 text-2xl sm:text-3xl font-semibold">
-              {product.price}€
+              {product!.price}€
             </p>
-            <p>{product.is_promo && "Votre produit est en promotion"}</p>
+            <p>{product!.is_promo && "Votre produit est en promotion"}</p>
             {/* REMPLACER PAR LE COMPOSANT "AJOUTER UN AVIS" */}
           </div>
           <section className="w-full bg-pink-50 p-5 space-y-4 border border-pink-200 rounded-lg">
@@ -87,7 +106,7 @@ export default function Product() {
               À Propos de ce Produit
             </h2>
             <p className="text-gray-700 leading-relaxed">
-              {product.description}
+              {product!.description}
             </p>
           </section>
           <div className="space-y-4">
@@ -116,7 +135,7 @@ export default function Product() {
             <div className="mb-4">
               <h4 className="font-medium text-gray-800 mb-2">Matière(s) :</h4>
               <p className="text-sm text-gray-700 font-medium">
-                {product.composition}
+                {product!.composition}
               </p>
             </div>
             {/* Certifications */}
@@ -162,13 +181,13 @@ export default function Product() {
             <h3 className="font-semibold">Couleur :</h3>
             <div className="flex flex-row items-center gap-3">
               <div className="w-10 h-10 border border-white rounded-lg shadow-lg bg-gradient-to-br from-pink-300 to-violet-400"></div>
-              <p className="text-gray-700">{product.color}</p>
+              <p className="text-gray-700">{product!.color}</p>
             </div>
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Taille :</h3>
-            {product.size ? (
-              <p>{product.size}</p>
+            {product!.size ? (
+              <p>{product!.size}</p>
             ) : (
               <select
                 className="bg-white p-2 w-full rounded-lg border-2 border-gray-200 text-sm"
@@ -176,8 +195,8 @@ export default function Product() {
                 id=""
               >
                 <option value="">Choisissez votre taille</option>
-                {product.sizes &&
-                  product.sizes.map((v, index) => (
+                {product!.sizes &&
+                  product!.sizes.map((v, index) => (
                     <option key={index}>{v}</option>
                   ))}
               </select>
@@ -185,7 +204,7 @@ export default function Product() {
           </div>
           <div className="space-y-2">
             <h3 className="font-semibold">Quantité :</h3>
-            {product.in_stock ? (
+            {product!.in_stock ? (
               <div className="flex flex-row items-center gap-4">
                 <button
                   className="bg-white h-10 w-10 rounded-full border border-gray-200 text-xl font-bold hover:bg-gray-100 transition"
