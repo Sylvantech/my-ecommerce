@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ProductSize = require("../models/ProductSize.model");
-const { verifyAdmin, verifyToken } = require("../middleware/authMiddleware");
+const { verifyAdmin } = require("../middleware/authMiddleware");
 
 router.post("/", verifyAdmin, async (req, res) => {
   const { size } = req.body;
@@ -47,5 +47,27 @@ router.get("/", async (req, res) => {
     });
   }
 });
+
+router.get("/:productSize", async (req, res) => {
+  const productSize = req.params.productSize;
+  
+  try {
+    const foundProductSize = await ProductSize.findOne({ id: productSize });
+    if (!foundProductSize) {
+      return res.status(404).json({
+        error: "La taille de produit n'a pas été trouvée",
+      });
+    }
+    
+    return res.status(200).json({
+      productSize: foundProductSize,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération de la taille du produit",
+      details: error.message,
+    });
+  }
+})
 
 module.exports = router;
