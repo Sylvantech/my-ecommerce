@@ -126,19 +126,16 @@ export default function Product() {
               </span>
             </div>
           </div>
-          {/* Composition & Entretien */}
           <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-6 my-2">
             <h3 className="font-bold text-lg text-green-700 mb-4">
               🧵 Composition & Entretien
             </h3>
-            {/* Matières */}
             <div className="mb-4">
               <h4 className="font-medium text-gray-800 mb-2">Matière(s) :</h4>
               <p className="text-sm text-gray-700 font-medium">
                 {product!.composition}
               </p>
             </div>
-            {/* Certifications */}
             <div className="mb-4">
               <h4 className="font-medium text-gray-800 mb-2">
                 Certifications :
@@ -152,7 +149,6 @@ export default function Product() {
                 </span>
               </div>
             </div>
-            {/* Instructions d'entretien */}
             <div>
               <h4 className="font-medium text-gray-800 mb-2">
                 Instructions d&apos;entretien :
