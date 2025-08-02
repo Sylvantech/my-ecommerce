@@ -49,11 +49,8 @@ export default function Product() {
     call();
   }, [slug]);
 
-
   const updateActualImage = (index: number) => {
-
     setActualImage(index);
-
   };
 
   const handleSoustraction = () => {
@@ -92,8 +89,18 @@ export default function Product() {
             ) : (
               <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl shadow-xl w-full max-w-xs sm:max-w-md lg:max-w-lg aspect-square flex items-center justify-center text-gray-400 border-4 border-white">
                 <div className="text-center">
-                  <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <svg
+                    className="w-16 h-16 mx-auto mb-4 text-gray-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
                   </svg>
                   <p className="text-lg font-medium">Pas d&apos;image</p>
                 </div>
@@ -103,19 +110,21 @@ export default function Product() {
           <div className="flex space-x-4 justify-center w-full overflow-x-auto pb-2">
             {product.assets &&
               product.assets.map((value, index) => (
-              <div
-                key={value._id}
-                className={`bg-white rounded-2xl shadow-lg w-20 h-20 flex-shrink-0 flex items-center justify-center border-2 transition-all duration-300 cursor-pointer hover:border-purple-400 hover:shadow-xl transform hover:scale-110 ${
-                index === actualImage ? 'border-purple-400 ring-2 ring-purple-100' : 'border-gray-200'
-                }`}
-                onClick={() => updateActualImage(index)}
-              >
-                <img
-                src={value.url}
-                alt={product.title}
-                className="object-cover w-full h-full rounded-xl"
-                />
-              </div>
+                <div
+                  key={value._id}
+                  className={`bg-white rounded-2xl shadow-lg w-20 h-20 flex-shrink-0 flex items-center justify-center border-2 transition-all duration-300 cursor-pointer hover:border-purple-400 hover:shadow-xl transform hover:scale-110 ${
+                    index === actualImage
+                      ? "border-purple-400 ring-2 ring-purple-100"
+                      : "border-gray-200"
+                  }`}
+                  onClick={() => updateActualImage(index)}
+                >
+                  <img
+                    src={value.url}
+                    alt={product.title}
+                    className="object-cover w-full h-full rounded-xl"
+                  />
+                </div>
               ))}
           </div>
         </div>
@@ -128,8 +137,12 @@ export default function Product() {
             <div className="flex items-center gap-2">
               <div className="flex text-yellow-400">
                 {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="w-5 h-5 fill-current" viewBox="0 0 20 20">
-                    <path d="M10 15l-5.878 3.09 1.123-6.545L0 6.91l6.564-.955L10 0l3.436 5.955L20 6.91l-5.245 4.635L15.878 18z"/>
+                  <svg
+                    key={i}
+                    className="w-5 h-5 fill-current"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L0 6.91l6.564-.955L10 0l3.436 5.955L20 6.91l-5.245 4.635L15.878 18z" />
                   </svg>
                 ))}
               </div>
@@ -137,32 +150,44 @@ export default function Product() {
             </div>
           </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-baseline gap-3">
-                <span className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  {product.price}€
-                </span>
-                {product.is_promo && (
-                  <div className="flex flex-col items-end">
-                    <span className="text-lg text-gray-400 line-through">29.99€</span>
-                    <span className="text-sm bg-red-500 text-white px-2 py-1 rounded-full font-semibold">
-                      -20%
-                    </span>
-                  </div>
-                )}
-              </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-baseline gap-3">
+              <span className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                {product.price}€
+              </span>
               {product.is_promo && (
-                <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">
-                  🔥 Promotion limitée !
+                <div className="flex flex-col items-end">
+                  <span className="text-lg text-gray-400 line-through">
+                    29.99€
+                  </span>
+                  <span className="text-sm bg-red-500 text-white px-2 py-1 rounded-full font-semibold">
+                    -20%
+                  </span>
                 </div>
               )}
             </div>
+            {product.is_promo && (
+              <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-pulse">
+                🔥 Promotion limitée !
+              </div>
+            )}
+          </div>
 
           <section className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8 space-y-6 border-2 border-purple-100 rounded-3xl shadow-xl backdrop-blur-sm">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
               <h2 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -182,19 +207,27 @@ export default function Product() {
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl border border-pink-100">
                 <span className="text-xl">🌈</span>
-                <span className="text-gray-700 font-medium">Design coloré unique</span>
+                <span className="text-gray-700 font-medium">
+                  Design coloré unique
+                </span>
               </div>
               <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-100">
                 <span className="text-xl">✨</span>
-                <span className="text-gray-700 font-medium">Coton bio ultra-doux</span>
+                <span className="text-gray-700 font-medium">
+                  Coton bio ultra-doux
+                </span>
               </div>
               <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-100">
                 <span className="text-xl">🧵</span>
-                <span className="text-gray-700 font-medium">Coutures renforcées</span>
+                <span className="text-gray-700 font-medium">
+                  Coutures renforcées
+                </span>
               </div>
               <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
                 <span className="text-xl">🎨</span>
-                <span className="text-gray-700 font-medium">Création exclusive</span>
+                <span className="text-gray-700 font-medium">
+                  Création exclusive
+                </span>
               </div>
             </div>
           </div>
@@ -259,7 +292,9 @@ export default function Product() {
                   style={{ backgroundColor: product.color }}
                 ></div>
                 <div>
-                  <p className="text-gray-700 font-medium text-lg">{product.color}</p>
+                  <p className="text-gray-700 font-medium text-lg">
+                    {product.color}
+                  </p>
                   <p className="text-gray-500 text-sm">Couleur disponible</p>
                 </div>
               </div>
@@ -307,7 +342,9 @@ export default function Product() {
                     -
                   </button>
                   <div className="bg-gray-50 px-6 py-3 rounded-xl border-2 border-gray-200 min-w-[60px] text-center">
-                    <span className="text-xl font-bold text-gray-800">{quantity}</span>
+                    <span className="text-xl font-bold text-gray-800">
+                      {quantity}
+                    </span>
                   </div>
                   <button
                     className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white h-12 w-12 rounded-full text-xl font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
@@ -324,7 +361,7 @@ export default function Product() {
             ) : (
               <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                 <p className="text-red-600 font-medium">
-                  Nous sommes désolés, votre produit n'est plus en stock
+                  Nous sommes désolés, votre produit est plus en stock
                 </p>
               </div>
             )}
@@ -351,7 +388,9 @@ export default function Product() {
                   <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
                 </svg>
                 Ajouter au Panier
-                <span className="ml-2 text-sm opacity-75">({quantity} article{quantity > 1 ? 's' : ''})</span>
+                <span className="ml-2 text-sm opacity-75">
+                  ({quantity} article{quantity > 1 ? "s" : ""})
+                </span>
               </div>
             </button>
 
@@ -379,9 +418,15 @@ export default function Product() {
                       <circle cx="7" cy="18" r="2"></circle>
                     </svg>
                   </div>
-                  <span className="font-bold text-gray-800 block mb-2">Livraison Express</span>
-                  <span className="text-sm text-gray-600 block">24-48h chrono</span>
-                  <span className="text-xs text-green-600 font-semibold">GRATUITE dès 50€</span>
+                  <span className="font-bold text-gray-800 block mb-2">
+                    Livraison Express
+                  </span>
+                  <span className="text-sm text-gray-600 block">
+                    24-48h chrono
+                  </span>
+                  <span className="text-xs text-green-600 font-semibold">
+                    GRATUITE dès 50€
+                  </span>
                 </div>
                 <div className="group p-4 bg-white rounded-xl shadow-sm border border-blue-100 hover:shadow-lg transition-all duration-300 hover:scale-105">
                   <div className="bg-gradient-to-r from-blue-400 to-cyan-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
@@ -400,9 +445,15 @@ export default function Product() {
                       <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
                     </svg>
                   </div>
-                  <span className="font-bold text-gray-800 block mb-2">Garantie Premium</span>
-                  <span className="text-sm text-gray-600 block">Satisfaction 30j</span>
-                  <span className="text-xs text-blue-600 font-semibold">100% sécurisé</span>
+                  <span className="font-bold text-gray-800 block mb-2">
+                    Garantie Premium
+                  </span>
+                  <span className="text-sm text-gray-600 block">
+                    Satisfaction 30j
+                  </span>
+                  <span className="text-xs text-blue-600 font-semibold">
+                    100% sécurisé
+                  </span>
                 </div>
                 <div className="group p-4 bg-white rounded-xl shadow-sm border border-purple-100 hover:shadow-lg transition-all duration-300 hover:scale-105">
                   <div className="bg-gradient-to-r from-purple-400 to-pink-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
@@ -422,9 +473,15 @@ export default function Product() {
                       <path d="M3 3v5h5"></path>
                     </svg>
                   </div>
-                  <span className="font-bold text-gray-800 block mb-2">Retour Facile</span>
-                  <span className="text-sm text-gray-600 block">Échange gratuit</span>
-                  <span className="text-xs text-purple-600 font-semibold">Sans condition</span>
+                  <span className="font-bold text-gray-800 block mb-2">
+                    Retour Facile
+                  </span>
+                  <span className="text-sm text-gray-600 block">
+                    Échange gratuit
+                  </span>
+                  <span className="text-xs text-purple-600 font-semibold">
+                    Sans condition
+                  </span>
                 </div>
               </div>
             </div>

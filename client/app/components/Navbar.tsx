@@ -46,7 +46,7 @@ const Navbar = () => {
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           <svg
-            className={`w-6 h-6 transform transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-90' : ''}`}
+            className={`w-6 h-6 transform transition-transform duration-300 ${isMobileMenuOpen ? "rotate-90" : ""}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -56,7 +56,11 @@ const Navbar = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
-              d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}
+              d={
+                isMobileMenuOpen
+                  ? "M6 18L18 6M6 6l12 12"
+                  : "M4 6h16M4 12h16m-7 6h7"
+              }
             ></path>
           </svg>
         </button>
@@ -125,7 +129,9 @@ const Navbar = () => {
             {isAccountMenuOpen && (
               <div className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-100 py-3 z-20">
                 <div className="px-4 py-2 border-b border-gray-100 mb-2">
-                  <p className="text-sm font-semibold text-gray-800">Mon Compte</p>
+                  <p className="text-sm font-semibold text-gray-800">
+                    Mon Compte
+                  </p>
                   <p className="text-xs text-gray-500">Gérez votre profil</p>
                 </div>
                 <a
@@ -213,8 +219,18 @@ const Navbar = () => {
             >
               <span className="flex items-center justify-between">
                 Produits
-                <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-2 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-5 h-5 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-2 transition-all duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </span>
             </a>
@@ -225,8 +241,18 @@ const Navbar = () => {
             >
               <span className="flex items-center justify-between">
                 Personnaliser
-                <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-2 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-5 h-5 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-2 transition-all duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </span>
             </a>
@@ -237,8 +263,18 @@ const Navbar = () => {
             >
               <span className="flex items-center justify-between">
                 Collections
-                <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-2 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-5 h-5 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-2 transition-all duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </span>
             </a>
@@ -246,7 +282,9 @@ const Navbar = () => {
 
           <div className="space-y-4 border-t border-gray-200 pt-6">
             <div className="bg-gradient-to-r from-gray-50 to-purple-50 rounded-2xl p-4 mb-4">
-              <p className="text-sm font-semibold text-gray-800 mb-1">Mon Compte</p>
+              <p className="text-sm font-semibold text-gray-800 mb-1">
+                Mon Compte
+              </p>
               <p className="text-xs text-gray-500">Accédez à votre profil</p>
             </div>
             <a
