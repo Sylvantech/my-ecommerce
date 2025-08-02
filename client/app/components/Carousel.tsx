@@ -44,7 +44,7 @@ export default function Carousel() {
   if (error) return <div className="text-center text-red-500 p-6">{error}</div>;
 
   return (
-    <div className="flex flex-col items-center mt-32">
+    <div className="flex flex-col items-center mt-32 mb-30">
       <div className="flex gap-4 items-center">
         <button
           className="mr-16 transition-colors bg-gray-200 hover:bg-gray-300 rounded-full h-10 w-10 flex items-center justify-center"
