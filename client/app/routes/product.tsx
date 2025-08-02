@@ -186,7 +186,10 @@ export default function Product() {
           <div className="space-y-2">
             <h3 className="font-semibold text-black">Couleur :</h3>
             <div className="flex flex-row items-center gap-3">
-              <div className="w-10 h-10 border border-white rounded-lg shadow-lg bg-gradient-to-br from-pink-300 to-violet-400"></div>
+              <div
+                className="w-10 h-10 border border-white rounded-lg shadow-lg"
+                style={{ backgroundColor: product.color }}
+              ></div>
               <p className="text-gray-700">{product.color}</p>
             </div>
           </div>
