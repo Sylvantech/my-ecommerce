@@ -120,7 +120,7 @@ export default function Product() {
             </p>
           </section>
           <div className="space-y-4">
-            <h3 className="font-semibold">Caractéristiques :</h3>
+            <h3 className="font-semibold text-black">Caractéristiques :</h3>
             <div className="flex flex-wrap gap-3 text-sm text-gray-700">
               <span className="flex items-center gap-2">
                 🌈 Design coloré unique
@@ -184,13 +184,13 @@ export default function Product() {
             </div>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold">Couleur :</h3>
+            <h3 className="font-semibold text-black">Couleur :</h3>
             <div className="flex flex-row items-center gap-3">
               <div className="w-10 h-10 border border-white rounded-lg shadow-lg bg-gradient-to-br from-pink-300 to-violet-400"></div>
               <p className="text-gray-700">{product.color}</p>
             </div>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 text-black">
             <h3 className="font-semibold">Taille :</h3>
             {product.size ? (
               <p>{product.size}</p>
@@ -209,18 +209,18 @@ export default function Product() {
             )}
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold">Quantité :</h3>
+            <h3 className="font-semibold text-black">Quantité :</h3>
             {product.in_stock ? (
               <div className="flex flex-row items-center gap-4">
                 <button
-                  className="bg-white h-10 w-10 rounded-full border border-gray-200 text-xl font-bold hover:bg-gray-100 transition"
+                  className="bg-white h-10 w-10 rounded-full border border-gray-200 text-xl font-bold hover:bg-gray-100 transition text-black"
                   onClick={handleSoustraction}
                 >
                   -
                 </button>
-                <p className="w-8 text-center">{quantity}</p>
+                <p className="w-8 text-center text-black">{quantity}</p>
                 <button
-                  className="bg-white h-10 w-10 rounded-full border border-gray-200 text-xl font-bold hover:bg-gray-100 transition"
+                  className="bg-white h-10 w-10 rounded-full border border-gray-200 text-xl font-bold hover:bg-gray-100 transition text-black"
                   onClick={handleAddition}
                 >
                   +
