@@ -1,0 +1,163 @@
+paths:
+  /api/productSize/:
+    post:
+      summary: Créer une nouvelle taille de produit
+      tags: [ProductSize]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [size]
+              properties:
+                size:
+                  type: string
+                  minLength: 2
+                  maxLength: 10
+                  description: Taille du produit
+            examples:
+              example1:
+                summary: Exemple de création de taille
+                value:
+                  size: "M"
+      responses:
+        '201':
+          description: Taille de produit créée avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Taille de produit créée avec succès"
+                  productSize:
+                    $ref: '#/components/schemas/ProductSize'
+        '400':
+          description: Format de la taille incompatible
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Format de la taille incompatible"
+        '401':
+          description: Non autorisé - Token manquant ou invalide
+        '403':
+          description: Accès refusé - Droits administrateur requis
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erreur lors de la création de la taille du produit"
+                  details:
+                    type: string
+
+    get:
+      summary: Récupérer toutes les tailles de produits
+      tags: [ProductSize]
+      responses:
+        '200':
+          description: Liste des tailles de produits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  productSizes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductSize'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erreur lors de la récupération des produits"
+                  details:
+                    type: string
+
+  /api/productSize/{productSize}:
+    get:
+      summary: Récupérer une taille de produit par ID
+      tags: [ProductSize]
+      parameters:
+        - in: path
+          name: productSize
+          required: true
+          schema:
+            type: string
+          description: ID de la taille de produit
+      responses:
+        '200':
+          description: Taille de produit trouvée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  productSize:
+                    $ref: '#/components/schemas/ProductSize'
+        '404':
+          description: Taille de produit non trouvée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "La taille de produit n'a pas été trouvée"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erreur lors de la récupération de la taille du produit"
+                  details:
+                    type: string
+
+components:
+  schemas:
+    ProductSize:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique de la taille de produit
+          readOnly: true
+        size:
+          type: string
+          description: Taille du produit
+          minLength: 2
+          maxLength: 20
+        created_at:
+          type: string
+          format: date-time
+          description: Date de création
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: Date de dernière mise à jour
+          readOnly: true
+      required:
+        - size

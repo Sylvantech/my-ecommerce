@@ -161,3 +161,86 @@ paths:
           description: Produit non trouvé
         '500':
           description: Erreur serveur
+
+  /api/product/review/{productId}:
+    get:
+      summary: Récupérer les avis d'un produit spécifique
+      tags: [Product]
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: integer
+          description: ID du produit pour lequel récupérer les avis
+      responses:
+        '200':
+          description: Avis du produit récupérés avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reviews:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+                    description: Liste des avis pour ce produit
+                  count:
+                    type: integer
+                    description: Nombre total d'avis
+                  average:
+                    type: number
+                    format: float
+                    description: Note moyenne (arrondie à 1 décimale)
+                    minimum: 1
+                    maximum: 5
+              examples:
+                successResponse:
+                  summary: Réponse avec avis
+                  value:
+                    reviews:
+                      - id: 1
+                        user_id: "507f1f77bcf86cd799439011"
+                        product_id: "507f1f77bcf86cd799439012"
+                        rating: 4
+                        created_at: "2024-01-15T10:30:00Z"
+                        updated_at: "2024-01-15T10:30:00Z"
+                      - id: 2
+                        user_id: "507f1f77bcf86cd799439013"
+                        product_id: "507f1f77bcf86cd799439012"
+                        rating: 5
+                        created_at: "2024-01-16T14:20:00Z"
+                        updated_at: "2024-01-16T14:20:00Z"
+                    count: 2
+                    average: 4.5
+        '404':
+          description: Produit non trouvé ou aucun avis trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                examples:
+                  productNotFound:
+                    summary: Produit non trouvé
+                    value:
+                      error: "Le produit n'a pas été trouvé"
+                  noReviews:
+                    summary: Aucun avis trouvé
+                    value:
+                      error: "Aucun avis trouvé pour ce produit"
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Erreur lors de la récupération des avis du produit"
+                  details:
+                    type: string
