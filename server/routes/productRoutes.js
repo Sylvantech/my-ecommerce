@@ -8,6 +8,44 @@ const Review = require("../models/Review.model");
 
 const { verifyAdmin, verifyToken } = require("../middleware/authMiddleware");
 
+router.post("/getReview", async (req, res) => {
+  const productId = req.body.id;
+  try {
+    const product = await Product.findOne({ id: productId });
+    if (!product) {
+      return res.status(404).json({
+        error: "Le produit n'a pas été trouvé",
+      });
+    }
+
+    const reviews = await Review.find({ product_id: product._id });
+    if (!reviews || reviews.length === 0) {
+      return res.status(200).json({
+        reviews: [],
+        count: 0,
+        average: 0,
+      });
+    }
+
+    let totalRating = 0;
+    for (let i = 0; i < reviews.length; i++) {
+      totalRating += reviews[i].rating;
+    }
+    const average = totalRating / reviews.length;
+
+    return res.status(200).json({
+      reviews: reviews,
+      count: reviews.length,
+      average: Math.round(average * 10) / 10,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération des avis du produit",
+      details: error.message,
+    });
+  }
+});
+
 router.post("/", verifyAdmin, async (req, res) => {
   const {
     title,
@@ -125,44 +163,6 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la récupération d'un produit",
-      details: error.message,
-    });
-  }
-});
-
-router.get("/review/:productId", async (req, res) => {
-  const productId = req.params.productId;
-
-  try {
-    const product = await Product.findOne({ id: productId });
-    if (!product) {
-      return res.status(404).json({
-        error: "Le produit n'a pas été trouvé",
-      });
-    }
-
-    const reviews = await Review.find({ product_id: product._id });
-
-    if (!reviews || reviews.length === 0) {
-      return res.status(404).json({
-        error: "Aucun avis trouvé pour ce produit",
-      });
-    }
-
-    let totalRating = 0;
-    for (let i = 0; i < reviews.length; i++) {
-      totalRating += reviews[i].rating;
-    }
-    const average = totalRating / reviews.length;
-
-    return res.status(200).json({
-      reviews: reviews,
-      count: reviews.length,
-      average: Math.round(average * 10) / 10,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      error: "Erreur lors de la récupération des avis du produit",
       details: error.message,
     });
   }
