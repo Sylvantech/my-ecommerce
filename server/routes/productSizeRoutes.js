@@ -50,7 +50,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:productSize", async (req, res) => {
   const productSize = req.params.productSize;
-  
+
   try {
     const foundProductSize = await ProductSize.findOne({ id: productSize });
     if (!foundProductSize) {
@@ -58,7 +58,7 @@ router.get("/:productSize", async (req, res) => {
         error: "La taille de produit n'a pas été trouvée",
       });
     }
-    
+
     return res.status(200).json({
       productSize: foundProductSize,
     });
@@ -68,6 +68,6 @@ router.get("/:productSize", async (req, res) => {
       details: error.message,
     });
   }
-})
+});
 
 module.exports = router;

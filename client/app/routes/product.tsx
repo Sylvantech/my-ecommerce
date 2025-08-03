@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
+import StarRating from "~/components/StarRating";
 import { productService } from "~/services/productService";
 
 interface ProductAsset {
@@ -9,6 +10,7 @@ interface ProductAsset {
 }
 
 interface Product {
+  id: number; // Added id property
   title: string;
   description: string;
   price: string;
@@ -135,18 +137,9 @@ export default function Product() {
               {product.title}
             </h1>
             <div className="flex items-center gap-2">
-              <div className="flex text-yellow-400">
-                {[...Array(5)].map((_, i) => (
-                  <svg
-                    key={i}
-                    className="w-5 h-5 fill-current"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 15l-5.878 3.09 1.123-6.545L0 6.91l6.564-.955L10 0l3.436 5.955L20 6.91l-5.245 4.635L15.878 18z" />
-                  </svg>
-                ))}
+              <div className="flex">
+                <StarRating productId={product.id} />
               </div>
-              <span className="text-gray-600 text-sm">(4.8) · 127 avis</span>
             </div>
           </div>
 
