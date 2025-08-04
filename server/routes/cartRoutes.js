@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const Category = require("../models/Category.model");
 const { verifyAdmin } = require("../middleware/authMiddleware");
 const Cart = require("../models/Cart.model");
 
@@ -86,9 +85,12 @@ router.put("/", verifyAdmin, async (req, res) => {
   }
 
   const updateData = {};
-  if (user_id !== undefined) updateData.user_id = user_id;
-  if (anonymous_user_id !== undefined)
+  if (user_id !== undefined) {
+    updateData.user_id = user_id;
+  }
+  if (anonymous_user_id !== undefined) {
     updateData.anonymous_user_id = anonymous_user_id;
+  }
 
   try {
     const updatedCart = await Cart.findOneAndUpdate({ _id: id }, updateData, {
