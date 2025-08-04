@@ -17,6 +17,7 @@ const productSizeRoutes = require("./routes/productSizeRoutes");
 const authRoutes = require("./routes/authRoutes");
 const swaggerRoute = require("./routes/swaggerRoute");
 const reviewRoute = require("./routes/reviewRoutes");
+const cartRoute = require("./routes/cartRoutes");
 
 app.use("/docs", swaggerRoute);
 app.use("/api/user", userRoutes);
@@ -26,6 +27,7 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/productSize", productSizeRoutes);
 app.use("/api/review", reviewRoute);
+app.use("/api/cart", cartRoute);
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
