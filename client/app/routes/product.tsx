@@ -24,13 +24,6 @@ interface Product {
   assets: ProductAsset[];
 }
 
-export function meta() {
-  return [
-    { title: "Login - E-commerce" },
-    { name: "product", content: "Product" },
-  ];
-}
-
 export default function Product() {
   const { slug } = useParams();
   const [quantity, setQuantity] = useState<number>(1);
