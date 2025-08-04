@@ -12,6 +12,7 @@ export default [
   layout("./layout/MainLayout.tsx", [
     index("routes/index/_index.tsx"),
     route("product/:slug", "routes/product.tsx"),
+    route("cart", "routes/index/cart.tsx"),
     //Ajouter les routes qui utilisent le layout ici
   ]),
 

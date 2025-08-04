@@ -184,7 +184,7 @@ const Navbar = () => {
 
           <a
             className="relative bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 hover:from-purple-700 hover:via-pink-600 hover:to-purple-700 text-white px-6 py-3 rounded-2xl flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group"
-            href="#panier"
+            href="/cart"
           >
             <div className="relative">
               <svg
