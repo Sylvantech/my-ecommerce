@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Star, StarHalf, Star as StarEmpty } from "lucide-react";
 import { fetchRating } from "../services/ratingService";
 import type { StarRatingProps } from "../types/star";
+import type { Review } from "../types/review";
 
 interface RatingData {
-  reviews: Array<any>;
+  reviews: Review[];
   count: number;
   average: number;
 }
