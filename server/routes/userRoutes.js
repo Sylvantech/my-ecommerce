@@ -57,6 +57,29 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.post("/getId",verifyToken, async (req, res) => {
+  try {
+    const userId = req.user && req.user.id;
+    if (!userId) {
+      return res.status(400).json({ error: "Utilisateur non authentifié" });
+    }
+
+    const user = await User.findOne({ id: userId });
+    if (!user) {
+      return res.status(404).json({ error: "Utilisateur non trouvé" });
+    }
+
+    res.status(200).json({
+      _id: user._id,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Erreur lors de la récupération de l'utilisateur",
+      details: error.message,
+    });
+  }
+});
+
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
