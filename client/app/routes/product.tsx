@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import StarRating from "~/components/StarRating";
 import { productService } from "~/services/productService";
+import { cartService } from "~/services/cartService";
 
 interface ProductAsset {
   _id: string;
@@ -29,6 +30,8 @@ export default function Product() {
   const [quantity, setQuantity] = useState<number>(1);
   const [product, setProduct] = useState<Product | null>(null);
   const [actualImage, setActualImage] = useState<number>(0);
+  const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
+  const [addToCartMessage, setAddToCartMessage] = useState<string>("");
 
   useEffect(() => {
     async function call() {
@@ -57,6 +60,36 @@ export default function Product() {
   const handleAddition = () => {
     if (quantity < product!.stock) {
       setQuantity(quantity + 1);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (!product) return;
+
+    setIsAddingToCart(true);
+    setAddToCartMessage("");
+
+    try {
+      const result = await cartService.addToCart(String(product.id), quantity);
+
+      if (result.success) {
+        setAddToCartMessage(
+          `✅ ${quantity} article${quantity > 1 ? "s" : ""} ajouté${quantity > 1 ? "s" : ""} au panier !`
+        );
+        setQuantity(1);
+      } else {
+        setAddToCartMessage(
+          `❌ Erreur: ${result.error || "Impossible d'ajouter au panier"}`
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'ajout au panier:", error);
+      setAddToCartMessage("❌ Une erreur s'est produite");
+    } finally {
+      setIsAddingToCart(false);
+      setTimeout(() => {
+        setAddToCartMessage("");
+      }, 3000);
     }
   };
 
@@ -354,29 +387,60 @@ export default function Product() {
           </div>
 
           <div className="space-y-4">
-            <button className="group relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 hover:from-purple-700 hover:via-pink-600 hover:to-purple-700 text-white px-8 py-4 rounded-2xl w-full shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 text-lg font-bold">
+            {addToCartMessage && (
+              <div
+                className={`p-4 rounded-2xl text-center font-medium ${
+                  addToCartMessage.includes("✅")
+                    ? "bg-green-50 text-green-700 border border-green-200"
+                    : "bg-red-50 text-red-700 border border-red-200"
+                }`}
+              >
+                {addToCartMessage}
+              </div>
+            )}
+
+            <button
+              onClick={handleAddToCart}
+              disabled={isAddingToCart || !product.in_stock}
+              className={`group relative overflow-hidden ${
+                isAddingToCart || !product.in_stock
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 hover:from-purple-700 hover:via-pink-600 hover:to-purple-700"
+              } text-white px-8 py-4 rounded-2xl w-full shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-500 text-lg font-bold`}
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="relative flex justify-center items-center gap-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300"
-                >
-                  <circle cx="8" cy="21" r="1"></circle>
-                  <circle cx="19" cy="21" r="1"></circle>
-                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
-                </svg>
-                Ajouter au Panier
-                <span className="ml-2 text-sm opacity-75">
-                  ({quantity} article{quantity > 1 ? "s" : ""})
-                </span>
+                {isAddingToCart ? (
+                  <>
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    Ajout en cours...
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-6 h-6 group-hover:rotate-12 transition-transform duration-300"
+                    >
+                      <circle cx="8" cy="21" r="1"></circle>
+                      <circle cx="19" cy="21" r="1"></circle>
+                      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                    </svg>
+                    {product.in_stock ? "Ajouter au Panier" : "Produit épuisé"}
+                    {product.in_stock && (
+                      <span className="ml-2 text-sm opacity-75">
+                        ({quantity} article{quantity > 1 ? "s" : ""})
+                      </span>
+                    )}
+                  </>
+                )}
               </div>
             </button>
 

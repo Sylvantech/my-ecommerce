@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
 
   const [cart, product] = await Promise.all([
     Cart.findById(cart_id),
-    Product.findById(product_id),
+    Product.findOne({ id: product_id }),
   ]);
 
   if (!cart) {
@@ -35,7 +35,10 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    let productCart = await ProductCart.findOne({ cart_id, product_id });
+    let productCart = await ProductCart.findOne({
+      cart_id,
+      product_id: product._id,
+    });
     if (productCart) {
       productCart.quantity += quantity;
       await productCart.save();
@@ -44,7 +47,11 @@ router.post("/", async (req, res) => {
         cart_product: productCart,
       });
     } else {
-      productCart = new ProductCart({ cart_id, product_id, quantity });
+      productCart = new ProductCart({
+        cart_id,
+        product_id: product._id,
+        quantity,
+      });
       await productCart.save();
       return res.status(201).json({
         message: "Produit ajouté au panier avec succès",
@@ -67,7 +74,9 @@ router.post("/getByCartId", async (req, res) => {
     });
   }
   try {
-    const productCarts = await ProductCart.find({ cart_id: cart_id }).populate("product_id");
+    const productCarts = await ProductCart.find({ cart_id: cart_id }).populate(
+      "product_id"
+    );
     if (productCarts.length === 0) {
       return res
         .status(404)
