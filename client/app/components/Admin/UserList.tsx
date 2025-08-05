@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CookieHelper } from "../../utils/cookieHelper";
-import type { User } from "../../types/userlist"
+import type { User } from "../../types/userlist";
 
 export default function UsersTable() {
   const [users, setUsers] = useState<User[]>([]);
@@ -9,8 +9,6 @@ export default function UsersTable() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-    
-
       try {
         const response = await fetch("http://localhost:3000/api/user", {
           method: "GET",
@@ -39,24 +37,32 @@ export default function UsersTable() {
 
   return (
     <tbody>
-        {users.map((user) => (
+      {users.map(user => (
         <tr key={user.id} className="text-center text-gray-600">
-            <td className="p-2 border border-gray-300">{user.id}</td>
-            <td className="p-2 border border-gray-300">{user.username}</td>
-            <td className="p-2 border border-gray-300">{user.email}</td>
-            <td className="p-2 border border-gray-300">
+          <td className="p-2 border border-gray-300">{user.id}</td>
+          <td className="p-2 border border-gray-300">{user.username}</td>
+          <td className="p-2 border border-gray-300">{user.email}</td>
+          <td className="p-2 border border-gray-300">
             {user.is_active ? "Actif" : "Inactif"}
-            </td>
-            <td className="p-2 border border-gray-300">{user.role}</td>
-            <td className="p-2 border border-gray-300">{new Date(user.created_at).toLocaleDateString()}</td>
-            <td className="p-2 border border-gray-300">{new Date(user.updated_at).toLocaleDateString()}</td>
-            <td className="p-2 border border-gray-300">{user.reduction}%</td>
-            <td className="p-2 border border-gray-300">
-            <button className="px-2 py-1 bg-blue-500 text-white rounded mr-1">Éditer</button>
-            <button className="px-2 py-1 bg-red-500 text-white rounded">Supprimer</button>
-            </td>
+          </td>
+          <td className="p-2 border border-gray-300">{user.role}</td>
+          <td className="p-2 border border-gray-300">
+            {new Date(user.created_at).toLocaleDateString()}
+          </td>
+          <td className="p-2 border border-gray-300">
+            {new Date(user.updated_at).toLocaleDateString()}
+          </td>
+          <td className="p-2 border border-gray-300">{user.reduction}%</td>
+          <td className="p-2 border border-gray-300">
+            <button className="px-2 py-1 bg-blue-500 text-white rounded mr-1">
+              Éditer
+            </button>
+            <button className="px-2 py-1 bg-red-500 text-white rounded">
+              Supprimer
+            </button>
+          </td>
         </tr>
-        ))}
+      ))}
     </tbody>
   );
 }
