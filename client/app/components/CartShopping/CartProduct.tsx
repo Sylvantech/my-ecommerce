@@ -22,8 +22,7 @@ export default function CartProduct({
   };
 
   return (
-    <div className="bg-black h-full flex justify-center">
-      <div className="bg-white w-85 h-90 sm:w-200 sm:h-full sm:p-6 rounded-3xl flex flex-col justify-evenly pt-2 hover:border-2 hover:border-pink-200">
+      <div className="bg-white w-85 h-full sm:w-200 sm:p-6 rounded-3xl flex flex-col justify-evenly pt-2 hover:border-2 hover:border-pink-200">
         <div className="flex flex-col justify-center sm:flex-row sm:justify-around">
           <div className="flex flex-col items-center sm:flex-row gap-3 mb-5">
             <img
@@ -92,9 +91,9 @@ export default function CartProduct({
           </div>
         </div>
 
-        <div className="flex flex-col mt-2">
+        <div className="flex flex-col mt-2 p-4 sm:p-0">
           <hr className="text-gray-200" />
-          <div className="flex justify-around items-center p-2">
+          <div className="flex justify-between items-center p-2">
             <p className="text-gray-600 text-sm">
               Sous-total pour cet article:
             </p>
@@ -102,6 +101,5 @@ export default function CartProduct({
           </div>
         </div>
       </div>
-    </div>
   );
 }
