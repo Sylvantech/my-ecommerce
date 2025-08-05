@@ -145,4 +145,27 @@ export const cartService = {
       return { success: false, error: errorMessage };
     }
   },
+  getCart: async () => {
+    const cartId = CookieHelper.getToken("CartId");
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/productCart/getByCartId",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cart_id: cartId }),
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erreur HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      return { success: true, data: data.cart_products[0] };
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      console.error("Erreur lors de la récupération du panier :", errorMessage);
+      return { success: false, error: errorMessage };
+    }
+  },
 };
