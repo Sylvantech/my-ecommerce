@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { Product } from "../types/product";
-import { productService } from "../services/productService";
+import type { Product } from "~/types/product";
+import { productService } from "~/services/productService";
 
 const useProductListHook = () => {
   const [products, setProducts] = useState<Product[]>([]);
