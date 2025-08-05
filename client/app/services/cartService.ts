@@ -15,14 +15,20 @@ export const cartService = {
         throw new Error("Vous devez être connecté pour créer un panier");
       }
 
-      const userResponse = await apiClient("http://localhost:3000/api/user/me", {
-        method: "POST",
-        body: JSON.stringify({}),
-      });
-      
+      const userResponse = await apiClient(
+        "http://localhost:3000/api/user/getId",
+        {
+          method: "POST",
+          body: JSON.stringify({}),
+        }
+      );
+
       if (!userResponse.ok) {
         const errorData = await userResponse.json();
-        throw new Error(errorData.error || `Erreur lors de la récupération de l'utilisateur: ${userResponse.status}`);
+        throw new Error(
+          errorData.error ||
+            `Erreur lors de la récupération de l'utilisateur: ${userResponse.status}`
+        );
       }
 
       const userData = await userResponse.json();
@@ -30,13 +36,32 @@ export const cartService = {
       const cartResponse = await apiClient("http://localhost:3000/api/cart", {
         method: "POST",
         body: JSON.stringify({
-            "user_id": userData.user._id
+          user_id: userData._id,
         }),
       });
 
       if (!cartResponse.ok) {
         const errorData = await cartResponse.json();
-        throw new Error(errorData.error || `Erreur HTTP ${cartResponse.status}`);
+
+        if (cartResponse.status === 400 && errorData.cart) {
+          const cart: Cart = {
+            id: errorData.cart.id,
+            _id: errorData.cart._id,
+            user_id: errorData.cart.user_id,
+            anonymous_user_id: errorData.cart.anonymous_user_id,
+            created_at: errorData.cart.created_at
+              ? new Date(errorData.cart.created_at)
+              : undefined,
+          };
+
+          CookieHelper.setToken(errorData.cart._id, "CartId");
+
+          return { success: true, data: cart };
+        }
+
+        throw new Error(
+          errorData.error || `Erreur HTTP ${cartResponse.status}`
+        );
       }
 
       const cartData = await cartResponse.json();
@@ -46,8 +71,12 @@ export const cartService = {
         _id: cartData.cart._id,
         user_id: cartData.cart.user_id,
         anonymous_user_id: cartData.cart.anonymous_user_id,
-        created_at: cartData.cart.created_at ? new Date(cartData.cart.created_at) : undefined,
+        created_at: cartData.cart.created_at
+          ? new Date(cartData.cart.created_at)
+          : undefined,
       };
+
+      CookieHelper.setToken(cartData.cart._id, "CartId");
 
       return { success: true, data: cart };
     } catch (err) {
@@ -57,26 +86,38 @@ export const cartService = {
     }
   },
 
-  async addToCart(productId: string, quantity: number = 1): Promise<CartProductResponse> {
+  async addToCart(
+    productId: string,
+    quantity: number = 1
+  ): Promise<CartProductResponse> {
     try {
       const accessToken = CookieHelper.getToken("AccesToken");
       if (!accessToken) {
-        throw new Error("Vous devez être connecté pour ajouter des produits au panier");
+        throw new Error(
+          "Vous devez être connecté pour ajouter des produits au panier"
+        );
       }
 
       const cartResult = await this.createCart();
       if (!cartResult.success || !cartResult.data) {
-        throw new Error(cartResult.error || "Impossible de récupérer le panier");
+        throw new Error(
+          cartResult.error || "Impossible de récupérer le panier"
+        );
       }
 
-      const response = await apiClient("http://localhost:3000/api/productCart", {
-        method: "POST",
-        body: JSON.stringify({
-          cart_id: cartResult.data._id,
-          product_id: productId,
-          quantity: quantity,
-        }),
-      });
+      const cartId = CookieHelper.getToken("CartId");
+
+      const response = await apiClient(
+        "http://localhost:3000/api/productCart",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            cart_id: cartId,
+            product_id: productId,
+            quantity: quantity,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -89,8 +130,12 @@ export const cartService = {
         cart_id: data.cart_product.cart_id,
         product_id: data.cart_product.product_id,
         quantity: data.cart_product.quantity,
-        created_at: data.cart_product.created_at ? new Date(data.cart_product.created_at) : undefined,
-        updated_at: data.cart_product.updated_at ? new Date(data.cart_product.updated_at) : undefined,
+        created_at: data.cart_product.created_at
+          ? new Date(data.cart_product.created_at)
+          : undefined,
+        updated_at: data.cart_product.updated_at
+          ? new Date(data.cart_product.updated_at)
+          : undefined,
       };
 
       return { success: true, data: cartProduct };
@@ -100,4 +145,4 @@ export const cartService = {
       return { success: false, error: errorMessage };
     }
   },
-}
+};

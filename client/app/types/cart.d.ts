@@ -18,22 +18,6 @@ export interface CartProduct {
   updated_at?: Date;
 }
 
-export interface CreateCartData {
-  user_id?: string | null;
-  anonymous_user_id?: string | null;
-}
-
-export interface AddToCartData {
-  cart_id: string;
-  product_id: string;
-  quantity?: number;
-}
-
-export interface UpdateCartProductData {
-  id: string;
-  quantity: number;
-}
-
 export interface CartResponse {
   success: boolean;
   data?: Cart;
@@ -43,11 +27,5 @@ export interface CartResponse {
 export interface CartProductResponse {
   success: boolean;
   data?: CartProduct;
-  error?: string;
-}
-
-export interface CartProductsResponse {
-  success: boolean;
-  data?: CartProduct[];
   error?: string;
 }
