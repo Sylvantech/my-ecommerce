@@ -2,9 +2,14 @@ const express = require("express");
 const router = express.Router();
 const ProductCart = require("../models/ProductCart.model");
 const Cart = require("../models/Cart.model");
+const Product = require("../models/Product.model");
 
 router.post("/", async (req, res) => {
   const { cart_id, product_id, quantity = 1 } = req.body;
+
+  if (quantity < 1) {
+    quantity = 1;
+  }
 
   if (!cart_id || !product_id) {
     return res.status(400).json({
@@ -12,11 +17,20 @@ router.post("/", async (req, res) => {
     });
   }
 
-  const cart = await Cart.findById(cart_id);
+  const [cart, product] = await Promise.all([
+    Cart.findById(cart_id),
+    Product.findById(product_id),
+  ]);
 
   if (!cart) {
     return res.status(400).json({
       error: "l'id du panier est incorrect !",
+    });
+  }
+
+  if (!product) {
+    return res.status(400).json({
+      error: "l'id du produit est incorrect !",
     });
   }
 
@@ -70,11 +84,17 @@ router.post("/getByCartId", async (req, res) => {
 
 router.put("/", async (req, res) => {
   const { id, quantity } = req.body;
+
+  if (quantity < 1) {
+    quantity = 1;
+  }
+
   if (!id || quantity === undefined) {
     return res.status(400).json({
       error: "id et quantity sont requis",
     });
   }
+
   try {
     const productCart = await ProductCart.findByIdAndUpdate(
       id,
