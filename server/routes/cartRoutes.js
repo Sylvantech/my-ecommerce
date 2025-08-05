@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { verifyAdmin } = require("../middleware/authMiddleware");
 const Cart = require("../models/Cart.model");
+const User = require("../models/User.model");
+const mongoose = require("mongoose");
 
 router.post("/", async (req, res) => {
   const { user_id = null, anonymous_user_id = null } = req.body;
@@ -13,20 +15,58 @@ router.post("/", async (req, res) => {
     });
   }
 
+  if (user_id) {
+    if (!mongoose.Types.ObjectId.isValid(user_id)) {
+      return res.status(400).json({
+        error: "Format d'ID utilisateur invalide",
+      });
+    }
+
+    const user = await User.findById(user_id);
+    if (!user) {
+      return res.status(404).json({
+        error: "Utilisateur non trouvé",
+      });
+    }
+  }
+
+  const searchConditions = [];
+
+  if (user_id) {
+    searchConditions.push({ user_id: user_id });
+  }
+
+  if (anonymous_user_id) {
+    searchConditions.push({ anonymous_user_id: anonymous_user_id });
+  }
+
+  const cart = await Cart.findOne({
+    $or: searchConditions,
+  });
+
+  if (cart) {
+    return res.status(400).json({
+      error:
+        "Un panier existe déjà pour cet utilisateur ou cet utilisateur anonyme",
+      cart: cart,
+    });
+  }
+
   try {
     const newCart = new Cart({
       user_id,
       anonymous_user_id,
     });
-    const cart = await newCart.save();
+    const savedCart = await newCart.save();
 
     res.status(201).json({
       message: "Panier créé avec succès",
       cart: {
-        id: cart.id,
-        user_id: cart.user_id,
-        anonymous_user_id: cart.anonymous_user_id,
-        created_at: cart.created_at,
+        _id: savedCart._id,
+        id: savedCart.id,
+        user_id: savedCart.user_id,
+        anonymous_user_id: savedCart.anonymous_user_id,
+        created_at: savedCart.created_at,
       },
     });
   } catch (error) {

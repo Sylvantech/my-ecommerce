@@ -57,7 +57,19 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/getId",verifyToken, async (req, res) => {
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find({}, "-password");
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({
+      error: "Erreur lors de la récupération des utilisateurs",
+      details: error.message,
+    });
+  }
+});
+
+router.post("/getId", verifyToken, async (req, res) => {
   try {
     const userId = req.user && req.user.id;
     if (!userId) {
