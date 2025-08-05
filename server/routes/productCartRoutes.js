@@ -35,9 +35,9 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    let productCart = await ProductCart.findOne({ 
-      cart_id, 
-      product_id: product._id
+    let productCart = await ProductCart.findOne({
+      cart_id,
+      product_id: product._id,
     });
     if (productCart) {
       productCart.quantity += quantity;
@@ -47,10 +47,10 @@ router.post("/", async (req, res) => {
         cart_product: productCart,
       });
     } else {
-      productCart = new ProductCart({ 
-        cart_id, 
+      productCart = new ProductCart({
+        cart_id,
         product_id: product._id,
-        quantity 
+        quantity,
       });
       await productCart.save();
       return res.status(201).json({
