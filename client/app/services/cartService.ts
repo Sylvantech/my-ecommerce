@@ -161,7 +161,7 @@ export const cartService = {
         throw new Error(errorData.error || `Erreur HTTP ${response.status}`);
       }
       const data = await response.json();
-      return { success: true, data: data.cart_products[0] };
+      return { success: true, data: data.cart_products };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       console.error("Erreur lors de la récupération du panier :", errorMessage);
