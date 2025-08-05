@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 import useAdminHook from "~/hooks/useAdminHook";
-import Navbar from "../components/AdminNavbar"
+import Navbar from "../components/AdminNavbar";
 
 export function meta() {
   return [

@@ -26,173 +26,173 @@ const Navbar = () => {
 
   return (
     <>
-        {/* Mobile toggle button */}
-        <button
+      {/* Mobile toggle button */}
+      <button
         className="sm:hidden fixed top-4 left-4 z-50 p-2 text-white bg-gray-800 rounded"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
+      >
         ☰
-        </button>
+      </button>
 
-        {/* Sidebar */}
-        <aside
+      {/* Sidebar */}
+      <aside
         className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
-            isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } sm:translate-x-0 bg-gray-50 dark:bg-gray-800`}
         aria-label="Sidebar"
-        >
+      >
         <div className="h-full px-3 py-4 overflow-y-auto">
-            {/* Optional close button for mobile */}
-            <div className="flex justify-end sm:hidden">
+          {/* Optional close button for mobile */}
+          <div className="flex justify-end sm:hidden">
             <button
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-gray-700 dark:text-gray-200 text-xl"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-gray-700 dark:text-gray-200 text-xl"
             >
-                ✕
+              ✕
             </button>
-            </div>
+          </div>
 
-            <ul className="space-y-2 font-medium">
+          <ul className="space-y-2 font-medium">
             {/* Utilisateurs */}
             <li>
-                <button
+              <button
                 type="button"
                 className="flex items-center space-x-4 w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                >
+              >
                 <span className="flex-1 ms-3 text-left whitespace-nowrap">
-                    👥 Utilisateurs
+                  👥 Utilisateurs
                 </span>
-                </button>
-                <ul id="users-menu" className="py-2 space-y-2">
+              </button>
+              <ul id="users-menu" className="py-2 space-y-2">
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Liste des utilisateurs
-                    </a>
+                  </a>
                 </li>
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Jetons d’authentification
-                    </a>
+                  </a>
                 </li>
-                </ul>
+              </ul>
             </li>
 
             {/* Produits */}
             <li>
-                <button
+              <button
                 type="button"
                 className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                >
+              >
                 <span className="flex-1 ms-3 text-left whitespace-nowrap">
-                    🛍️ Catalogue
+                  🛍️ Catalogue
                 </span>
-                </button>
-                <ul id="products-menu" className="py-2 space-y-2">
+              </button>
+              <ul id="products-menu" className="py-2 space-y-2">
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Produits
-                    </a>
+                  </a>
                 </li>
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Catégories
-                    </a>
+                  </a>
                 </li>
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Tailles
-                    </a>
+                  </a>
                 </li>
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Assets
-                    </a>
+                  </a>
                 </li>
-                </ul>
+              </ul>
             </li>
 
             {/* Commandes */}
             <li>
-                <button
+              <button
                 type="button"
                 className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                >
+              >
                 <span className="flex-1 ms-3 text-left whitespace-nowrap">
-                    🛒 Commandes
+                  🛒 Commandes
                 </span>
-                </button>
-                <ul id="orders-menu" className="py-2 space-y-2">
+              </button>
+              <ul id="orders-menu" className="py-2 space-y-2">
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Paniers
-                    </a>
+                  </a>
                 </li>
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Produits du panier
-                    </a>
+                  </a>
                 </li>
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Compteur
-                    </a>
+                  </a>
                 </li>
-                </ul>
+              </ul>
             </li>
 
             {/* Avis clients */}
             <li>
-                <button
+              <button
                 type="button"
                 className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                >
+              >
                 <span className="flex-1 ms-3 text-left whitespace-nowrap">
-                    ⭐ Avis clients
+                  ⭐ Avis clients
                 </span>
-                </button>
-                <ul id="review-menu" className="py-2 space-y-2">
+              </button>
+              <ul id="review-menu" className="py-2 space-y-2">
                 <li>
-                    <a
+                  <a
                     href="#"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
+                  >
                     Reviews
-                    </a>
+                  </a>
                 </li>
-                </ul>
+              </ul>
             </li>
-            </ul>
+          </ul>
         </div>
-        </aside>
+      </aside>
     </>
-    );
+  );
 };
 
 export default Navbar;
