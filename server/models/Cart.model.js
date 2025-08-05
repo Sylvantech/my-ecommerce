@@ -11,7 +11,6 @@ const cartSchema = new mongoose.Schema(
     anonymous_user_id: {
       type: Number,
       default: null,
-      unique: true,
       sparse: true,
     },
   },

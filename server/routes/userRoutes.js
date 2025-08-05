@@ -57,7 +57,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/getId",verifyToken, async (req, res) => {
+router.post("/getId", verifyToken, async (req, res) => {
   try {
     const userId = req.user && req.user.id;
     if (!userId) {
