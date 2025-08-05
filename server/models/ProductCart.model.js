@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Counter = require("./Counter.model");
 
-const cartProductSchema = new mongoose.Schema(
+const productCartSchema = new mongoose.Schema(
   {
     id: {
       type: Number,
@@ -22,10 +22,10 @@ const cartProductSchema = new mongoose.Schema(
   }
 );
 
-cartProductSchema.pre("save", async function (next) {
+productCartSchema.pre("save", async function (next) {
   if (this.isNew) {
     const counter = await Counter.findByIdAndUpdate(
-      { _id: "cartProductId" },
+      { _id: "productCartId" },
       { $inc: { sequence_value: 1 } },
       { new: true, upsert: true }
     );
@@ -34,5 +34,5 @@ cartProductSchema.pre("save", async function (next) {
   next();
 });
 
-const CartProduct = mongoose.model("CartProduct", cartProductSchema);
-module.exports = CartProduct;
+const ProductCart = mongoose.model("ProductCart", productCartSchema);
+module.exports = ProductCart;
