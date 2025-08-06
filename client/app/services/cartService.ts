@@ -145,7 +145,7 @@ export const cartService = {
       return { success: false, error: errorMessage };
     }
   },
-  getCart: async () => {
+  getCartProduct: async () => {
     const cartId = CookieHelper.getToken("CartId");
     try {
       const response = await fetch(
