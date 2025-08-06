@@ -70,13 +70,15 @@ router.post("/getByCartId", async (req, res) => {
   const { cart_id } = req.body;
   if (!cart_id) {
     return res.status(400).json({
-      error: "user_cart_id requis",
+      error: "cart_id requis",
     });
   }
   try {
-    const productCarts = await ProductCart.find({ cart_id: cart_id }).populate(
-      "product_id"
-    );
+    const productCarts = await ProductCart.find({ cart_id: cart_id })
+      .populate({
+      path: "product_id",
+      populate: { path: "assets" }
+      });
     if (productCarts.length === 0) {
       return res
         .status(404)
