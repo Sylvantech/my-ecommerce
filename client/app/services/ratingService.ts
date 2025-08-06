@@ -1,5 +1,7 @@
+import type { Review } from "../types/review";
+
 interface RatingData {
-  reviews: Array<any>;
+  reviews: Review[];
   count: number;
   average: number;
 }
