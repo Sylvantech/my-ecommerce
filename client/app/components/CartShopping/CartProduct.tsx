@@ -7,6 +7,7 @@ interface Product {
   size: string;
   price: { $numberDecimal: string };
   stock: number;
+  assets: [{ url: string }];
 }
 
 interface CartProduct {
@@ -16,7 +17,7 @@ interface CartProduct {
 }
 
 export default function CartProduct() {
-  const [quantity, setQuantity] = useState(1);
+  const [quantities, setQuantities] = useState<number[]>([]);
 
   const [cartProduct, setCartProduct] = useState<CartProduct[] | null>(null);
 
@@ -25,30 +26,34 @@ export default function CartProduct() {
       const res = await cartService.getCartProduct();
       if (res.success) {
         setCartProduct(res.data);
+        setQuantities(res.data.map((item: CartProduct) => item.quantity));
       }
     }
     getCartProduct();
   }, []);
 
-  console.log(cartProduct);
-
-  const handleAddition = () => {
-    if (quantity !== stock) {
-      setQuantity(quantity + 1);
+  const handleAddition = (index: number, stock: number) => {
+    const copyQuantity = [...quantities];
+    if (copyQuantity[index] < stock) {
+      copyQuantity[index] = copyQuantity[index] + 1;
+      setQuantities(copyQuantity);
     }
   };
 
-  const handleSoustraction = () => {
-    if (quantity !== 0) {
-      setQuantity(quantity - 1);
+  const handleSoustraction = (index: number) => {
+    const copyQuantity = [...quantities];
+    if (copyQuantity[index] > 1) {
+      copyQuantity[index] = copyQuantity[index] - 1;
+      setQuantities(copyQuantity);
     }
   };
 
   return (
     <div>
       {Array.isArray(cartProduct) &&
-        cartProduct.map((value) => {
+        cartProduct.map((value, index) => {
           const product = value.product_id;
+
           return (
             <div
               key={value.id}
@@ -57,7 +62,7 @@ export default function CartProduct() {
               <div className="flex flex-col justify-center sm:flex-row sm:justify-around">
                 <div className="flex flex-col items-center sm:flex-row gap-3 mb-5">
                   <img
-                    src=""
+                    src={product.assets[0].url}
                     alt="Image du produit ajouté au panier"
                     width={100}
                     height={100}
@@ -76,7 +81,9 @@ export default function CartProduct() {
                         </span>
                       </p>
                       <p className="flex justify-center items-center">
-                        <span className="text-gray-600 text-sm p-2">Taille: </span>{" "}
+                        <span className="text-gray-600 text-sm p-2">
+                          Taille:{" "}
+                        </span>{" "}
                         <span className="ml-2 px-2 py-1 border border-gray-200 rounded-full text-xs">
                           {product.size}
                         </span>
@@ -91,21 +98,18 @@ export default function CartProduct() {
                 <div className="flex items-center gap-5 ml-5">
                   <button
                     className="bg-white rounded-full border border-gray-300 w-10 h-10 hover:border-pink-300 hover:bg-pink-50"
-                    onClick={handleSoustraction}
+                    onClick={() => handleSoustraction(index)}
                   >
                     -
                   </button>
-                  <p className="text-xl">{value.quantity}</p>
+                  <p className="text-xl">{quantities[index]}</p>
                   <button
                     className="bg-white rounded-full border border-gray-300 w-10 h-10 hover:border-pink-300 hover:bg-pink-50"
-                    onClick={handleAddition}
+                    onClick={() => handleAddition(index, product.stock)}
                   >
                     +
                   </button>
-                  <button
-                    className="hover:text-red-500 hover:bg-pink-50 p-3  hover:flex hover:justify-center hover:items-center hover:rounded-full"
-                    onClick={() => setQuantity(1)}
-                  >
+                  <button className="hover:text-red-500 hover:bg-pink-50 p-3  hover:flex hover:justify-center hover:items-center hover:rounded-full">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -136,7 +140,7 @@ export default function CartProduct() {
                   </p>
                   <p className="text-purple-700 text-xl sm:text-3xl">
                     {Number(product.price?.$numberDecimal) *
-                      Number(value.quantity)}{" "}
+                      Number(quantities[index])}{" "}
                     €
                   </p>
                 </div>
