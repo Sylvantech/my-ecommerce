@@ -168,4 +168,53 @@ export const cartService = {
       return { success: false, error: errorMessage };
     }
   },
+
+  updateCartProductQuantity: async (
+    cartProductId: string,
+    quantity: number
+  ) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/productCart", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: cartProductId, quantity }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erreur HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      return { success: true, data: data.cart_product };
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      console.error(
+        "Erreur lors de la mise à jour de la quantité :",
+        errorMessage
+      );
+      return { success: false, error: errorMessage };
+    }
+  },
+
+  deleteCartProduct: async (cartProductId: string) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/productCart", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: cartProductId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Erreur HTTP ${response.status}`);
+      }
+
+      return { success: true };
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      console.error("Erreur lors de la suppression du produit :", errorMessage);
+      return { success: false, error: errorMessage };
+    }
+  },
 };
