@@ -1,4 +1,4 @@
-import type { Product, ProductSize } from "../types/product";
+import type { Product } from "../types/product";
 
 export const productService = {
   async getAll(): Promise<{
@@ -20,19 +20,27 @@ export const productService = {
         id: item.id,
         title: item.title,
         description: item.description,
-        category_id: item.category_id
-          ? String(item.category_id._id)
+        category: item.category_id
+          ? {
+            _id: String(item.category_id._id),
+            id: item.category_id.id,
+            name: item.category_id.name,
+            description: item.category_id.description
+          }
           : undefined,
+
         price: item.price,
         composition: item.composition,
         weight_in_gr: item.weight_in_gr,
         is_promo: item.is_promo,
         is_new: item.is_new,
-        src:item.src,
+        src: item.src,
         created_at: item.created_at ? new Date(item.created_at) : undefined,
         updated_at: item.updated_at ? new Date(item.updated_at) : undefined,
       }));
 
+
+      console.log("Les données formaté",formatted);
       return { success: true, data: formatted };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);

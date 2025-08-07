@@ -5,13 +5,14 @@ type ProductCardProps = {
   category?: Category;
 };
 
-const ProductsCard = ({ product, category }: ProductCardProps) => {
-  const { title, src, price, description, is_promo, id } = product;
+const ProductsCard = ({ product }: ProductCardProps) => {
+
+  console.log("Le produit",product);
+  const { title, src, price, description, is_promo, id,category } = product;
 
   const imageUrl = src;
-  console.log("l'image",src);
 
-  const categoryName = category?.name ?? "Sans catégorie";
+  const categoryName = category.name ?? "Sans catégorie";
 
   const formatPrice = (price: number | undefined): string => {
     if (!price || typeof price !== 'number' || isNaN(price)) {
