@@ -17,7 +17,7 @@ const productSizeSchema = new mongoose.Schema(
       type: String,
       maxlength: 10,
       trim: true,
-      default: null, // optional
+      default: null,
     },
   },
   {
