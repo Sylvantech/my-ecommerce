@@ -4,18 +4,25 @@ const ProductVariant = require("../models/ProductVariant.model");
 const Product = require("../models/Product.model");
 const ProductColor = require("../models/ProductColor.model");
 const ProductSize = require("../models/ProductSize.model");
+const { verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", async (req, res) => {
+router.post("/",verifyAdmin, async (req, res) => {
   const { product_id, color_id, size_id, stock, available } = req.body;
 
   const product = await Product.findById(product_id);
-  if (!product) return res.status(400).json({ error: "Produit non trouvé" });
+  if (product === null) {
+    return res.status(400).json({ error: "Produit non trouvé" });
+  }
 
   const color = await ProductColor.findById(color_id);
-  if (!color) return res.status(400).json({ error: "Couleur non trouvée" });
+  if (color === null) {
+    return res.status(400).json({ error: "Couleur non trouvée" });
+  }
 
   const size = await ProductSize.findById(size_id);
-  if (!size) return res.status(400).json({ error: "Taille non trouvée" });
+  if (size === null) {
+    return res.status(400).json({ error: "Taille non trouvée" });
+  }
 
   try {
     const newVariant = new ProductVariant({
@@ -75,7 +82,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.patch("/", async (req, res) => {
+router.patch("/",verifyAdmin, async (req, res) => {
   const { id, product_id, color_id, size_id, stock, available } = req.body;
   try {
     const variant = await ProductVariant.findOne({ id });
@@ -97,7 +104,7 @@ router.patch("/", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/",verifyAdmin, async (req, res) => {
   const id = req.body.id;
   if (!id)
     return res
