@@ -4,7 +4,7 @@ import StarRating from "~/components/StarRating";
 import { productService } from "~/services/productService";
 import { productSizeService } from "~/services/productSizeService"; 
 import { cartService } from "~/services/cartService";
-import type { Product, ProductVariant, ProductColor } from "~/types/product";
+import type { Product, ProductVariant } from "~/types/product";
 import type { ProductSize } from "~/types/productSize";
 
 export default function Product() {
@@ -18,10 +18,6 @@ export default function Product() {
   const [currentImage, setCurrentImage] = useState<string>("");
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const [addToCartMessage, setAddToCartMessage] = useState<string>("");
-
-  const availableSizes = allSizes.filter(size => 
-    variants.some(variant => variant.size_id._id === String(size.id))
-  );
 
   const filteredVariantsBySize = selectedSize 
     ? variants.filter(v => v.size_id._id === selectedSize)
@@ -362,7 +358,7 @@ export default function Product() {
               ) : (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                   <p className="text-red-600 font-medium">
-                    Cette variante n'est plus en stock
+                    Cette variante n&apos;est plus en stock
                   </p>
                 </div>
               )}

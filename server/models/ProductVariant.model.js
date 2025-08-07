@@ -30,7 +30,6 @@ const productVariantSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-
   },
   {
     timestamps: {

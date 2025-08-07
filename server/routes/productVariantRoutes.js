@@ -71,16 +71,17 @@ router.get("/", async (req, res) => {
 router.get("/:productId", async (req, res) => {
   const productId = req.params.productId;
 
-  const product = await Product.findOne({id:productId});
+  const product = await Product.findOne({ id: productId });
 
-  
   try {
     const variants = await ProductVariant.find({ product_id: product._id })
       .populate("product_id")
       .populate("color_id")
       .populate("size_id");
     if (!variants || variants.length === 0) {
-      return res.status(404).json({ error: "Aucun variant trouvé pour ce produit", product });
+      return res
+        .status(404)
+        .json({ error: "Aucun variant trouvé pour ce produit", product });
     }
     res.status(200).json({ variants });
   } catch (error) {
