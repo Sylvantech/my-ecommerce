@@ -74,11 +74,10 @@ router.post("/getByCartId", async (req, res) => {
     });
   }
   try {
-    const productCarts = await ProductCart.find({ cart_id: cart_id })
-      .populate({
+    const productCarts = await ProductCart.find({ cart_id: cart_id }).populate({
       path: "product_id",
-      populate: { path: "assets" }
-      });
+      populate: { path: "assets" },
+    });
     if (productCarts.length === 0) {
       return res
         .status(404)

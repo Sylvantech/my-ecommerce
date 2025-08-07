@@ -19,34 +19,10 @@ const productSchema = new mongoose.Schema(
       default: "",
     },
     category_id: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-    price: {
-      type: mongoose.Types.Decimal128,
-      required: true,
-      min: 0,
-    },
-    color: {
-      type: String,
-      maxlength: 50,
-      default: "",
-    },
     composition: {
       type: String,
       maxlength: 50,
       default: "",
-    },
-    size: {
-      type: String,
-      maxlength: 50,
-      default: "",
-    },
-    in_stock: {
-      type: Boolean,
-      default: true,
-    },
-    stock: {
-      type: Number,
-      default: 0,
-      min: 0,
     },
     weight_in_gr: {
       type: Number,
@@ -60,8 +36,7 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    assets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Asset" }],
-    sizes: [{ type: mongoose.Schema.Types.ObjectId, ref: "ProductSize" }],
+    src: { type: String, required },
   },
   {
     timestamps: {

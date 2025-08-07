@@ -1,23 +1,22 @@
 const mongoose = require("mongoose");
-const Counter = require("./Counter.model");
 
-const productSizeSchema = new mongoose.Schema(
+const productColorSchema = new mongoose.Schema(
   {
     id: {
       type: Number,
       unique: true,
     },
-    eu_size: {
+    name: {
       type: String,
       required: true,
-      maxlength: 10,
+      maxlength: 100,
       trim: true,
     },
-    label: {
+    hex_code: {
       type: String,
-      maxlength: 10,
+      maxlength: 7,
+      default: "",
       trim: true,
-      default: null, // optional
     },
   },
   {
@@ -28,10 +27,11 @@ const productSizeSchema = new mongoose.Schema(
   }
 );
 
-productSizeSchema.pre("save", async function (next) {
+productColorSchema.pre("save", async function (next) {
   if (this.isNew) {
+    const Counter = require("./Counter.model");
     const counter = await Counter.findByIdAndUpdate(
-      { _id: "productSizeId" },
+      { _id: "productColorId" },
       { $inc: { sequence_value: 1 } },
       { new: true, upsert: true }
     );
@@ -40,5 +40,5 @@ productSizeSchema.pre("save", async function (next) {
   next();
 });
 
-const ProductSize = mongoose.model("ProductSize", productSizeSchema);
-module.exports = ProductSize;
+const ProductColor = mongoose.model("ProductColor", productColorSchema);
+module.exports = ProductColor;
