@@ -1,6 +1,5 @@
 import { CookieHelper } from "~/utils/cookieHelper";
 import type { RegisterData, LoginData, LoginResponse } from "~/types/auth";
-import { v4 as uuidv4 } from "uuid";
 
 export const authService = {
   async register(userData: RegisterData) {
@@ -62,9 +61,5 @@ export const authService = {
     const data = await res.json();
     CookieHelper.setToken(data.token, "AccesToken");
     return data.token;
-  },
-
-  async anonymousUserId() {
-    return uuidv4();
   },
 };
