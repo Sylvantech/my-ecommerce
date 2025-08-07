@@ -22,11 +22,11 @@ export const productService = {
         description: item.description,
         category: item.category_id
           ? {
-            _id: String(item.category_id._id),
-            id: item.category_id.id,
-            name: item.category_id.name,
-            description: item.category_id.description
-          }
+              _id: String(item.category_id._id),
+              id: item.category_id.id,
+              name: item.category_id.name,
+              description: item.category_id.description,
+            }
           : undefined,
 
         price: item.price,
@@ -39,8 +39,6 @@ export const productService = {
         updated_at: item.updated_at ? new Date(item.updated_at) : undefined,
       }));
 
-
-      console.log("Les données formaté",formatted);
       return { success: true, data: formatted };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
@@ -74,8 +72,13 @@ export const productService = {
         id: item.id,
         title: item.title,
         description: item.description,
-        category_id: item.category_id
-          ? String(item.category_id._id)
+        category: item.category_id
+          ? {
+              _id: String(item.category_id._id),
+              id: item.category_id.id,
+              name: item.category_id.name,
+              description: item.category_id.description,
+            }
           : undefined,
         price: item.price,
         composition: item.composition,

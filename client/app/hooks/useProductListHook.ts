@@ -11,7 +11,6 @@ const useProductListHook = () => {
     const fetchProducts = async () => {
       const result = await productService.getAll();
 
-      console.log(result.data);
       if (result.success && result.data) {
         setProducts(result.data);
       } else {

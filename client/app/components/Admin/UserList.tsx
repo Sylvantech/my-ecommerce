@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { CookieHelper } from "../../utils/cookieHelper";
 import type { User } from "../../types/userlist";
 
 export default function UsersTable() {

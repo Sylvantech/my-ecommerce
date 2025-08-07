@@ -13,7 +13,7 @@ export interface Product {
   id: number;
   title: string;
   description?: string;
-  category: Category; 
+  category?: Category;
   composition?: string;
   weight_in_gr?: number;
   is_promo?: boolean;

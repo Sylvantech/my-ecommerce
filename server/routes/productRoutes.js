@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
   const {
     title,
     description,
-    price,         
+    price,
     category_id,
     composition,
     weight_in_gr,
@@ -56,7 +56,7 @@ router.post("/", async (req, res) => {
     const newProduct = new Product({
       title,
       description,
-      price,         
+      price,
       category_id: category._id,
       composition,
       weight_in_gr,
@@ -115,7 +115,7 @@ router.patch("/", verifyAdmin, async (req, res) => {
     id,
     title,
     description,
-    price,          // ← Ajouter price ici
+    price, // ← Ajouter price ici
     category_id,
     composition,
     weight_in_gr,
@@ -132,7 +132,7 @@ router.patch("/", verifyAdmin, async (req, res) => {
 
     if (title !== undefined) product.title = title;
     if (description !== undefined) product.description = description;
-    if (price !== undefined) product.price = price;          // ← Ajouter cette ligne
+    if (price !== undefined) product.price = price; // ← Ajouter cette ligne
     if (category_id !== undefined) product.category_id = category_id;
     if (composition !== undefined) product.composition = composition;
     if (weight_in_gr !== undefined) product.weight_in_gr = weight_in_gr;

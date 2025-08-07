@@ -6,16 +6,14 @@ type ProductCardProps = {
 };
 
 const ProductsCard = ({ product }: ProductCardProps) => {
-
-  console.log("Le produit",product);
-  const { title, src, price, description, is_promo, id,category } = product;
+  const { title, src, price, description, is_promo, id, category } = product;
 
   const imageUrl = src;
 
-  const categoryName = category.name ?? "Sans catégorie";
+  const categoryName = category?.name ?? "Sans catégorie";
 
   const formatPrice = (price: number | undefined): string => {
-    if (!price || typeof price !== 'number' || isNaN(price)) {
+    if (!price || typeof price !== "number" || isNaN(price)) {
       return "Prix non disponible";
     }
     return `${price.toFixed(2)}€`;
@@ -28,9 +26,7 @@ const ProductsCard = ({ product }: ProductCardProps) => {
   if (!product || !title) {
     return (
       <div className="bg-white rounded-3xl shadow-lg p-6">
-        <div className="text-center text-gray-500">
-          Produit non disponible
-        </div>
+        <div className="text-center text-gray-500">Produit non disponible</div>
       </div>
     );
   }
@@ -98,7 +94,7 @@ const ProductsCard = ({ product }: ProductCardProps) => {
               <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 {formatPrice(price)}
               </span>
-              {is_promo && price && typeof price === 'number' && (
+              {is_promo && price && typeof price === "number" && (
                 <span className="text-xs text-gray-400 line-through">
                   {formatPrice(price * 1.2)}
                 </span>
@@ -121,7 +117,7 @@ const ProductsCard = ({ product }: ProductCardProps) => {
           </div>
 
           {/* ...reste du code identique... */}
-          
+
           <div className="flex items-center space-x-4 mb-4 text-xs text-gray-500">
             <div className="flex items-center space-x-1">
               <div className="w-3 h-3 bg-green-400 rounded-full"></div>

@@ -6,7 +6,7 @@ const ProductColor = require("../models/ProductColor.model");
 const ProductSize = require("../models/ProductSize.model");
 const { verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/",verifyAdmin, async (req, res) => {
+router.post("/", verifyAdmin, async (req, res) => {
   const { product_id, color_id, size_id, stock, available } = req.body;
 
   const product = await Product.findById(product_id);
@@ -82,7 +82,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.patch("/",verifyAdmin, async (req, res) => {
+router.patch("/", verifyAdmin, async (req, res) => {
   const { id, product_id, color_id, size_id, stock, available } = req.body;
   try {
     const variant = await ProductVariant.findOne({ id });
@@ -104,7 +104,7 @@ router.patch("/",verifyAdmin, async (req, res) => {
   }
 });
 
-router.delete("/",verifyAdmin, async (req, res) => {
+router.delete("/", verifyAdmin, async (req, res) => {
   const id = req.body.id;
   if (!id)
     return res
