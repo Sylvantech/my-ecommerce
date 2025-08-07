@@ -9,7 +9,7 @@ const cartSchema = new mongoose.Schema(
     },
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     anonymous_user_id: {
-      type: Number,
+      type: String,
       default: null,
       sparse: true,
     },
