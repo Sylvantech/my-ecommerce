@@ -75,7 +75,7 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  const { limit } = req.body;
+  const { limit } = req.query;
   try {
     const query = Product.find().populate("category_id");
     if (limit && limit > 0) {

@@ -1,55 +1,46 @@
-import type { Product } from "../../types/product";
+import type { Product, Category } from "../../types/product";
 
 type ProductCardProps = {
   product: Product;
+  category?: Category;
 };
 
-const ProductsCard = ({ product }: ProductCardProps) => {
-  const { title, assets, price, category_id, description } = product;
+const ProductsCard = ({ product, category }: ProductCardProps) => {
+  const { title, src, price, description, is_promo, id } = product;
 
-  const imageUrl =
-    assets && assets.length > 0
-      ? typeof assets[0] === "string"
-        ? assets[0]
-        : assets[0].url
-      : undefined;
+  const imageUrl = src;
+  console.log("l'image",src);
 
-  const categoryName =
-    typeof category_id === "string"
-      ? category_id
-      : (category_id?.name ?? "Sans catégorie");
+  const categoryName = category?.name ?? "Sans catégorie";
 
-  const formatPrice = (
-    price: number | string | { $numberDecimal: string } | null | undefined
-  ): string => {
-    if (
-      typeof price === "object" &&
-      price !== null &&
-      "$numberDecimal" in price
-    ) {
-      return `${parseFloat(price.$numberDecimal).toFixed(2)}€`;
+  const formatPrice = (price: number | undefined): string => {
+    if (!price || typeof price !== 'number' || isNaN(price)) {
+      return "Prix non disponible";
     }
-    if (typeof price === "number") {
-      return `${price.toFixed(2)}€`;
-    }
-    if (typeof price === "string") {
-      const numPrice = parseFloat(price);
-      return isNaN(numPrice) ? "0.00€" : `${numPrice.toFixed(2)}€`;
-    }
-    return "0.00€";
+    return `${price.toFixed(2)}€`;
   };
 
-  function handleCLick(id: number) {
+  function handleClick(id: number) {
     window.location.href = `/product/${id}`;
+  }
+
+  if (!product || !title) {
+    return (
+      <div className="bg-white rounded-3xl shadow-lg p-6">
+        <div className="text-center text-gray-500">
+          Produit non disponible
+        </div>
+      </div>
+    );
   }
 
   return (
     <div
       className="group cursor-pointer transform transition-all duration-500 hover:scale-105 hover:-translate-y-2"
-      onClick={() => handleCLick(product.id)}
+      onClick={() => handleClick(id)}
     >
       <div className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-purple-200 relative">
-        {product.is_promo && (
+        {is_promo && (
           <div className="absolute top-4 right-4 z-10 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-bounce">
             🔥 PROMO
           </div>
@@ -57,7 +48,7 @@ const ProductsCard = ({ product }: ProductCardProps) => {
 
         <div className="relative overflow-hidden">
           <div
-            className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 bg-center bg-cover transition-transform duration-700 "
+            className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 bg-center bg-cover transition-transform duration-700"
             style={{
               backgroundImage: imageUrl ? `url(${imageUrl})` : "none",
             }}
@@ -98,7 +89,7 @@ const ProductsCard = ({ product }: ProductCardProps) => {
           </h2>
 
           <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
-            {description}
+            {description || "Aucune description disponible"}
           </p>
 
           <div className="flex items-center justify-between mb-4">
@@ -106,9 +97,9 @@ const ProductsCard = ({ product }: ProductCardProps) => {
               <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 {formatPrice(price)}
               </span>
-              {product.is_promo && (
+              {is_promo && price && typeof price === 'number' && (
                 <span className="text-xs text-gray-400 line-through">
-                  {formatPrice(typeof price === "number" ? price * 1.2 : price)}
+                  {formatPrice(price * 1.2)}
                 </span>
               )}
             </div>
@@ -128,6 +119,8 @@ const ProductsCard = ({ product }: ProductCardProps) => {
             </div>
           </div>
 
+          {/* ...reste du code identique... */}
+          
           <div className="flex items-center space-x-4 mb-4 text-xs text-gray-500">
             <div className="flex items-center space-x-1">
               <div className="w-3 h-3 bg-green-400 rounded-full"></div>
