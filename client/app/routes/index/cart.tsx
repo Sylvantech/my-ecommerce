@@ -7,14 +7,22 @@ import {
   ChevronLeft,
   Tag,
 } from "lucide-react";
+import { useState } from "react";
+import CartProduct from "~/components/CartShopping/CartProduct";
 
 const MagicSocksCart = () => {
-  const mockData = {
-    subtotal: 76.94,
-    discount: -24.0,
-    shipping: 3.5,
-    total: 76.94,
+  const [cartData, setCartData] = useState({
+    subtotal: 0,
+    itemCount: 0,
+  });
+
+  const handleCartUpdate = (data: { subtotal: number; itemCount: number }) => {
+    setCartData(data);
   };
+
+  const discount = 0;
+  const shipping = cartData.subtotal > 50 ? 0 : 3.5;
+  const total = cartData.subtotal - discount + shipping;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 p-4">
@@ -33,11 +41,15 @@ const MagicSocksCart = () => {
                 Créatives !
               </h2>
               <p className="text-gray-700 font-semibold">
-                X paires de bonheur dans ton panier
+                {cartData.itemCount} paire{cartData.itemCount !== 1 ? "s" : ""}{" "}
+                de bonheur dans ton panier
               </p>
             </div>
 
             {/* Mettre la liste des artciles */}
+            <div>
+              <CartProduct onCartUpdate={handleCartUpdate}></CartProduct>
+            </div>
 
             <div className="text-center lg:text-left">
               <button
@@ -69,32 +81,26 @@ const MagicSocksCart = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 font-medium">
-                    Sous-total (6 articles)
+                    Sous-total ({cartData.itemCount} article
+                    {cartData.itemCount !== 1 ? "s" : ""})
                   </span>
                   <span className="font-bold text-gray-800">
-                    {mockData.subtotal.toFixed(2)}€
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-green-600 flex items-center gap-1 font-medium">
-                    Économies créatives{" "}
-                    <Sparkles size={14} className="text-yellow-400" />
-                  </span>
-                  <span className="font-bold text-green-600">
-                    -{Math.abs(mockData.discount).toFixed(2)}€
+                    {cartData.subtotal.toFixed(2)}€
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 font-medium">Livraison</span>
                   <div className="text-right">
-                    <span className="font-bold text-green-600">
-                      Gratuite !{" "}
-                    </span>
-                    <span className="text-sm text-gray-400 line-through">
-                      {mockData.shipping.toFixed(2)}€
-                    </span>
+                    {shipping === 0 ? (
+                      <span className="font-bold text-green-600">
+                        Gratuite !{" "}
+                      </span>
+                    ) : (
+                      <span className="font-bold text-gray-800">
+                        {shipping.toFixed(2)}€
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -103,7 +109,7 @@ const MagicSocksCart = () => {
                 <div className="flex justify-between items-center text-xl">
                   <span className="font-bold text-gray-800">Total</span>
                   <span className="font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    {mockData.total.toFixed(2)}€
+                    {total.toFixed(2)}€
                   </span>
                 </div>
               </div>

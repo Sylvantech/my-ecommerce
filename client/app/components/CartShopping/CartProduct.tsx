@@ -11,12 +11,17 @@ interface Product {
 }
 
 interface CartProduct {
+  _id: string;
   id: number;
   quantity: number;
   product_id: Product;
 }
 
-export default function CartProduct() {
+interface CartProductProps {
+  onCartUpdate?: (data: { subtotal: number; itemCount: number }) => void;
+}
+
+export default function CartProduct({ onCartUpdate }: CartProductProps) {
   const [quantities, setQuantities] = useState<number[]>([]);
 
   const [cartProduct, setCartProduct] = useState<CartProduct[] | null>(null);
@@ -32,95 +37,151 @@ export default function CartProduct() {
     getCartProduct();
   }, []);
 
-  const handleAddition = (index: number, stock: number) => {
+  useEffect(() => {
+    if (cartProduct && quantities.length > 0 && onCartUpdate) {
+      const subtotal = cartProduct.reduce((total, item, index) => {
+        const price = Number(item.product_id.price?.$numberDecimal) || 0;
+        const quantity = quantities[index] || 0;
+        return total + price * quantity;
+      }, 0);
+
+      const itemCount = quantities.reduce((total, qty) => total + qty, 0);
+
+      onCartUpdate({ subtotal, itemCount });
+    }
+  }, [cartProduct, quantities, onCartUpdate]);
+
+  const handleAddition = async (
+    index: number,
+    stock: number,
+    cartProductId: string
+  ) => {
     const copyQuantity = [...quantities];
     if (copyQuantity[index] < stock) {
-      copyQuantity[index] = copyQuantity[index] + 1;
+      const newQuantity = copyQuantity[index] + 1;
+      copyQuantity[index] = newQuantity;
       setQuantities(copyQuantity);
+
+      const result = await cartService.updateCartProductQuantity(
+        cartProductId,
+        newQuantity
+      );
+      if (!result.success) {
+        copyQuantity[index] = copyQuantity[index] - 1;
+        setQuantities(copyQuantity);
+        console.error("Erreur lors de la mise à jour :", result.error);
+      }
     }
   };
 
-  const handleSoustraction = (index: number) => {
+  const handleSoustraction = async (index: number, cartProductId: string) => {
     const copyQuantity = [...quantities];
     if (copyQuantity[index] > 1) {
-      copyQuantity[index] = copyQuantity[index] - 1;
+      const newQuantity = copyQuantity[index] - 1;
+      copyQuantity[index] = newQuantity;
       setQuantities(copyQuantity);
+
+      const result = await cartService.updateCartProductQuantity(
+        cartProductId,
+        newQuantity
+      );
+      if (!result.success) {
+        copyQuantity[index] = copyQuantity[index] + 1;
+        setQuantities(copyQuantity);
+        console.error("Erreur lors de la mise à jour :", result.error);
+      }
+    }
+  };
+
+  const handleDelete = async (index: number, cartProductId: string) => {
+    const result = await cartService.deleteCartProduct(cartProductId);
+    if (result.success) {
+      const newCartProducts = cartProduct!.filter((_, i) => i !== index);
+      const newQuantities = quantities.filter((_, i) => i !== index);
+      setCartProduct(newCartProducts);
+      setQuantities(newQuantities);
+    } else {
+      console.error("Erreur lors de la suppression :", result.error);
     }
   };
 
   return (
-    <div>
+    <div className="space-y-4">
       {Array.isArray(cartProduct) &&
         cartProduct.map((value, index) => {
           const product = value.product_id;
 
           return (
             <div
-              key={value.id}
-              className="bg-white w-85 h-full sm:w-200 sm:p-6 rounded-3xl flex flex-col justify-evenly pt-2 hover:border-2 hover:border-pink-200 mb-5"
+              key={value._id}
+              className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-purple-100 hover:border-pink-200"
             >
-              <div className="flex flex-col justify-center sm:flex-row sm:justify-around">
-                <div className="flex flex-col items-center sm:flex-row gap-3 mb-5">
+              <div className="flex flex-col lg:flex-row lg:justify-between items-start lg:items-center gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 flex-1">
                   <img
                     src={product.assets[0].url}
                     alt="Image du produit ajouté au panier"
-                    width={100}
-                    height={100}
-                    className="bg-gray-100 rounded-2xl shadow-lg mr-3"
+                    className="w-24 h-24 bg-gray-100 rounded-2xl shadow-lg object-cover"
                   />
-                  <div className="sm:flex sm:flex-col">
-                    <p className="text-lg">{product.title}</p>
-                    <div className="sm:flex sm:flex-row gap-3 sm:items-center">
-                      <p className="text-gray-600 text-sm flex justify-center items-center gap-1">
+                  <div className="flex flex-col justify-center">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      {product.title}
+                    </h3>
+                    <div className="flex flex-col sm:flex-row gap-3 mb-2">
+                      <div className="flex items-center gap-2">
                         <span
-                          className="border border-white w-6 h-6 rounded-full shadow-lg"
+                          className="w-4 h-4 rounded-full border border-gray-300 shadow-sm"
                           style={{ backgroundColor: product.color }}
-                        ></span>{" "}
-                        <span className="text-gray-900 ml-2">
+                        ></span>
+                        <span className="text-gray-600 text-sm font-medium">
                           {product.color}
                         </span>
-                      </p>
-                      <p className="flex justify-center items-center">
-                        <span className="text-gray-600 text-sm p-2">
-                          Taille:{" "}
-                        </span>{" "}
-                        <span className="ml-2 px-2 py-1 border border-gray-200 rounded-full text-xs">
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-600 text-sm">Taille:</span>
+                        <span className="px-3 py-1 bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200 rounded-full text-sm font-semibold text-purple-700">
                           {product.size}
                         </span>
-                      </p>
+                      </div>
                     </div>
-                    <p className="text-purple-700 text-xl sm:text-2xl">
+                    <p className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                       {product.price?.$numberDecimal} €
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-5 ml-5">
+                <div className="flex items-center gap-3">
                   <button
-                    className="bg-white rounded-full border border-gray-300 w-10 h-10 hover:border-pink-300 hover:bg-pink-50"
-                    onClick={() => handleSoustraction(index)}
+                    className="w-10 h-10 rounded-full border border-purple-200 bg-white hover:bg-purple-50 hover:border-purple-300 transition-all duration-200 flex items-center justify-center text-gray-600 hover:text-purple-600 font-semibold"
+                    onClick={() => handleSoustraction(index, value._id)}
                   >
                     -
                   </button>
-                  <p className="text-xl">{quantities[index]}</p>
+                  <span className="text-lg font-semibold text-gray-800 min-w-[2rem] text-center">
+                    {quantities[index]}
+                  </span>
                   <button
-                    className="bg-white rounded-full border border-gray-300 w-10 h-10 hover:border-pink-300 hover:bg-pink-50"
-                    onClick={() => handleAddition(index, product.stock)}
+                    className="w-10 h-10 rounded-full border border-purple-200 bg-white hover:bg-purple-50 hover:border-purple-300 transition-all duration-200 flex items-center justify-center text-gray-600 hover:text-purple-600 font-semibold"
+                    onClick={() =>
+                      handleAddition(index, product.stock, value._id)
+                    }
                   >
                     +
                   </button>
-                  <button className="hover:text-red-500 hover:bg-pink-50 p-3  hover:flex hover:justify-center hover:items-center hover:rounded-full">
+                  <button
+                    className="ml-2 p-2 rounded-full hover:bg-red-50 text-gray-400 hover:text-red-500 transition-all duration-200"
+                    onClick={() => handleDelete(index, value._id)}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
+                      width="20"
+                      height="20"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="lucide lucide-trash2 w-4 h-4"
                     >
                       <path d="M3 6h18"></path>
                       <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
@@ -132,17 +193,18 @@ export default function CartProduct() {
                 </div>
               </div>
 
-              <div className="flex flex-col mt-2 p-4 sm:p-0">
-                <hr className="text-gray-200" />
-                <div className="flex justify-between items-center p-2">
-                  <p className="text-gray-600 text-sm">
+              <div className="mt-4 pt-4 border-t border-purple-100">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600 font-medium">
                     Sous-total pour cet article:
-                  </p>
-                  <p className="text-purple-700 text-xl sm:text-3xl">
-                    {Number(product.price?.$numberDecimal) *
-                      Number(quantities[index])}{" "}
+                  </span>
+                  <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    {(
+                      Number(product.price?.$numberDecimal) *
+                      Number(quantities[index])
+                    ).toFixed(2)}{" "}
                     €
-                  </p>
+                  </span>
                 </div>
               </div>
             </div>
