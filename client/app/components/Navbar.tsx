@@ -200,9 +200,6 @@ const Navbar = () => {
                   d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 />
               </svg>
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                3
-              </span>
             </div>
             <span className="font-semibold">Panier</span>
           </a>
@@ -335,7 +332,7 @@ const Navbar = () => {
 
             <a
               className="relative bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 hover:from-purple-700 hover:via-pink-600 hover:to-purple-700 text-white px-6 py-4 rounded-2xl flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 mt-6 group"
-              href="#panier"
+              href="/cart"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <div className="relative">
@@ -352,9 +349,6 @@ const Navbar = () => {
                     d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                   />
                 </svg>
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                  3
-                </span>
               </div>
               <span className="font-bold text-lg">Mon Panier</span>
             </a>
