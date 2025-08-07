@@ -104,12 +104,15 @@ export const productService = {
     error?: string;
   }> {
     try {
-      const res = await fetch(`http://localhost:3000/api/productVariant/${productId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/productVariant/${productId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       console.log(res);
       if (!res.ok) {
