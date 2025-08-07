@@ -97,4 +97,33 @@ export const productService = {
       return { success: false, error: errorMessage };
     }
   },
+
+  async getVariants(productId: number): Promise<{
+    success: boolean;
+    data?: any[];
+    error?: string;
+  }> {
+    try {
+      const res = await fetch(`http://localhost:3000/api/productVariant/${productId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log(res);
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Erreur HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      return { success: true, data: data.variants };
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      console.error("Erreur lors du fetch des variantes :", errorMessage);
+      return { success: false, error: errorMessage };
+    }
+  },
 };

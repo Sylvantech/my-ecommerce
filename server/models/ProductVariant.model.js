@@ -21,6 +21,7 @@ const productVariantSchema = new mongoose.Schema(
       required: true,
       ref: "ProductSize",
     },
+    src: { type: String, required: true },
     stock: {
       type: Number,
       default: 0,
@@ -29,6 +30,7 @@ const productVariantSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
   },
   {
     timestamps: {
