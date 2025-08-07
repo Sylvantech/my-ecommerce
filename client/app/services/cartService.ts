@@ -1,5 +1,6 @@
 import { apiClient } from "./apiClient";
 import { CookieHelper } from "~/utils/cookieHelper";
+import { AnonymousHelper } from "~/utils/anonymousHelper";
 import type {
   Cart,
   CartResponse,
@@ -11,32 +12,37 @@ export const cartService = {
   async createCart(): Promise<CartResponse> {
     try {
       const accessToken = CookieHelper.getToken("AccesToken");
-      if (!accessToken) {
-        throw new Error("Vous devez être connecté pour créer un panier");
-      }
+      let user_id = null;
+      let anonymous_user_id = null;
 
-      const userResponse = await apiClient(
-        "http://localhost:3000/api/user/getId",
-        {
-          method: "POST",
-          body: JSON.stringify({}),
-        }
-      );
-
-      if (!userResponse.ok) {
-        const errorData = await userResponse.json();
-        throw new Error(
-          errorData.error ||
-            `Erreur lors de la récupération de l'utilisateur: ${userResponse.status}`
+      if (accessToken) {
+        const userResponse = await apiClient(
+          "http://localhost:3000/api/user/getId",
+          {
+            method: "POST",
+            body: JSON.stringify({}),
+          }
         );
-      }
 
-      const userData = await userResponse.json();
+        if (!userResponse.ok) {
+          const errorData = await userResponse.json();
+          throw new Error(
+            errorData.error ||
+              `Erreur lors de la récupération de l'utilisateur: ${userResponse.status}`
+          );
+        }
+
+        const userData = await userResponse.json();
+        user_id = userData._id;
+      } else {
+        anonymous_user_id = AnonymousHelper.getAnonymousId();
+      }
 
       const cartResponse = await apiClient("http://localhost:3000/api/cart", {
         method: "POST",
         body: JSON.stringify({
-          user_id: userData._id,
+          user_id,
+          anonymous_user_id,
         }),
       });
 
@@ -91,13 +97,6 @@ export const cartService = {
     quantity: number = 1
   ): Promise<CartProductResponse> {
     try {
-      const accessToken = CookieHelper.getToken("AccesToken");
-      if (!accessToken) {
-        throw new Error(
-          "Vous devez être connecté pour ajouter des produits au panier"
-        );
-      }
-
       const cartResult = await this.createCart();
       if (!cartResult.success || !cartResult.data) {
         throw new Error(
