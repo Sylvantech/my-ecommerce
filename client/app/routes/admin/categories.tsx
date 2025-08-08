@@ -14,16 +14,6 @@ export default function Categories() {
       <p className="text-gray-700 mb-6">
         Organisez vos produits par catégories
       </p>
-      <div className="flex flex-col sm:flex-row justify-around gap-3 mb-5">
-        <div className="pl-3 flex flex-col justify-around bg-white border-2 border-gray-200 rounded-xl w-full h-30">
-          <h2 className="text-gray-700">Total Catégories</h2>
-          <p className="text-2xl">6</p>
-        </div>
-        <div className="pl-3 flex flex-col justify-around bg-white border-2 border-gray-200 rounded-xl w-full h-30">
-          <h2 className="text-gray-700">Total Produits</h2>
-          <p className="text-2xl">98</p>
-        </div>
-      </div>
       <div className="flex justify-between gap-2">
         <div className="flex-1 flex flex-row items-center border rounded-xl border-gray-200 gap-4 p-1">
           <svg
