@@ -34,10 +34,11 @@ router.post("/getReview", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyAdmin, async (req, res) => {
   const {
     title,
     description,
+    price,
     category_id,
     composition,
     weight_in_gr,
@@ -55,6 +56,7 @@ router.post("/", async (req, res) => {
     const newProduct = new Product({
       title,
       description,
+      price,
       category_id: category._id,
       composition,
       weight_in_gr,
@@ -63,7 +65,7 @@ router.post("/", async (req, res) => {
       src,
     });
     await newProduct.save();
-    res.status(201).json({ message: "Produit crée avec succès" });
+    res.status(201).json({ message: "Produit créé avec succès" });
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la création d'un produit.",
@@ -73,7 +75,7 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  const { limit } = req.body;
+  const { limit } = req.query;
   try {
     const query = Product.find().populate("category_id");
     if (limit && limit > 0) {
@@ -113,6 +115,7 @@ router.patch("/", verifyAdmin, async (req, res) => {
     id,
     title,
     description,
+    price,
     category_id,
     composition,
     weight_in_gr,
@@ -129,6 +132,7 @@ router.patch("/", verifyAdmin, async (req, res) => {
 
     if (title !== undefined) product.title = title;
     if (description !== undefined) product.description = description;
+    if (price !== undefined) product.price = price;
     if (category_id !== undefined) product.category_id = category_id;
     if (composition !== undefined) product.composition = composition;
     if (weight_in_gr !== undefined) product.weight_in_gr = weight_in_gr;
@@ -141,28 +145,6 @@ router.patch("/", verifyAdmin, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: "Erreur lors de la mise à jour du produit",
-      details: error.message,
-    });
-  }
-});
-
-router.delete("/", verifyAdmin, async (req, res) => {
-  const id = req.body.id;
-  if (!id) {
-    return res
-      .status(400)
-      .json({ error: "Veuillez fournir un ID de produit valide" });
-  }
-  const productExists = await Product.findOne({ id: id });
-  if (!productExists) {
-    return res.status(404).json({ error: "Ce produit n'existe pas" });
-  }
-  try {
-    await Product.findOneAndDelete({ id: id });
-    res.status(200).json({ message: "Produit supprimé avec succès" });
-  } catch (error) {
-    return res.status(500).json({
-      error: "Erreur lors de la suppression du produit",
       details: error.message,
     });
   }

@@ -1,5 +1,3 @@
-import Navbar from "../../components/Admin/AdminNavbar";
-
 export default function Admin() {
   return (
     <div>
