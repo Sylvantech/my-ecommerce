@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const categoryUtils = require("../utils/categoryApiUtils");
 const Category = require("../models/Category.model");
+const Product = require("../models/Product.model");
+
 const { verifyAdmin } = require("../middleware/authMiddleware");
 
 router.post("/", verifyAdmin, async (req, res) => {
@@ -115,7 +117,7 @@ router.put("/", verifyAdmin, async (req, res) => {
   }
 });
 
-router.delete("/", verifyAdmin, async (req, res) => {
+router.delete("/", async (req, res) => {
   const id = req.body.id;
   if (!id || !Number.isInteger(Number(id))) {
     return res.status(400).json({
@@ -126,6 +128,14 @@ router.delete("/", verifyAdmin, async (req, res) => {
   if (!categoryExists) {
     return res.status(500).json({
       error: "Cette catégorie n'exite pas",
+    });
+  }
+
+  const products = await Product.find({ category_id: categoryExists._id });
+
+  if (products) {
+    return res.status(409).json({
+      error: "Cette catégorie est relié a un produit ! ",
     });
   }
   try {
