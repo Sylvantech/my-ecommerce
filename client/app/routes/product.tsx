@@ -217,7 +217,6 @@ export default function Product() {
                         <p className="text-sm font-bold">
                           {selectedVariant.color_id.name}
                         </p>
-                        
                       </div>
                     </div>
                   </div>

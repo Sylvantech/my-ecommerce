@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const ProductSize = require("../models/ProductSize.model");
+const { verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", async (req, res) => {
+router.post("/", verifyAdmin, async (req, res) => {
   const { eu_size, label } = req.body;
 
   if (

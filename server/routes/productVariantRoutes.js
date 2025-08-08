@@ -6,7 +6,7 @@ const ProductColor = require("../models/ProductColor.model");
 const ProductSize = require("../models/ProductSize.model");
 const { verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", async (req, res) => {
+router.post("/", verifyAdmin, async (req, res) => {
   const { product_id, color_id, size_id, src, stock, available } = req.body;
 
   const product = await Product.findById(product_id);

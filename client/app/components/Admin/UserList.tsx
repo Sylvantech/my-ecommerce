@@ -22,8 +22,12 @@ export default function UsersTable() {
 
         const usersData = await response.json();
         setUsers(usersData);
-      } catch (err: any) {
-        setError(err.message || "Une erreur inconnue s’est produite");
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Une erreur inconnue s'est produite");
+        }
       } finally {
         setLoading(false);
       }

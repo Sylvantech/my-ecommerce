@@ -112,7 +112,9 @@ const ProductsCard = ({ product }: ProductCardProps) => {
                   <path d="M10 15l-5.878 3.09 1.123-6.545L0 6.91l6.564-.955L10 0l3.436 5.955L20 6.91l-5.245 4.635L15.878 18z" />
                 </svg>
               ))}
-              <span className="text-xs text-gray-500 ml-2 font-medium">(4.2)</span>
+              <span className="text-xs text-gray-500 ml-2 font-medium">
+                (4.2)
+              </span>
             </div>
           </div>
 
@@ -141,7 +143,7 @@ const ProductsCard = ({ product }: ProductCardProps) => {
 
           <div className="flex items-center justify-between">
             <div className="flex-1"></div>
-            
+
             <button className="w-14 h-14 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-violet-50 hover:to-violet-100 text-gray-600 hover:text-violet-700 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300 group/heart border border-gray-200 hover:border-violet-300">
               <svg
                 className="w-5 h-5 group-hover/heart:scale-125 transition-transform duration-300"

@@ -34,7 +34,7 @@ router.post("/getReview", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyAdmin, async (req, res) => {
   const {
     title,
     description,
@@ -115,7 +115,7 @@ router.patch("/", verifyAdmin, async (req, res) => {
     id,
     title,
     description,
-    price, // ← Ajouter price ici
+    price,
     category_id,
     composition,
     weight_in_gr,
@@ -132,7 +132,7 @@ router.patch("/", verifyAdmin, async (req, res) => {
 
     if (title !== undefined) product.title = title;
     if (description !== undefined) product.description = description;
-    if (price !== undefined) product.price = price; // ← Ajouter cette ligne
+    if (price !== undefined) product.price = price;
     if (category_id !== undefined) product.category_id = category_id;
     if (composition !== undefined) product.composition = composition;
     if (weight_in_gr !== undefined) product.weight_in_gr = weight_in_gr;

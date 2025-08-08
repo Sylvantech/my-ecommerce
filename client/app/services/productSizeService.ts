@@ -16,14 +16,16 @@ export const productSizeService = {
 
       const data = await res.json();
 
-      const formatted: ProductSize[] = data.productSizes.map((item: any) => ({
-        id: item.id,
-        _id: item._id,
-        eu_size: item.eu_size,
-        label: item.label,
-        created_at: item.created_at ? new Date(item.created_at) : undefined,
-        updated_at: item.updated_at ? new Date(item.updated_at) : undefined,
-      }));
+      const formatted: ProductSize[] = data.productSizes.map(
+        (item: ProductSize) => ({
+          id: item.id,
+          _id: item._id,
+          eu_size: item.eu_size,
+          label: item.label,
+          created_at: item.created_at ? new Date(item.created_at) : undefined,
+          updated_at: item.updated_at ? new Date(item.updated_at) : undefined,
+        })
+      );
 
       return { success: true, data: formatted };
     } catch (err) {
