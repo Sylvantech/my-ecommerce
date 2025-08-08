@@ -117,7 +117,7 @@ router.put("/", verifyAdmin, async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
+router.delete("/",verifyAdmin, async (req, res) => {
   const id = req.body.id;
   if (!id || !Number.isInteger(Number(id))) {
     return res.status(400).json({
