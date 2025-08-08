@@ -72,14 +72,6 @@ const Navbar = () => {
                     Liste des utilisateurs
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    Jetons d’authentification
-                  </a>
-                </li>
               </ul>
             </li>
 
@@ -118,14 +110,6 @@ const Navbar = () => {
                     Tailles
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    Assets
-                  </a>
-                </li>
               </ul>
             </li>
 
@@ -139,32 +123,40 @@ const Navbar = () => {
                   🛒 Commandes
                 </span>
               </button>
-              <ul id="orders-menu" className="py-2 space-y-2">
+                <ul id="orders-menu" className="py-2 space-y-2">
                 <li>
                   <a
-                    href="#"
-                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  href="#"
+                  className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    Paniers
+                  Paniers
                   </a>
                 </li>
                 <li>
                   <a
-                    href="#"
-                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  href="#"
+                  className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    Produits du panier
+                  Adresses utilisateur
                   </a>
                 </li>
                 <li>
                   <a
-                    href="#"
-                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  href="#"
+                  className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    Compteur
+                  Gestion bancaire
                   </a>
                 </li>
-              </ul>
+                <li>
+                  <a
+                  href="#"
+                  className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                  Gestion de commande
+                  </a>
+                </li>
+                </ul>
             </li>
 
             {/* Avis clients */}
