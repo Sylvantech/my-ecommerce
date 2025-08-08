@@ -69,12 +69,14 @@ const ProductsCard = ({ product }: ProductCardProps) => {
 
           <div className="flex items-end justify-between mb-6">
             <div className="flex flex-col">
-                <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight">
+              <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight">
                 {formatPrice(price)}
               </span>
               <span
                 className={`block h-5 text-sm text-gray-400 line-through font-light mt-1 ${
-                  is_promo && price && typeof price === "number" ? "visible" : "invisible"
+                  is_promo && price && typeof price === "number"
+                    ? "visible"
+                    : "invisible"
                 }`}
               >
                 {is_promo && price && typeof price === "number"

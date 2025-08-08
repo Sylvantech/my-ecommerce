@@ -7,8 +7,13 @@ interface Product {
   assets?: [{ url: string }];
 }
 
-interface VariantColor { name: string; hex_code: string }
-interface VariantSize { eu_size: string }
+interface VariantColor {
+  name: string;
+  hex_code: string;
+}
+interface VariantSize {
+  eu_size: string;
+}
 
 interface Variant {
   src: string;
@@ -31,7 +36,9 @@ interface CartProductProps {
 
 export default function CartProduct({ onCartUpdate }: CartProductProps) {
   const [quantities, setQuantities] = useState<number[]>([]);
-  const [cartProduct, setCartProduct] = useState<CartProductItem[] | null>(null);
+  const [cartProduct, setCartProduct] = useState<CartProductItem[] | null>(
+    null
+  );
 
   useEffect(() => {
     async function getCartProduct() {
@@ -39,7 +46,7 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
       if (res.success) {
         const items = res.data as CartProductItem[];
         setCartProduct(items);
-        setQuantities(items.map((item) => item.quantity));
+        setQuantities(items.map(item => item.quantity));
       } else {
         setCartProduct([]);
         setQuantities([]);
@@ -53,7 +60,8 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
     if (cartProduct && onCartUpdate) {
       const subtotal = cartProduct.reduce((total, item, index) => {
         const raw = item.product_id?.price;
-        const price = typeof raw === "number" ? raw : Number(raw?.$numberDecimal ?? 0);
+        const price =
+          typeof raw === "number" ? raw : Number(raw?.$numberDecimal ?? 0);
         const quantity = quantities[index] || 0;
         return total + price * quantity;
       }, 0);
@@ -125,7 +133,10 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
           const product = value.product_id;
           const variant = value.variant_id;
           const rawPrice = product.price;
-          const unitPrice = typeof rawPrice === "number" ? rawPrice : Number(rawPrice?.$numberDecimal ?? 0);
+          const unitPrice =
+            typeof rawPrice === "number"
+              ? rawPrice
+              : Number(rawPrice?.$numberDecimal ?? 0);
 
           return (
             <div
@@ -147,7 +158,10 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
                       <div className="flex items-center gap-2">
                         <span
                           className="w-4 h-4 rounded-full border border-gray-300 shadow-sm"
-                          style={{ backgroundColor: variant?.color_id?.hex_code || "#ccc" }}
+                          style={{
+                            backgroundColor:
+                              variant?.color_id?.hex_code || "#ccc",
+                          }}
                         ></span>
                         <span className="text-gray-600 text-sm font-medium">
                           {variant?.color_id?.name || "-"}
@@ -215,8 +229,7 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
                     Sous-total pour cet article:
                   </span>
                   <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    {(unitPrice * Number(quantities[index])).toFixed(2)} {" "}
-                    €
+                    {(unitPrice * Number(quantities[index])).toFixed(2)} €
                   </span>
                 </div>
               </div>

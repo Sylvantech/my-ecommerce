@@ -14,7 +14,6 @@ interface Category {
 export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
   const [categories, setCategories] = useState<Category[]>([]);
 
-
   useEffect(() => {
     async function getCategories() {
       const res = await adminService.getCategories();

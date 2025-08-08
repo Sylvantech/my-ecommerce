@@ -34,10 +34,10 @@ const Navbar = () => {
 
     checkAuthStatus();
 
-    window.addEventListener('storage', checkAuthStatus);
+    window.addEventListener("storage", checkAuthStatus);
 
     return () => {
-      window.removeEventListener('storage', checkAuthStatus);
+      window.removeEventListener("storage", checkAuthStatus);
     };
   }, []);
 
@@ -155,7 +155,6 @@ const Navbar = () => {
 
             {isAccountMenuOpen && (
               <div className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-100 py-3 z-20">
-
                 {isAuthenticated ? (
                   <>
                     <a
@@ -350,7 +349,6 @@ const Navbar = () => {
           </div>
 
           <div className="space-y-4 border-t border-gray-200 pt-6">
-
             {isAuthenticated ? (
               <>
                 <a

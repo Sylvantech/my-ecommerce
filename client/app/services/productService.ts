@@ -42,15 +42,16 @@ export const productService = {
       return { success: true, data: formatted };
     } catch (err) {
       let errorMessage = "Une erreur est survenue";
-      
+
       if (err instanceof TypeError && err.message.includes("fetch")) {
-        errorMessage = "NetworkError when attempting to fetch resource - Serveur indisponible";
+        errorMessage =
+          "NetworkError when attempting to fetch resource - Serveur indisponible";
       } else if (err instanceof Error) {
         errorMessage = err.message;
       } else {
         errorMessage = String(err);
       }
-      
+
       console.error("Erreur lors du fetch des produits :", errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -102,15 +103,16 @@ export const productService = {
       return { success: true, data: formatted };
     } catch (err) {
       let errorMessage = "Une erreur est survenue";
-      
+
       if (err instanceof TypeError && err.message.includes("fetch")) {
-        errorMessage = "NetworkError when attempting to fetch resource - Serveur indisponible";
+        errorMessage =
+          "NetworkError when attempting to fetch resource - Serveur indisponible";
       } else if (err instanceof Error) {
         errorMessage = err.message;
       } else {
         errorMessage = String(err);
       }
-      
+
       console.error("Erreur lors du fetch du produit :", errorMessage);
       return { success: false, error: errorMessage };
     }

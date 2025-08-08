@@ -1,3 +1,5 @@
+import type { User } from "../types/userlist";
+
 export const adminService = {
   async authenticated(token: string) {
     try {
@@ -40,6 +42,25 @@ export const adminService = {
       }
       const data = await res.json();
       return { success: true, data: data.categories };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
+
+  getUsers: async (): Promise<{
+    success: boolean;
+    data?: User[];
+    error?: string;
+  }> => {
+    try {
+      const res = await fetch("http://localhost:3000/api/user/");
+      if (!res.ok) {
+        const message = "Erreur lors de la récupération des utilisateurs";
+        return { success: false, error: message };
+      }
+      const data = await res.json();
+      return { success: true, data };
     } catch (err) {
       console.error(`erreur: ${err}`);
       return { success: false, error: "Erreur réseau ou serveur" };

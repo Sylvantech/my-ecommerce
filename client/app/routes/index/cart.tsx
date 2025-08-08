@@ -54,7 +54,8 @@ const MagicSocksCart = () => {
                     Votre panier est vide
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Découvrez nos chaussettes créatives et ajoutez-en à votre panier !
+                    Découvrez nos chaussettes créatives et ajoutez-en à votre
+                    panier !
                   </p>
                 </div>
               )}
@@ -91,7 +92,8 @@ const MagicSocksCart = () => {
                   </p>
                   <div className="text-4xl mb-4">✨</div>
                   <p className="text-gray-600 text-sm">
-                    Ajoutez des produits à votre panier pour voir votre résumé de commande.
+                    Ajoutez des produits à votre panier pour voir votre résumé
+                    de commande.
                   </p>
                 </div>
               ) : (
@@ -112,7 +114,9 @@ const MagicSocksCart = () => {
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600 font-medium">Livraison</span>
+                      <span className="text-gray-600 font-medium">
+                        Livraison
+                      </span>
                       <div className="text-right">
                         {shipping === 0 ? (
                           <span className="font-bold text-green-600">
@@ -140,7 +144,9 @@ const MagicSocksCart = () => {
                   <div className="mb-6">
                     <div className="flex items-center gap-2 mb-3">
                       <Tag className="text-purple-600" size={16} />
-                      <span className="text-gray-700 font-medium">Code promo</span>
+                      <span className="text-gray-700 font-medium">
+                        Code promo
+                      </span>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input
@@ -172,13 +178,13 @@ const MagicSocksCart = () => {
                     <Lock className="text-white" size={20} />
                   </div>
                   <div>
-                      <p className="font-bold text-gray-800 text-sm">Paiement</p>
-                      <p className="text-gray-600 text-xs">Sécurisé</p>
-                    </div>
+                    <p className="font-bold text-gray-800 text-sm">Paiement</p>
+                    <p className="text-gray-600 text-xs">Sécurisé</p>
                   </div>
+                </div>
 
-                  <div className="flex flex-col items-center space-y-2">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
                     <Truck className="text-white" size={20} />
                   </div>
                   <div>
