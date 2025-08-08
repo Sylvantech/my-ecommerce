@@ -1,33 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { adminService } from "~/services/adminService";
 
 interface CategoryAdminProps {
   searchCategory: string;
 }
 
+interface Category {
+  id: number;
+  name: string;
+  description: string;
+}
+
 export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
-  const [categories, setCategories] = useState([
-    {
-      _id: "688c76671fdbc63e8d79255e",
-      id: 4,
-      name: "Luxe",
-      description:
-        "Chaussettes en matières nobles comme la soie ou le cachemire.",
-    },
-    {
-      _id: "688c76671fdbc63e8d79255c",
-      id: 2,
-      name: "Sport",
-      description:
-        "Chaussettes respirantes et renforcées pour le sport et l’activité physique.",
-    },
-    {
-      _id: "688c76671fdbc63e8d792560",
-      id: 6,
-      name: "Enfants",
-      description:
-        "Chaussettes confortables et amusantes pour les plus petits.",
-    },
-  ]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  console.log(categories);
+
+  useEffect(() => {
+    async function getCategories() {
+      const res = await adminService.getCategories();
+      if (res.success) {
+        setCategories(res.data);
+      } else {
+        console.error(res.error);
+      }
+    }
+    getCategories();
+  }, []);
+
+  if (categories.length < 1) {
+    return "Chargement";
+  }
 
   const filtered = categories.filter(category =>
     category.name.toLowerCase().includes(searchCategory.toLowerCase())
@@ -143,7 +146,8 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
               </div>
             </div>
           ))
-        : categories.map((category, index) => {
+        : Array.isArray(categories) &&
+          categories.map((category, index) => {
             return (
               <div
                 key={index}
