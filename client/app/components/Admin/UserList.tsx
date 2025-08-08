@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { User } from "../../types/userlist";
+import { adminService } from "../../services/adminService";
 
 export default function UsersTable() {
   const [users, setUsers] = useState<User[]>([]);
@@ -9,19 +10,14 @@ export default function UsersTable() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/user", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Erreur lors de la récupération des utilisateurs");
+        const result = await adminService.getUsers();
+        if (result.success && result.data) {
+          setUsers(result.data);
+        } else {
+          setError(
+            result.error || "Erreur lors de la récupération des utilisateurs"
+          );
         }
-
-        const usersData = await response.json();
-        setUsers(usersData);
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);

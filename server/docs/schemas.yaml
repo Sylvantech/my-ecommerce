@@ -219,6 +219,7 @@ components:
         - title
         - category_id
         - price
+        - src
       properties:
         id:
           type: integer
@@ -232,25 +233,13 @@ components:
           description: Description du produit
         category_id:
           type: string
-          description: ID de la catégorie
+          description: ID MongoDB de la catégorie
         price:
           type: number
           description: Prix du produit
-        color:
-          type: string
-          description: Couleur du produit
         composition:
           type: string
           description: Composition du produit
-        size:
-          type: string
-          description: Taille du produit
-        in_stock:
-          type: boolean
-          description: Disponibilité en stock
-        stock:
-          type: integer
-          description: Quantité en stock
         weight_in_gr:
           type: number
           description: Poids en grammes
@@ -260,16 +249,9 @@ components:
         is_new:
           type: boolean
           description: Nouveau produit
-        assets:
-          type: array
-          items:
-            type: string
-          description: IDs des assets/images
-        productSizes:
-          type: array
-          items:
-            type: string
-          description: IDs des tailles disponibles
+        src:
+          type: string
+          description: URL de l'image principale
         created_at:
           type: string
           format: date-time
@@ -315,21 +297,26 @@ components:
           description: Date de dernière mise à jour
           readOnly: true
 
-    # Schémas productSize
+    # Schémas productSize (modèle actuel)
     ProductSize:
       type: object
       required:
-        - size
+        - eu_size
       properties:
         id:
           type: integer
           description: ID unique de la taille de produit
           readOnly: true
-        size:
+        eu_size:
           type: string
-          description: Taille du produit
+          description: "Taille EU (ex: \"42\")"
           minLength: 2
-          maxLength: 20
+          maxLength: 10
+        label:
+          type: string
+          description: "Label optionnel (ex: \"M\")"
+          maxLength: 10
+          nullable: true
         created_at:
           type: string
           format: date-time
@@ -339,6 +326,108 @@ components:
           type: string
           format: date-time
           description: Date de dernière mise à jour
+          readOnly: true
+
+    # Schémas productColor
+    ProductColor:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        hex_code:
+          type: string
+          description: "Code hexadécimal (ex: #FFFFFF)"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    # Schémas productVariant
+    ProductVariant:
+      type: object
+      required:
+        - product_id
+        - color_id
+        - size_id
+        - src
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        product_id:
+          type: string
+        color_id:
+          type: string
+        size_id:
+          type: string
+        src:
+          type: string
+        stock:
+          type: integer
+        available:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    # Schémas Cart
+    Cart:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_id:
+          type: string
+          nullable: true
+        anonymous_user_id:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    # Schémas ProductCart
+    ProductCart:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cart_id:
+          type: string
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
           readOnly: true
 
   securitySchemes:

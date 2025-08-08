@@ -37,6 +37,7 @@ export interface ProductColor {
 }
 
 export interface ProductVariant {
+  _id: string;
   id: number;
   product_id: string;
   color_id: ProductColor;

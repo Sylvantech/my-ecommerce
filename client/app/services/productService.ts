@@ -16,6 +16,7 @@ export const productService = {
 
       const data = await res.json();
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const formatted: Product[] = data.products.map((item: any) => ({
         id: item.id,
         title: item.title,
@@ -41,7 +42,17 @@ export const productService = {
 
       return { success: true, data: formatted };
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
+      let errorMessage = "Une erreur est survenue";
+
+      if (err instanceof TypeError && err.message.includes("fetch")) {
+        errorMessage =
+          "NetworkError when attempting to fetch resource - Serveur indisponible";
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      } else {
+        errorMessage = String(err);
+      }
+
       console.error("Erreur lors du fetch des produits :", errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -92,7 +103,17 @@ export const productService = {
 
       return { success: true, data: formatted };
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
+      let errorMessage = "Une erreur est survenue";
+
+      if (err instanceof TypeError && err.message.includes("fetch")) {
+        errorMessage =
+          "NetworkError when attempting to fetch resource - Serveur indisponible";
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      } else {
+        errorMessage = String(err);
+      }
+
       console.error("Erreur lors du fetch du produit :", errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -100,6 +121,7 @@ export const productService = {
 
   async getVariants(productId: number): Promise<{
     success: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any[];
     error?: string;
   }> {
@@ -114,7 +136,6 @@ export const productService = {
         }
       );
 
-      console.log(res);
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.error || `Erreur HTTP ${res.status}`);

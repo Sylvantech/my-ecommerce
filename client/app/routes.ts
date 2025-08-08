@@ -11,7 +11,7 @@ export default [
   route("login", "routes/login.tsx"),
   layout("./layout/MainLayout.tsx", [
     index("routes/index/_index.tsx"),
-    route("product/:slug", "routes/product.tsx"),
+    route("product/:slug", "routes/index/product.tsx"),
     route("cart", "routes/index/cart.tsx"),
     //Ajouter les routes qui utilisent le layout ici
   ]),
@@ -19,7 +19,7 @@ export default [
   // Layout Admin & route admin
   layout("layout/AdminLayout.tsx", [
     route("admin", "routes/admin/_index.tsx"),
-    route("user_list", "routes/admin/user_list.tsx"),
+    route("admin/user", "routes/admin/user.tsx"),
     route("admin/categories", "routes/admin/categories.tsx"),
   ]),
 ] satisfies RouteConfig;

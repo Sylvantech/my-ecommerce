@@ -3,6 +3,8 @@ paths:
     post:
       summary: Créer une nouvelle catégorie
       tags: [Category]
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -55,6 +57,8 @@ paths:
     put:
       summary: Mettre à jour une catégorie
       tags: [Category]
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -81,6 +85,8 @@ paths:
     delete:
       summary: Supprimer une catégorie
       tags: [Category]
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:

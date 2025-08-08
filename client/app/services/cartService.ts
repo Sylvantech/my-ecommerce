@@ -93,7 +93,7 @@ export const cartService = {
   },
 
   async addToCart(
-    productId: string,
+    variantId: string,
     quantity: number = 1
   ): Promise<CartProductResponse> {
     try {
@@ -112,7 +112,7 @@ export const cartService = {
           method: "POST",
           body: JSON.stringify({
             cart_id: cartId,
-            product_id: productId,
+            variant_id: variantId,
             quantity: quantity,
           }),
         }

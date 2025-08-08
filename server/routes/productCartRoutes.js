@@ -2,65 +2,67 @@ const express = require("express");
 const router = express.Router();
 const ProductCart = require("../models/ProductCart.model");
 const Cart = require("../models/Cart.model");
-const Product = require("../models/Product.model");
+const ProductVariant = require("../models/ProductVariant.model");
 
 router.post("/", async (req, res) => {
-  const { cart_id, product_id, quantity = 1 } = req.body;
+  const { cart_id, variant_id, quantity = 1 } = req.body;
 
-  if (quantity < 1) {
-    quantity = 1;
-  }
+  const qty = Math.max(1, Number(quantity) || 1);
 
-  if (!cart_id || !product_id) {
+  if (!cart_id || !variant_id) {
     return res.status(400).json({
-      error: "l'id du produit et du panier sont requis !",
-    });
-  }
-
-  const [cart, product] = await Promise.all([
-    Cart.findById(cart_id),
-    Product.findOne({ id: product_id }),
-  ]);
-
-  if (!cart) {
-    return res.status(400).json({
-      error: "l'id du panier est incorrect !",
-    });
-  }
-
-  if (!product) {
-    return res.status(400).json({
-      error: "l'id du produit est incorrect !",
+      error: "cart_id et variant_id sont requis !",
     });
   }
 
   try {
+    const [cart, variant] = await Promise.all([
+      Cart.findById(cart_id),
+      ProductVariant.findById(variant_id),
+    ]);
+
+    if (!cart) {
+      return res.status(400).json({
+        error: "l'id du panier est incorrect !",
+      });
+    }
+
+    if (!variant) {
+      return res.status(400).json({
+        error: "l'id de la variante est incorrect !",
+      });
+    }
+
+    const productObjectId = variant.product_id;
+
     let productCart = await ProductCart.findOne({
       cart_id,
-      product_id: product._id,
+      variant_id: variant._id,
     });
+
     if (productCart) {
-      productCart.quantity += quantity;
+      productCart.quantity += qty;
       await productCart.save();
       return res.status(200).json({
-        message: "Quantité du produit augmentée dans le panier",
+        message: "Quantité de la variante augmentée dans le panier",
         cart_product: productCart,
       });
     } else {
       productCart = new ProductCart({
         cart_id,
-        product_id: product._id,
-        quantity,
+        product_id: productObjectId,
+        variant_id: variant._id,
+        quantity: qty,
       });
       await productCart.save();
       return res.status(201).json({
-        message: "Produit ajouté au panier avec succès",
+        message: "Variante ajoutée au panier avec succès",
         cart_product: productCart,
       });
     }
   } catch (error) {
     res.status(500).json({
-      error: "Erreur lors de l'ajout du produit au panier",
+      error: "Erreur lors de l'ajout de la variante au panier",
       details: error.message,
     });
   }
@@ -74,10 +76,11 @@ router.post("/getByCartId", async (req, res) => {
     });
   }
   try {
-    const productCarts = await ProductCart.find({ cart_id: cart_id }).populate({
-      path: "product_id",
-      populate: { path: "assets" },
-    });
+    const productCarts = await ProductCart.find({ cart_id: cart_id }).populate([
+      { path: "product_id" },
+      { path: "variant_id", populate: [{ path: "color_id" }, { path: "size_id" }] },
+    ]);
+
     if (productCarts.length === 0) {
       return res
         .status(404)
@@ -95,9 +98,7 @@ router.post("/getByCartId", async (req, res) => {
 router.put("/", async (req, res) => {
   const { id, quantity } = req.body;
 
-  if (quantity < 1) {
-    quantity = 1;
-  }
+  const qty = Math.max(1, Number(quantity) || 1);
 
   if (!id || quantity === undefined) {
     return res.status(400).json({
@@ -108,7 +109,7 @@ router.put("/", async (req, res) => {
   try {
     const productCart = await ProductCart.findByIdAndUpdate(
       id,
-      { quantity },
+      { quantity: qty },
       { new: true }
     );
     if (!productCart) {

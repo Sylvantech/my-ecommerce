@@ -85,8 +85,8 @@ router.put("/", verifyAdmin, async (req, res) => {
     });
   }
   const updateData = {};
-  if (name) updateData.name = name;
-  if (description) updateData.description = description;
+  if (name) {updateData.name = name;}
+  if (description) {updateData.description = description;}
 
   if (await Category.findOne({ name: name })) {
     return res.status(400).json({

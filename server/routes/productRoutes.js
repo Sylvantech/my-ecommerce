@@ -130,15 +130,15 @@ router.patch("/", verifyAdmin, async (req, res) => {
       return res.status(404).json({ error: "Produit non trouvé" });
     }
 
-    if (title !== undefined) product.title = title;
-    if (description !== undefined) product.description = description;
-    if (price !== undefined) product.price = price;
-    if (category_id !== undefined) product.category_id = category_id;
-    if (composition !== undefined) product.composition = composition;
-    if (weight_in_gr !== undefined) product.weight_in_gr = weight_in_gr;
-    if (is_promo !== undefined) product.is_promo = is_promo;
-    if (is_new !== undefined) product.is_new = is_new;
-    if (src !== undefined) product.src = src;
+    if (title !== undefined) {product.title = title;}
+    if (description !== undefined) {product.description = description;}
+    if (price !== undefined) {product.price = price;}
+    if (category_id !== undefined) {product.category_id = category_id;}
+    if (composition !== undefined) {product.composition = composition;}
+    if (weight_in_gr !== undefined) {product.weight_in_gr = weight_in_gr;}
+    if (is_promo !== undefined) {product.is_promo = is_promo;}
+    if (is_new !== undefined) {product.is_new = is_new;}
+    if (src !== undefined) {product.src = src;}
 
     await product.save();
     res.status(200).json({ message: "Produit mis à jour avec succès" });
