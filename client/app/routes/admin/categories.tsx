@@ -2,7 +2,11 @@ import { useState } from "react";
 import CategoryAdmin from "~/components/Admin/CategoryAdmin";
 
 export default function Categories() {
-  const searchCategory = () => {};
+  const [searchCategory, setSearchCategory] = useState("");
+
+  const handleCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchCategory(e.target.value);
+  };
 
   return (
     <div className="sm:ml-80 mr-3 flex flex-col gap-3">
@@ -45,7 +49,8 @@ export default function Categories() {
               id=""
               placeholder="Rechercher une catégorie..."
               className="w-full"
-              onChange={searchCategory}
+              onChange={handleCategory}
+              value={searchCategory}
             />
           </form>
         </div>
@@ -54,7 +59,7 @@ export default function Categories() {
         </button>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <CategoryAdmin />
+        <CategoryAdmin searchCategory={searchCategory} />
       </div>
     </div>
   );
