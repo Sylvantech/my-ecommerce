@@ -54,7 +54,7 @@ router.get("/", async (req, res) => {
       .populate("product_id")
       .populate("color_id")
       .populate("size_id");
-    if (limit && limit > 0) query.limit(limit);
+    if (limit && limit > 0) {query.limit(limit);}
     const variants = await query.exec();
     if (!variants || variants.length === 0) {
       return res.status(404).json({ error: "Aucun variant trouvé" });
@@ -96,14 +96,14 @@ router.patch("/", verifyAdmin, async (req, res) => {
   const { id, product_id, color_id, size_id, src, stock, available } = req.body;
   try {
     const variant = await ProductVariant.findOne({ id });
-    if (!variant) return res.status(404).json({ error: "Variant non trouvé" });
+    if (!variant) {return res.status(404).json({ error: "Variant non trouvé" });}
 
-    if (product_id !== undefined) variant.product_id = product_id;
-    if (color_id !== undefined) variant.color_id = color_id;
-    if (size_id !== undefined) variant.size_id = size_id;
-    if (src !== undefined) variant.src = src;
-    if (stock !== undefined) variant.stock = stock;
-    if (available !== undefined) variant.available = available;
+    if (product_id !== undefined) {variant.product_id = product_id;}
+    if (color_id !== undefined) {variant.color_id = color_id;}
+    if (size_id !== undefined) {variant.size_id = size_id;}
+    if (src !== undefined) {variant.src = src;}
+    if (stock !== undefined) {variant.stock = stock;}
+    if (available !== undefined) {variant.available = available;}
 
     await variant.save();
     res.status(200).json({ message: "Variant mis à jour avec succès" });
@@ -118,13 +118,13 @@ router.patch("/", verifyAdmin, async (req, res) => {
 router.delete("/", verifyAdmin, async (req, res) => {
   const id = req.body.id;
   if (!id)
-    return res
+    {return res
       .status(400)
-      .json({ error: "Veuillez fournir un ID de variant valide" });
+      .json({ error: "Veuillez fournir un ID de variant valide" });}
 
   const variantExists = await ProductVariant.findOne({ id });
   if (!variantExists)
-    return res.status(404).json({ error: "Ce variant n'existe pas" });
+    {return res.status(404).json({ error: "Ce variant n'existe pas" });}
 
   try {
     await ProductVariant.findOneAndDelete({ id });
