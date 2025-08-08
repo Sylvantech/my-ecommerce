@@ -1,6 +1,9 @@
+import { useState } from "react";
 import CategoryAdmin from "~/components/Admin/CategoryAdmin";
 
 export default function Categories() {
+  const searchCategory = () => {};
+
   return (
     <div className="sm:ml-80 mr-3 flex flex-col gap-3">
       <h1 className="text-3xl">Gestion des Catégories</h1>
@@ -42,6 +45,7 @@ export default function Categories() {
               id=""
               placeholder="Rechercher une catégorie..."
               className="w-full"
+              onChange={searchCategory}
             />
           </form>
         </div>
