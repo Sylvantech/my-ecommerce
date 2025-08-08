@@ -28,4 +28,21 @@ export const adminService = {
       );
     }
   },
+
+  getCategories: async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/category/");
+      if (!res.ok) {
+        return {
+          success: false,
+          error: "Erreur lors de la récupération des catégories",
+        };
+      }
+      const data = await res.json();
+      return { success: true, data: data.categories };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
 };

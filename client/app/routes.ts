@@ -20,5 +20,6 @@ export default [
   layout("layout/AdminLayout.tsx", [
     route("admin", "routes/admin/_index.tsx"),
     route("user_list", "routes/admin/user_list.tsx"),
+    route("admin/categories", "routes/admin/categories.tsx"),
   ]),
 ] satisfies RouteConfig;

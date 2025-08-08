@@ -7,20 +7,21 @@ const productVariantSchema = new mongoose.Schema(
       unique: true,
     },
     product_id: {
-      type: Number,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "Product",
     },
     color_id: {
-      type: Number,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "ProductColor",
     },
     size_id: {
-      type: Number,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "ProductSize",
     },
+    src: { type: String, required: true },
     stock: {
       type: Number,
       default: 0,
@@ -43,7 +44,6 @@ productVariantSchema.index(
   { unique: true }
 );
 
-// Auto-increment id
 productVariantSchema.pre("save", async function (next) {
   if (this.isNew) {
     const Counter = require("./Counter.model");

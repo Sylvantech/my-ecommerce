@@ -28,7 +28,6 @@ const MagicSocksCart = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 p-4">
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Side - Cart Items */}
           <div className="lg:col-span-2 space-y-6">
             <div className="text-center lg:text-left">
               <h1 className="text-5xl font-bold mb-2 flex items-center justify-center lg:justify-start gap-3">
