@@ -45,7 +45,7 @@ export default function Categories() {
             />
           </form>
         </div>
-        <button className="bg-black text-white text-sm p-0.5 rounded-lg">
+        <button className="bg-black text-white text-sm p-1 rounded-lg flex justify-center items-center gap-1">
           <span className="text-xl">+</span> Ajouter une catégorie
         </button>
       </div>
