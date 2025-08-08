@@ -132,7 +132,6 @@ export const productService = {
         }
       );
 
-      console.log(res);
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.error || `Erreur HTTP ${res.status}`);

@@ -9,6 +9,7 @@ const productCartSchema = new mongoose.Schema(
     },
     cart_id: { type: mongoose.Schema.Types.ObjectId, ref: "Cart" },
     product_id: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    variant_id: { type: mongoose.Schema.Types.ObjectId, ref: "ProductVariant" },
     quantity: {
       type: Number,
       default: 1,
@@ -21,6 +22,8 @@ const productCartSchema = new mongoose.Schema(
     },
   }
 );
+
+productCartSchema.index({ cart_id: 1, variant_id: 1 }, { unique: true });
 
 productCartSchema.pre("save", async function (next) {
   if (this.isNew) {

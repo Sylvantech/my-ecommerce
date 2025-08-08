@@ -47,8 +47,8 @@ const MagicSocksCart = () => {
 
             {/* Mettre la liste des artciles */}
             <div>
-              {cartData.itemCount === 0 ? (
-                <div className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-lg p-8 border border-purple-100 text-center">
+              {cartData.itemCount === 0 && (
+                <div className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-lg p-8 border border-purple-100 text-center mb-6">
                   <div className="text-6xl mb-4">🛒</div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-2">
                     Votre panier est vide
@@ -57,9 +57,8 @@ const MagicSocksCart = () => {
                     Découvrez nos chaussettes créatives et ajoutez-en à votre panier !
                   </p>
                 </div>
-              ) : (
-                <CartProduct onCartUpdate={handleCartUpdate}></CartProduct>
               )}
+              <CartProduct onCartUpdate={handleCartUpdate} />
             </div>
 
             <div className="text-center lg:text-left">
@@ -173,13 +172,13 @@ const MagicSocksCart = () => {
                     <Lock className="text-white" size={20} />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-800 text-sm">Paiement</p>
-                    <p className="text-gray-600 text-xs">Sécurisé</p>
+                      <p className="font-bold text-gray-800 text-sm">Paiement</p>
+                      <p className="text-gray-600 text-xs">Sécurisé</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
+                  <div className="flex flex-col items-center space-y-2">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300">
                     <Truck className="text-white" size={20} />
                   </div>
                   <div>

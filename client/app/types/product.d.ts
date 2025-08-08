@@ -37,7 +37,8 @@ export interface ProductColor {
 }
 
 export interface ProductVariant {
-  id: number;
+  _id: string; // MongoDB ObjectId de la variante
+  id: number; // identifiant auto-incrémenté
   product_id: string;
   color_id: ProductColor;
   size_id: ProductSize;

@@ -3,18 +3,26 @@ import { cartService } from "~/services/cartService";
 
 interface Product {
   title: string;
-  color: string;
-  size: string;
-  price: { $numberDecimal: string };
-  stock: number;
-  assets: [{ url: string }];
+  price: number | { $numberDecimal: string };
+  assets?: [{ url: string }];
 }
 
-interface CartProduct {
+interface VariantColor { name: string; hex_code: string }
+interface VariantSize { eu_size: string }
+
+interface Variant {
+  src: string;
+  stock: number;
+  color_id: VariantColor;
+  size_id: VariantSize;
+}
+
+interface CartProductItem {
   _id: string;
   id: number;
   quantity: number;
-  product_id: Product;
+  product_id: Product; // peuplé côté serveur
+  variant_id: Variant; // peuplé côté serveur
 }
 
 interface CartProductProps {
@@ -23,24 +31,30 @@ interface CartProductProps {
 
 export default function CartProduct({ onCartUpdate }: CartProductProps) {
   const [quantities, setQuantities] = useState<number[]>([]);
-
-  const [cartProduct, setCartProduct] = useState<CartProduct[] | null>(null);
+  const [cartProduct, setCartProduct] = useState<CartProductItem[] | null>(null);
 
   useEffect(() => {
     async function getCartProduct() {
       const res = await cartService.getCartProduct();
       if (res.success) {
-        setCartProduct(res.data);
-        setQuantities(res.data.map((item: CartProduct) => item.quantity));
+        const items = res.data as CartProductItem[];
+        setCartProduct(items);
+        setQuantities(items.map((item) => item.quantity));
+      } else {
+        // Panier vide ou erreur: synchroniser le parent avec 0
+        setCartProduct([]);
+        setQuantities([]);
+        if (onCartUpdate) onCartUpdate({ subtotal: 0, itemCount: 0 });
       }
     }
     getCartProduct();
   }, []);
 
   useEffect(() => {
-    if (cartProduct && quantities.length > 0 && onCartUpdate) {
+    if (cartProduct && onCartUpdate) {
       const subtotal = cartProduct.reduce((total, item, index) => {
-        const price = Number(item.product_id.price?.$numberDecimal) || 0;
+        const raw = item.product_id?.price;
+        const price = typeof raw === "number" ? raw : Number(raw?.$numberDecimal ?? 0);
         const quantity = quantities[index] || 0;
         return total + price * quantity;
       }, 0);
@@ -110,6 +124,9 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
       {Array.isArray(cartProduct) &&
         cartProduct.map((value, index) => {
           const product = value.product_id;
+          const variant = value.variant_id;
+          const rawPrice = product.price;
+          const unitPrice = typeof rawPrice === "number" ? rawPrice : Number(rawPrice?.$numberDecimal ?? 0);
 
           return (
             <div
@@ -119,7 +136,7 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
               <div className="flex flex-col lg:flex-row lg:justify-between items-start lg:items-center gap-4">
                 <div className="flex flex-col sm:flex-row gap-4 flex-1">
                   <img
-                    src={product.assets[0].url}
+                    src={variant?.src || product.assets?.[0]?.url}
                     alt="Image du produit ajouté au panier"
                     className="w-24 h-24 bg-gray-100 rounded-2xl shadow-lg object-cover"
                   />
@@ -131,21 +148,21 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
                       <div className="flex items-center gap-2">
                         <span
                           className="w-4 h-4 rounded-full border border-gray-300 shadow-sm"
-                          style={{ backgroundColor: product.color }}
+                          style={{ backgroundColor: variant?.color_id?.hex_code || "#ccc" }}
                         ></span>
                         <span className="text-gray-600 text-sm font-medium">
-                          {product.color}
+                          {variant?.color_id?.name || "-"}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-gray-600 text-sm">Taille:</span>
                         <span className="px-3 py-1 bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200 rounded-full text-sm font-semibold text-purple-700">
-                          {product.size}
+                          {variant?.size_id?.eu_size || "-"}
                         </span>
                       </div>
                     </div>
                     <p className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                      {product.price?.$numberDecimal} €
+                      {unitPrice.toFixed(2)} €
                     </p>
                   </div>
                 </div>
@@ -163,7 +180,7 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
                   <button
                     className="w-10 h-10 rounded-full border border-purple-200 bg-white hover:bg-purple-50 hover:border-purple-300 transition-all duration-200 flex items-center justify-center text-gray-600 hover:text-purple-600 font-semibold"
                     onClick={() =>
-                      handleAddition(index, product.stock, value._id)
+                      handleAddition(index, variant?.stock ?? 0, value._id)
                     }
                   >
                     +
@@ -199,10 +216,7 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
                     Sous-total pour cet article:
                   </span>
                   <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    {(
-                      Number(product.price?.$numberDecimal) *
-                      Number(quantities[index])
-                    ).toFixed(2)}{" "}
+                    {(unitPrice * Number(quantities[index])).toFixed(2)} {" "}
                     €
                   </span>
                 </div>

@@ -115,7 +115,7 @@ export default function Product() {
 
     try {
       const result = await cartService.addToCart(
-        String(selectedVariant.id),
+        String(selectedVariant._id),
         quantity
       );
 
