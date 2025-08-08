@@ -21,8 +21,8 @@ interface CartProductItem {
   _id: string;
   id: number;
   quantity: number;
-  product_id: Product; // peuplé côté serveur
-  variant_id: Variant; // peuplé côté serveur
+  product_id: Product;
+  variant_id: Variant;
 }
 
 interface CartProductProps {
@@ -41,7 +41,6 @@ export default function CartProduct({ onCartUpdate }: CartProductProps) {
         setCartProduct(items);
         setQuantities(items.map((item) => item.quantity));
       } else {
-        // Panier vide ou erreur: synchroniser le parent avec 0
         setCartProduct([]);
         setQuantities([]);
         if (onCartUpdate) onCartUpdate({ subtotal: 0, itemCount: 0 });

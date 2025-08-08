@@ -66,7 +66,7 @@ const Navbar = () => {
               <ul id="users-menu" className="py-2 space-y-2">
                 <li>
                   <a
-                    href="/user_list"
+                    href="/admin/user"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Liste des utilisateurs

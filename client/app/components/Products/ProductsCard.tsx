@@ -33,17 +33,17 @@ const ProductsCard = ({ product }: ProductCardProps) => {
 
   return (
     <div
-      className="group cursor-pointer transform transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1"
+      className="group cursor-pointer transform transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1 h-full"
       onClick={() => handleClick(id)}
     >
-      <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-violet-400 relative backdrop-blur-sm hover:bg-gradient-to-br hover:from-white hover:to-violet-50/30">
+      <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-violet-400 relative backdrop-blur-sm hover:bg-gradient-to-br hover:from-white hover:to-violet-50/30 h-[560px] w-[400px] flex flex-col">
         {is_promo && (
           <div className="absolute top-4 right-4 z-10 bg-gradient-to-r from-violet-600 to-purple-600 text-white px-3 py-1.5 rounded-full text-xs font-medium tracking-wide shadow-lg">
             PROMO
           </div>
         )}
 
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden flex-shrink-0">
           <div
             className="w-full h-80 bg-gradient-to-br from-gray-50 to-gray-100 bg-center bg-cover transition-all duration-700 group-hover:scale-110"
             style={{
@@ -54,33 +54,11 @@ const ProductsCard = ({ product }: ProductCardProps) => {
               {categoryName}
             </div>
 
-            <div className="absolute bottom-4 right-4 w-12 h-12 bg-white/95 backdrop-blur-md rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-              <svg
-                className="w-5 h-5 text-gray-700"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
-              </svg>
-            </div>
-
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
           </div>
         </div>
 
-        <div className="p-7">
+        <div className="p-7 flex flex-col flex-1">
           <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-violet-700 transition-colors duration-300 leading-snug">
             {title}
           </h2>
@@ -91,14 +69,18 @@ const ProductsCard = ({ product }: ProductCardProps) => {
 
           <div className="flex items-end justify-between mb-6">
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-gray-900 tracking-tight">
+                <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight">
                 {formatPrice(price)}
               </span>
-              {is_promo && price && typeof price === "number" && (
-                <span className="text-sm text-gray-400 line-through font-light mt-1">
-                  {formatPrice(price * 1.2)}
-                </span>
-              )}
+              <span
+                className={`block h-5 text-sm text-gray-400 line-through font-light mt-1 ${
+                  is_promo && price && typeof price === "number" ? "visible" : "invisible"
+                }`}
+              >
+                {is_promo && price && typeof price === "number"
+                  ? formatPrice(price * 1.2)
+                  : ""}
+              </span>
             </div>
 
             <div className="flex items-center space-x-1">
@@ -141,7 +123,7 @@ const ProductsCard = ({ product }: ProductCardProps) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-auto">
             <div className="flex-1"></div>
 
             <button className="w-14 h-14 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-violet-50 hover:to-violet-100 text-gray-600 hover:text-violet-700 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300 group/heart border border-gray-200 hover:border-violet-300">

@@ -33,9 +33,9 @@ const Navbar = () => {
     };
 
     checkAuthStatus();
-    
+
     window.addEventListener('storage', checkAuthStatus);
-    
+
     return () => {
       window.removeEventListener('storage', checkAuthStatus);
     };
@@ -135,7 +135,9 @@ const Navbar = () => {
                   />
                 </svg>
               </div>
-              <span>Compte</span>
+              <p className="text-sm font-semibold text-gray-800">
+                {isAuthenticated ? "Espace Personnel" : "Connexion"}
+              </p>
               <svg
                 className={`w-4 h-4 transition-transform duration-300 ${isAccountMenuOpen ? "rotate-180" : ""}`}
                 fill="none"
@@ -153,15 +155,7 @@ const Navbar = () => {
 
             {isAccountMenuOpen && (
               <div className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-100 py-3 z-20">
-                <div className="px-4 py-2 border-b border-gray-100 mb-2">
-                  <p className="text-sm font-semibold text-gray-800">
-                    Mon Compte
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {isAuthenticated ? "Gérez votre profil" : "Accédez à votre espace"}
-                  </p>
-                </div>
-                
+
                 {isAuthenticated ? (
                   <>
                     <a
@@ -356,15 +350,7 @@ const Navbar = () => {
           </div>
 
           <div className="space-y-4 border-t border-gray-200 pt-6">
-            <div className="bg-gradient-to-r from-gray-50 to-purple-50 rounded-2xl p-4 mb-4">
-              <p className="text-sm font-semibold text-gray-800 mb-1">
-                Mon Compte
-              </p>
-              <p className="text-xs text-gray-500">
-                {isAuthenticated ? "Gérez votre profil" : "Accédez à votre espace"}
-              </p>
-            </div>
-            
+
             {isAuthenticated ? (
               <>
                 <a
