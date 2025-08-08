@@ -16,6 +16,7 @@ export const productService = {
 
       const data = await res.json();
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const formatted: Product[] = data.products.map((item: any) => ({
         id: item.id,
         title: item.title,
@@ -120,6 +121,7 @@ export const productService = {
 
   async getVariants(productId: number): Promise<{
     success: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any[];
     error?: string;
   }> {

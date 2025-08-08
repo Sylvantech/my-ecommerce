@@ -7,7 +7,6 @@ const ProductVariant = require("../models/ProductVariant.model");
 router.post("/", async (req, res) => {
   const { cart_id, variant_id, quantity = 1 } = req.body;
 
-  // Normalisation de la quantité
   const qty = Math.max(1, Number(quantity) || 1);
 
   if (!cart_id || !variant_id) {
@@ -34,7 +33,6 @@ router.post("/", async (req, res) => {
       });
     }
 
-    // Le product_id stocké est l'ObjectId du produit parent
     const productObjectId = variant.product_id;
 
     let productCart = await ProductCart.findOne({
