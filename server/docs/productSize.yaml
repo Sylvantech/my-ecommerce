@@ -17,12 +17,12 @@ paths:
                   type: string
                   minLength: 2
                   maxLength: 10
-                  description: Taille EU (ex: "42")
+                  description: "Taille EU (ex: \"42\")"
                 label:
                   type: string
                   maxLength: 10
                   nullable: true
-                  description: Label optionnel (ex: "M")
+                  description: "Label optionnel (ex: \"M\")"
       responses:
         '201':
           description: Taille de produit créée avec succès
@@ -99,12 +99,12 @@ components:
           readOnly: true
         eu_size:
           type: string
-          description: Taille EU
+          description: "Taille EU"
           minLength: 2
           maxLength: 10
         label:
           type: string
-          description: Label optionnel
+          description: "Label optionnel"
           maxLength: 10
           nullable: true
         created_at:

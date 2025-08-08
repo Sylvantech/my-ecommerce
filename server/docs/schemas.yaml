@@ -309,12 +309,12 @@ components:
           readOnly: true
         eu_size:
           type: string
-          description: Taille EU (ex: "42")
+          description: "Taille EU (ex: \"42\")"
           minLength: 2
           maxLength: 10
         label:
           type: string
-          description: Label optionnel (ex: "M")
+          description: "Label optionnel (ex: \"M\")"
           maxLength: 10
           nullable: true
         created_at:
@@ -341,7 +341,7 @@ components:
           type: string
         hex_code:
           type: string
-          description: Code hexadécimal (ex: #FFFFFF)
+          description: "Code hexadécimal (ex: #FFFFFF)"
         created_at:
           type: string
           format: date-time

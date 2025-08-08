@@ -19,7 +19,7 @@ paths:
                 hex_code:
                   type: string
                   maxLength: 7
-                  description: Code hexadécimal (ex: #FFFFFF)
+                  description: "Code hexadécimal (ex: #FFFFFF)"
       responses:
         '201':
           description: Couleur de produit créée avec succès
@@ -99,7 +99,7 @@ components:
           description: Nom de la couleur
         hex_code:
           type: string
-          description: Code hexadécimal (ex: #FFFFFF)
+          description: "Code hexadécimal (ex: #FFFFFF)"
         created_at:
           type: string
           format: date-time
