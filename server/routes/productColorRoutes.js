@@ -3,7 +3,7 @@ const router = express.Router();
 const ProductColor = require("../models/ProductColor.model");
 const { verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", verifyAdmin, async (req, res) => {
+router.post("/", async (req, res) => {
   const { name, hex_code } = req.body;
 
   if (typeof name !== "string" || name.length < 1 || name.length > 100) {

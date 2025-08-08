@@ -25,8 +25,6 @@ export default function Product() {
     ? variants.filter(v => v.size_id._id === selectedSize)
     : [];
 
-  // ...existing useEffect and functions...
-
   useEffect(() => {
     async function fetchProductData() {
       if (!slug) return;
@@ -160,7 +158,6 @@ export default function Product() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-100">
-      {/* Hero Section avec breadcrumb */}
       <div className="bg-white/70 backdrop-blur-sm border-b border-purple-100">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <nav className="flex items-center space-x-2 text-sm">
@@ -185,7 +182,6 @@ export default function Product() {
 
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid lg:grid-cols-2 gap-16 items-start">
-          {/* Section Image - Améliorée */}
           <div className="space-y-6">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-700"></div>
@@ -196,7 +192,6 @@ export default function Product() {
                   className="w-full aspect-square object-cover rounded-2xl shadow-lg transition-transform duration-700 group-hover:scale-105"
                 />
 
-                {/* Badge premium avec animation */}
                 {product.is_new && (
                   <div className="absolute top-4 right-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-lg animate-bounce">
                     ✨ NOUVEAU
@@ -209,7 +204,6 @@ export default function Product() {
                   </div>
                 )}
 
-                {/* Info variant sélectionné */}
                 {selectedVariant && (
                   <div className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-sm text-white px-4 py-3 rounded-2xl shadow-xl">
                     <div className="flex items-center gap-3">
@@ -223,9 +217,7 @@ export default function Product() {
                         <p className="text-sm font-bold">
                           {selectedVariant.color_id.name}
                         </p>
-                        <p className="text-xs text-gray-300">
-                          Taille {selectedVariant.size_id.size}
-                        </p>
+                        
                       </div>
                     </div>
                   </div>
@@ -233,7 +225,6 @@ export default function Product() {
               </div>
             </div>
 
-            {/* Miniatures des variants */}
             {filteredVariantsBySize.length > 1 && (
               <div className="flex gap-3 justify-center">
                 {filteredVariantsBySize.slice(0, 4).map(variant => (
@@ -257,9 +248,7 @@ export default function Product() {
             )}
           </div>
 
-          {/* Section Détails - Complètement redesignée */}
           <div className="space-y-8">
-            {/* Header produit */}
             <div className="space-y-6">
               <div>
                 <h1 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-purple-800 to-indigo-800 bg-clip-text text-transparent leading-tight mb-4">
@@ -278,7 +267,6 @@ export default function Product() {
                 {product.description}
               </p>
 
-              {/* Prix avec effet premium */}
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl blur-lg opacity-20"></div>
@@ -296,7 +284,6 @@ export default function Product() {
               </div>
             </div>
 
-            {/* Sélection tailles - Design premium */}
             <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50">
               <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
@@ -335,7 +322,6 @@ export default function Product() {
               </div>
             </div>
 
-            {/* Cards variants - Plus modernes */}
             {selectedSize && filteredVariantsBySize.length > 0 && (
               <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50">
                 <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-3">
@@ -370,7 +356,6 @@ export default function Product() {
                                 : "ring-2 ring-slate-200"
                           }`}
                         >
-                          {/* Bande colorée */}
                           <div
                             className="h-2 w-full"
                             style={{
@@ -385,10 +370,8 @@ export default function Product() {
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />
 
-                            {/* Overlay gradient */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                            {/* Badge stock */}
                             <div className="absolute top-3 right-3">
                               {isAvailable ? (
                                 <div className="bg-emerald-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
@@ -401,7 +384,6 @@ export default function Product() {
                               )}
                             </div>
 
-                            {/* Checkmark pour sélection */}
                             {isSelected && (
                               <div className="absolute inset-0 bg-purple-600/30 flex items-center justify-center">
                                 <div className="bg-white rounded-full p-3 shadow-xl animate-pulse">
@@ -421,7 +403,6 @@ export default function Product() {
                             )}
                           </div>
 
-                          {/* Info couleur */}
                           <div className="p-4 bg-white">
                             <div className="flex items-center gap-3">
                               <div
@@ -448,7 +429,6 @@ export default function Product() {
               </div>
             )}
 
-            {/* Quantité - Plus moderne */}
             {selectedVariant && (
               <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50">
                 <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-3">
@@ -499,7 +479,6 @@ export default function Product() {
               </div>
             )}
 
-            {/* Messages et bouton d'ajout - Plus impressionnant */}
             <div className="space-y-6">
               {addToCartMessage && (
                 <div
