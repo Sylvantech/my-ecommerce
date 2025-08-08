@@ -1,0 +1,152 @@
+paths:
+  /api/cart/:
+    post:
+      summary: Créer un panier
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  nullable: true
+                  description: ID MongoDB de l'utilisateur
+                anonymous_user_id:
+                  type: string
+                  nullable: true
+                  description: Identifiant d'utilisateur anonyme
+      responses:
+        '201':
+          description: Panier créé avec succès
+        '400':
+          description: Données invalides ou panier déjà existant
+        '404':
+          description: Utilisateur non trouvé
+        '500':
+          description: Erreur serveur
+    get:
+      summary: Récupérer tous les paniers
+      tags: [Cart]
+      responses:
+        '200':
+          description: Liste des paniers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  carts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Cart'
+        '404':
+          description: Aucun panier trouvé
+        '500':
+          description: Erreur serveur
+    put:
+      summary: Mettre à jour un panier
+      tags: [Cart]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: string
+                user_id:
+                  type: string
+                anonymous_user_id:
+                  type: string
+      responses:
+        '200':
+          description: Panier mis à jour avec succès
+        '400':
+          description: Données invalides
+        '404':
+          description: Panier non trouvé
+        '500':
+          description: Erreur serveur
+    delete:
+      summary: Supprimer un panier
+      tags: [Cart]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Panier supprimé avec succès
+        '400':
+          description: ID invalide
+        '404':
+          description: Panier non trouvé
+        '500':
+          description: Erreur serveur
+
+  /api/cart/getById:
+    post:
+      summary: Récupérer un panier par ID MongoDB
+      tags: [Cart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Panier trouvé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart:
+                    $ref: '#/components/schemas/Cart'
+        '404':
+          description: Panier non trouvé
+        '500':
+          description: Erreur serveur
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user_id:
+          type: string
+          nullable: true
+        anonymous_user_id:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true

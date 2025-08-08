@@ -1,0 +1,149 @@
+paths:
+  /api/productCart/:
+    post:
+      summary: Ajouter une variante au panier (ou augmenter la quantité)
+      tags: [ProductCart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cart_id, variant_id]
+              properties:
+                cart_id:
+                  type: string
+                  description: ID MongoDB du panier
+                variant_id:
+                  type: string
+                  description: ID MongoDB de la variante
+                quantity:
+                  type: integer
+                  minimum: 1
+                  default: 1
+      responses:
+        '201':
+          description: Variante ajoutée au panier
+        '200':
+          description: Quantité augmentée pour une variante déjà présente
+        '400':
+          description: Données invalides
+        '500':
+          description: Erreur serveur
+    put:
+      summary: Mettre à jour la quantité d'un produit du panier
+      tags: [ProductCart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id, quantity]
+              properties:
+                id:
+                  type: string
+                  description: ID MongoDB du ProductCart
+                quantity:
+                  type: integer
+                  minimum: 1
+      responses:
+        '200':
+          description: Quantité mise à jour avec succès
+        '404':
+          description: Produit non trouvé dans le panier
+        '500':
+          description: Erreur serveur
+    delete:
+      summary: Supprimer un produit du panier
+      tags: [ProductCart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: string
+                  description: ID MongoDB du ProductCart
+      responses:
+        '200':
+          description: Produit supprimé du panier
+        '404':
+          description: Produit non trouvé dans le panier
+        '500':
+          description: Erreur serveur
+
+  /api/productCart/getByCartId:
+    post:
+      summary: Récupérer les produits d'un panier par ID de panier
+      tags: [ProductCart]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cart_id]
+              properties:
+                cart_id:
+                  type: string
+                  description: ID MongoDB du panier
+      responses:
+        '200':
+          description: Produits du panier
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cart_products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductCartWithPopulation'
+        '404':
+          description: Aucun produit trouvé pour ce panier
+        '500':
+          description: Erreur serveur
+
+components:
+  schemas:
+    ProductCart:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        cart_id:
+          type: string
+        product_id:
+          type: string
+        variant_id:
+          type: string
+        quantity:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    ProductCartWithPopulation:
+      allOf:
+        - $ref: '#/components/schemas/ProductCart'
+        - type: object
+          properties:
+            product_id:
+              $ref: '#/components/schemas/Product'
+            variant_id:
+              type: object
+              properties:
+                color_id:
+                  $ref: '#/components/schemas/ProductColor'
+                size_id:
+                  $ref: '#/components/schemas/ProductSize'

@@ -3,13 +3,15 @@ paths:
     post:
       summary: Créer un nouveau produit
       tags: [Product]
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [title, category_id, price]
+              required: [title, category_id, price, src]
               properties:
                 title:
                   type: string
@@ -17,28 +19,19 @@ paths:
                   type: string
                 category_id:
                   type: string
+                  description: ID MongoDB de la catégorie
                 price:
                   type: number
-                color:
-                  type: string
                 composition:
                   type: string
-                size:
-                  type: string
-                in_stock:
-                  type: boolean
-                stock:
-                  type: integer
                 weight_in_gr:
                   type: number
                 is_promo:
                   type: boolean
                 is_new:
                   type: boolean
-                assetsData:
-                  type: array
-                  items:
-                    type: object
+                src:
+                  type: string
       responses:
         '201':
           description: Produit créé avec succès
@@ -49,6 +42,13 @@ paths:
     get:
       summary: Récupérer tous les produits
       tags: [Product]
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+          description: Limite le nombre de produits retournés
       responses:
         '200':
           description: Liste des produits
@@ -68,6 +68,8 @@ paths:
     patch:
       summary: Mettre à jour un produit
       tags: [Product]
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -86,26 +88,16 @@ paths:
                   type: string
                 price:
                   type: number
-                color:
-                  type: string
                 composition:
                   type: string
-                size:
-                  type: string
-                in_stock:
-                  type: boolean
-                stock:
-                  type: integer
                 weight_in_gr:
                   type: number
                 is_promo:
                   type: boolean
                 is_new:
                   type: boolean
-                assetsData:
-                  type: array
-                  items:
-                    type: object
+                src:
+                  type: string
       responses:
         '200':
           description: Produit mis à jour avec succès
@@ -115,34 +107,13 @@ paths:
           description: Produit non trouvé
         '500':
           description: Erreur serveur
-    delete:
-      summary: Supprimer un produit
-      tags: [Product]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [id]
-              properties:
-                id:
-                  type: integer
-      responses:
-        '200':
-          description: Produit supprimé avec succès
-        '400':
-          description: ID invalide
-        '404':
-          description: Produit non trouvé
-        '500':
-          description: Erreur serveur
-  /api/product/getById:
+
+  /api/product/{id}:
     get:
       summary: Récupérer un produit par ID
       tags: [Product]
       parameters:
-        - in: query
+        - in: path
           name: id
           required: true
           schema:
@@ -162,17 +133,21 @@ paths:
         '500':
           description: Erreur serveur
 
-  /api/product/review/{productId}:
-    get:
-      summary: Récupérer les avis d'un produit spécifique
+  /api/product/getReview:
+    post:
+      summary: Récupérer les avis d'un produit (POST)
       tags: [Product]
-      parameters:
-        - in: path
-          name: productId
-          required: true
-          schema:
-            type: integer
-          description: ID du produit pour lequel récupérer les avis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id]
+              properties:
+                id:
+                  type: integer
+                  description: ID numérique du produit (champ auto-incrémenté)
       responses:
         '200':
           description: Avis du produit récupérés avec succès
@@ -185,37 +160,13 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Review'
-                    description: Liste des avis pour ce produit
                   count:
                     type: integer
-                    description: Nombre total d'avis
                   average:
                     type: number
                     format: float
-                    description: Note moyenne (arrondie à 1 décimale)
-                    minimum: 1
-                    maximum: 5
-              examples:
-                successResponse:
-                  summary: Réponse avec avis
-                  value:
-                    reviews:
-                      - id: 1
-                        user_id: "507f1f77bcf86cd799439011"
-                        product_id: "507f1f77bcf86cd799439012"
-                        rating: 4
-                        created_at: "2024-01-15T10:30:00Z"
-                        updated_at: "2024-01-15T10:30:00Z"
-                      - id: 2
-                        user_id: "507f1f77bcf86cd799439013"
-                        product_id: "507f1f77bcf86cd799439012"
-                        rating: 5
-                        created_at: "2024-01-16T14:20:00Z"
-                        updated_at: "2024-01-16T14:20:00Z"
-                    count: 2
-                    average: 4.5
         '404':
-          description: Produit non trouvé ou aucun avis trouvé
+          description: Produit non trouvé
           content:
             application/json:
               schema:
@@ -223,15 +174,7 @@ paths:
                 properties:
                   error:
                     type: string
-                examples:
-                  productNotFound:
-                    summary: Produit non trouvé
-                    value:
-                      error: "Le produit n'a pas été trouvé"
-                  noReviews:
-                    summary: Aucun avis trouvé
-                    value:
-                      error: "Aucun avis trouvé pour ce produit"
+                    example: "Le produit n'a pas été trouvé"
         '500':
           description: Erreur serveur
           content:
