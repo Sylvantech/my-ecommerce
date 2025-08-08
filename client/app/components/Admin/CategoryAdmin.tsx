@@ -14,22 +14,35 @@ interface Category {
 export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
   const [categories, setCategories] = useState<Category[]>([]);
 
+  async function getCategories() {
+    const res = await adminService.getCategories();
+    if (res.success) {
+      setCategories(res.data);
+    } else {
+      console.error(res.error);
+    }
+  }
 
   useEffect(() => {
-    async function getCategories() {
-      const res = await adminService.getCategories();
-      if (res.success) {
-        setCategories(res.data);
-      } else {
-        console.error(res.error);
-      }
-    }
     getCategories();
   }, []);
 
   if (categories.length < 1) {
     return "Chargement";
   }
+
+  const handleDelete = (id: number) => {
+    async function deleteCategory() {
+      const idCategory = id;
+      const res = await adminService.deleteCategory(idCategory);
+      if (res.success) {
+        getCategories();
+      } else {
+        console.error(res.error);
+      }
+    }
+    deleteCategory();
+  };
 
   const filtered = categories.filter(category =>
     category.name.toLowerCase().includes(searchCategory.toLowerCase())
@@ -121,7 +134,10 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
                       <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"></path>
                     </svg>
                   </button>
-                  <button className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center">
+                  <button
+                    onClick={() => handleDelete(category.id)}
+                    className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -145,8 +161,7 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
               </div>
             </div>
           ))
-        : Array.isArray(categories) &&
-          categories.map((category, index) => {
+        : categories.map((category, index) => {
             return (
               <div
                 key={index}
@@ -230,7 +245,10 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
                         <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"></path>
                       </svg>
                     </button>
-                    <button className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center">
+                    <button
+                      onClick={() => handleDelete(category.id)}
+                      className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"

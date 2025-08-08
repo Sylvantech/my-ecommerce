@@ -45,4 +45,28 @@ export const adminService = {
       return { success: false, error: "Erreur réseau ou serveur" };
     }
   },
+
+  deleteCategory: async (idCategory: number) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/category/", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: idCategory }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Token invalide ou expiré");
+        } else if (res.status === 403) {
+          throw new Error("Droits administrateur requis");
+        }
+      }
+      return {
+        success: true,
+        data: `La catégorie ${idCategory} a bien été supprimé`,
+      };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
 };
