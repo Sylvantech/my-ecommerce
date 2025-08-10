@@ -69,4 +69,26 @@ export const adminService = {
       return { success: false, error: "Erreur réseau ou serveur" };
     }
   },
+
+  createCategory: async (name: string, description: string) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/category/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, description }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Token invalide ou expiré");
+        } else if (res.status === 403) {
+          throw new Error("Droits administrateur requis");
+        }
+      }
+      const data = await res.json();
+      return { success: true, data };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
 };
