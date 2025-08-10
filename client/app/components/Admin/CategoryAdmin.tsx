@@ -13,6 +13,20 @@ interface Category {
 
 export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [description, setDescription] = useState("");
+
+  const [name, setName] = useState("");
+
+  const [id, setId] = useState<number>(0);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleChange = (category: Category) => {
+    setIsModalOpen(true);
+    setId(category.id);
+    setName(category.name);
+    setDescription(category.description);
+  };
 
   async function getCategories() {
     const res = await adminService.getCategories();
@@ -22,6 +36,18 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
       console.error(res.error);
     }
   }
+
+  const handleSubmit = async () => {
+    if (name && description && id) {
+      const res = await adminService.modifyCategory(name, description, id);
+      if (res?.success) {
+        setIsModalOpen(false);
+        await getCategories();
+      } else {
+        return res;
+      }
+    }
+  };
 
   useEffect(() => {
     getCategories();
@@ -50,6 +76,63 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
 
   return (
     <div className="sm:w-full">
+      {isModalOpen && (
+        <div className="fixed inset-0 flex justify-end items-center p-4 bg-black/50 w-full">
+          <div className="bg-white w-full max-w-sm p-6 flex flex-col gap-4 rounded-lg">
+            <div>
+              <div className="flex justify-end">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-sm text-gray-700"
+                >
+                  X
+                </button>
+              </div>
+              <h1 className="text-xl">Ajouter une nouvelle catégorie</h1>
+              <p className="text-gray-500 text-sm">
+                Créez une nouvelle catégorie pour organiser vos produits.
+              </p>
+            </div>
+            <div>
+              <h3>Nom de la catégorie</h3>
+              <input
+                className="shadow border border-gray-300 w-full rounded-lg p-1.5"
+                type="text"
+                name="name"
+                id="name"
+                placeholder="Ex: Chaussettes..."
+                value={name}
+                onChange={e => setName(e.target.value)}
+              />
+            </div>
+            <div>
+              <h3>Description</h3>
+              <textarea
+                className="shadow p-2 border border-gray-300 w-full rounded-lg"
+                name="description"
+                id="description"
+                placeholder="Description de la catégorie..."
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="border border-gray-200 p-2 rounded-lg text-sm"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleSubmit}
+                className="bg-gray-400 hover:bg-black text-white p-2 rounded-lg text-sm"
+              >
+                Modifier
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {filtered.length > 0
         ? filtered.map((category, index) => (
             <div
@@ -117,7 +200,10 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
                   <span className="text-sm">Voir</span>
                 </button>
                 <div className="flex gap-2">
-                  <button className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center">
+                  <button
+                    onClick={() => handleChange(category)}
+                    className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -228,7 +314,10 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
                     <span className="text-sm">Voir</span>
                   </button>
                   <div className="flex gap-2">
-                    <button className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center">
+                    <button
+                      onClick={() => handleChange(category)}
+                      className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
