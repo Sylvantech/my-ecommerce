@@ -3,6 +3,7 @@ import { adminService } from "~/services/adminService";
 
 interface CategoryAdminProps {
   searchCategory: string;
+  refresh: number;
 }
 
 interface Category {
@@ -11,7 +12,10 @@ interface Category {
   description: string;
 }
 
-export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
+export default function CategoryAdmin({
+  searchCategory,
+  refresh,
+}: CategoryAdminProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [description, setDescription] = useState("");
 
@@ -53,6 +57,10 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
     getCategories();
   }, []);
 
+  useEffect(() => {
+    getCategories();
+  }, [refresh]);
+
   if (categories.length < 1) {
     return "Chargement";
   }
@@ -76,63 +84,12 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
 
   return (
     <div className="sm:w-full">
-      {isModalOpen && (
-        <div className="fixed inset-0 flex justify-end items-center p-4 bg-black/50 w-full">
-          <div className="bg-white w-full max-w-sm p-6 flex flex-col gap-4 rounded-lg">
-            <div>
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="text-sm text-gray-700"
-                >
-                  X
-                </button>
-              </div>
-              <h1 className="text-xl">Ajouter une nouvelle catégorie</h1>
-              <p className="text-gray-500 text-sm">
-                Créez une nouvelle catégorie pour organiser vos produits.
-              </p>
-            </div>
-            <div>
-              <h3>Nom de la catégorie</h3>
-              <input
-                className="shadow border border-gray-300 w-full rounded-lg p-1.5"
-                type="text"
-                name="name"
-                id="name"
-                placeholder="Ex: Chaussettes..."
-                value={name}
-                onChange={e => setName(e.target.value)}
-              />
-            </div>
-            <div>
-              <h3>Description</h3>
-              <textarea
-                className="shadow p-2 border border-gray-300 w-full rounded-lg"
-                name="description"
-                id="description"
-                placeholder="Description de la catégorie..."
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-              />
-            </div>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="border border-gray-200 p-2 rounded-lg text-sm"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={handleSubmit}
-                className="bg-gray-400 hover:bg-black text-white p-2 rounded-lg text-sm"
-              >
-                Modifier
-              </button>
-            </div>
-          </div>
+      <div className="flex flex-col sm:flex-row justify-around gap-3 mb-5">
+        <div className="pl-3 flex flex-col justify-around bg-white border-2 border-gray-200 rounded-xl w-full h-30">
+          <h2 className="text-gray-700">Total Catégories</h2>
+          <p className="text-2xl">{categories.length}</p>
         </div>
-      )}
+      </div>
       {filtered.length > 0
         ? filtered.map((category, index) => (
             <div
@@ -162,13 +119,8 @@ export default function CategoryAdmin({ searchCategory }: CategoryAdminProps) {
                     ></circle>
                   </svg>
                 </div>
-                <div className="flex flex-col w-full">
-                  <div className="flex justify-between">
-                    <h3 className="text-black">{category.name}</h3>
-                    <p className="text-xs sm:text-base bg-gray-100 p-2 rounded-lg">
-                      <span className="border-b-1">{12}</span>
-                    </p>
-                  </div>
+                <div>
+                  <h3 className="text-black">{category.name}</h3>
                   <p className="text-sm">ID: {category.id}</p>
                 </div>
               </div>

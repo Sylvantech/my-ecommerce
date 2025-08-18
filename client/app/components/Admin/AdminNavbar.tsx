@@ -123,40 +123,40 @@ const Navbar = () => {
                   🛒 Commandes
                 </span>
               </button>
-                <ul id="orders-menu" className="py-2 space-y-2">
+              <ul id="orders-menu" className="py-2 space-y-2">
                 <li>
                   <a
-                  href="#"
-                  className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    href="#"
+                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                  Paniers
+                    Paniers
                   </a>
                 </li>
                 <li>
                   <a
-                  href="#"
-                  className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    href="#"
+                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                  Adresses utilisateur
+                    Adresses utilisateur
                   </a>
                 </li>
                 <li>
                   <a
-                  href="#"
-                  className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    href="#"
+                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                  Gestion bancaire
+                    Gestion bancaire
                   </a>
                 </li>
                 <li>
                   <a
-                  href="#"
-                  className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    href="#"
+                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                  Gestion de commande
+                    Gestion de commande
                   </a>
                 </li>
-                </ul>
+              </ul>
             </li>
 
             {/* Avis clients */}
