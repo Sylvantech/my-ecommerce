@@ -54,7 +54,6 @@ export const adminService = {
       return { success: false, error: "Token manquant" };
     }
 
-
     try {
       const res = await fetch("http://localhost:3000/api/category/", {
         method: "DELETE",
@@ -107,7 +106,10 @@ export const adminService = {
     try {
       const res = await fetch("http://localhost:3000/api/category/", {
         method: "PUT",
-        headers: {Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ name, description, id }),
       });
       if (!res.ok) {
@@ -126,10 +128,17 @@ export const adminService = {
   },
 
   createCategory: async (name: string, description: string) => {
+    const token = CookieHelper.getToken("AccesToken");
+    if (!token) {
+      return { success: false, error: "Token manquant" };
+    }
     try {
       const res = await fetch("http://localhost:3000/api/category/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ name, description }),
       });
       if (!res.ok) {
