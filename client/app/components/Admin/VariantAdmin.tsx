@@ -7,6 +7,7 @@ interface VariantAdminProps {
 }
 
 interface ProductVariant {
+  _id:string;
   id: number;
   product_id: {
     _id: string;
@@ -94,19 +95,17 @@ export default function VariantAdmin({
     return "Chargement";
   }
 
-  // const handleDelete = (id: number) => {
-  //     async function deleteVariant() {
-  //         const res = await adminService.deleteProductVariant(id);
-  //         if (res.success) {
-  //             getVariants();
-  //         } else {
-  //             console.error(res.error);
-  //         }
-  //     }
-  //     deleteVariant();
-  // };
-
-  const filtered = variants.filter(
+  const handleDelete = (id: number) => {
+    async function deleteVariant() {
+      const res = await adminService.deleteProductVariant(id);
+      if (res.success) {
+        getVariants();
+      } else {
+        console.error(res.error);
+      }
+    }
+    deleteVariant();
+  };  const filtered = variants.filter(
     variant =>
       variant.product_id?.name
         ?.toLowerCase()
@@ -256,7 +255,7 @@ export default function VariantAdmin({
                     </svg>
                   </button>
                   <button
-                    // onClick={() => handleDelete(variant.id)}
+                    onClick={() => handleDelete(variant.id)}
                     className="inline-flex items-center justify-center w-10 h-10 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
                     title="Supprimer"
                   >
@@ -424,7 +423,7 @@ export default function VariantAdmin({
                     </svg>
                   </button>
                   <button
-                    // onClick={() => handleDelete(variant.id)}
+                    onClick={() => handleDelete(variant.id)}
                     className="inline-flex items-center justify-center w-10 h-10 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
                     title="Supprimer"
                   >
