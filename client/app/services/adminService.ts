@@ -1,5 +1,5 @@
 import type { User } from "../types/userlist";
-
+import { CookieHelper } from "../utils/cookieHelper";
 export const adminService = {
   async authenticated(token: string) {
     try {
@@ -49,10 +49,19 @@ export const adminService = {
   },
 
   deleteCategory: async (idCategory: number) => {
+    const token = CookieHelper.getToken("AccesToken");
+    if (!token) {
+      return { success: false, error: "Token manquant" };
+    }
+
+
     try {
       const res = await fetch("http://localhost:3000/api/category/", {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ id: idCategory }),
       });
       if (!res.ok) {
@@ -91,10 +100,14 @@ export const adminService = {
     }
   },
   modifyCategory: async (name: string, description: string, id: number) => {
+    const token = CookieHelper.getToken("AccesToken");
+    if (!token) {
+      return { success: false, error: "Token manquant" };
+    }
     try {
       const res = await fetch("http://localhost:3000/api/category/", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         body: JSON.stringify({ name, description, id }),
       });
       if (!res.ok) {
