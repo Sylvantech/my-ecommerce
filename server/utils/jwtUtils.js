@@ -4,10 +4,10 @@ const crypto = require("crypto");
 const RefreshToken = require("../models/refreshToken.model");
 
 function generateJWTToken(user) {
-  let today = new Date();
-  let expirationDate = new Date(today);
+  const today = new Date();
+  const expirationDate = new Date(today);
   expirationDate.setTime(today.getTime() + 2.5 * 60 * 60 * 1000); // 2.5 heures
-  let payload = {
+  const payload = {
     id: user.id,
     email: user.email,
     role: user.role,
@@ -18,7 +18,7 @@ function generateJWTToken(user) {
     aud: "ecommerce-chaussettes-client",
   };
 
-  let token = jwt.sign(payload, config.secretKey);
+  const token = jwt.sign(payload, config.secretKey);
   return { JWTToken: token, ExpirationDate: expirationDate };
 }
 

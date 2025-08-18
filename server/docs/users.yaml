@@ -103,14 +103,18 @@ paths:
                     example: "Utilisateur authentifié avec succès"
                   user:
                     $ref: '#/components/schemas/UserResponseWithReduction'
-                  token:
+                  accessToken:
                     type: string
                     description: Token JWT pour l'authentification
                     example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                   expiresAt:
                     type: string
                     format: date-time
-                    description: Date d'expiration du token
+                  refreshToken:
+                    type: string
+                  refreshTokenExpiresAt:
+                    type: string
+                    format: date-time
         '400':
           description: Données invalides
           content:
@@ -141,6 +145,14 @@ paths:
                 $ref: '#/components/schemas/ErrorWithDetails'
 
   /api/user:
+    get:
+      summary: Récupérer tous les utilisateurs (sans mots de passe)
+      tags: [Users]
+      responses:
+        '200':
+          description: Liste des utilisateurs
+        '500':
+          description: Erreur serveur
     put:
       summary: Mettre à jour un utilisateur
       description: Mettre à jour les informations d'un utilisateur existant
@@ -233,7 +245,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorWithDetails'
-
     delete:
       summary: Supprimer un utilisateur
       description: Supprimer un utilisateur existant par son ID
@@ -277,3 +288,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorWithDetails'
+
+  /api/user/getId:
+    post:
+      summary: Récupérer l'ObjectId MongoDB de l'utilisateur authentifié
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Identifiant récupéré
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+        '400':
+          description: Utilisateur non authentifié
+        '404':
+          description: Utilisateur non trouvé
+        '500':
+          description: Erreur serveur

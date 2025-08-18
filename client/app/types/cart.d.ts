@@ -1,4 +1,4 @@
-import type { Product } from "./product";
+import type { Product, ProductVariant } from "./product";
 
 export interface Cart {
   id: number;
@@ -13,6 +13,7 @@ export interface CartProduct {
   _id: string;
   cart_id: string;
   product_id: string | Product;
+  variant_id?: string | ProductVariant;
   quantity: number;
   created_at?: Date;
   updated_at?: Date;

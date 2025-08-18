@@ -17,6 +17,20 @@ export default function CategoryAdmin({
   refresh,
 }: CategoryAdminProps) {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [description, setDescription] = useState("");
+
+  const [name, setName] = useState("");
+
+  const [id, setId] = useState<number>(0);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleChange = (category: Category) => {
+    setIsModalOpen(true);
+    setId(category.id);
+    setName(category.name);
+    setDescription(category.description);
+  };
 
   async function getCategories() {
     const res = await adminService.getCategories();
@@ -26,6 +40,18 @@ export default function CategoryAdmin({
       console.error(res.error);
     }
   }
+
+  const handleSubmit = async () => {
+    if (name && description && id) {
+      const res = await adminService.modifyCategory(name, description, id);
+      if (res?.success) {
+        setIsModalOpen(false);
+        await getCategories();
+      } else {
+        return res;
+      }
+    }
+  };
 
   useEffect(() => {
     getCategories();
@@ -126,7 +152,10 @@ export default function CategoryAdmin({
                   <span className="text-sm">Voir</span>
                 </button>
                 <div className="flex gap-2">
-                  <button className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center">
+                  <button
+                    onClick={() => handleChange(category)}
+                    className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -237,7 +266,10 @@ export default function CategoryAdmin({
                     <span className="text-sm">Voir</span>
                   </button>
                   <div className="flex gap-2">
-                    <button className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center">
+                    <button
+                      onClick={() => handleChange(category)}
+                      className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"

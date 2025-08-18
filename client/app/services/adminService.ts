@@ -1,3 +1,5 @@
+import type { User } from "../types/userlist";
+
 export const adminService = {
   async authenticated(token: string) {
     try {
@@ -64,6 +66,46 @@ export const adminService = {
         success: true,
         data: `La catégorie ${idCategory} a bien été supprimé`,
       };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
+
+  getUsers: async (): Promise<{
+    success: boolean;
+    data?: User[];
+    error?: string;
+  }> => {
+    try {
+      const res = await fetch("http://localhost:3000/api/user/");
+      if (!res.ok) {
+        const message = "Erreur lors de la récupération des utilisateurs";
+        return { success: false, error: message };
+      }
+      const data = await res.json();
+      return { success: true, data };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
+  modifyCategory: async (name: string, description: string, id: number) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/category/", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, description, id }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Token invalide ou expiré");
+        } else if (res.status === 403) {
+          throw new Error("Droits administrateur requis");
+        }
+      }
+      const data = await res.json();
+      return { success: true, data };
     } catch (err) {
       console.error(`erreur: ${err}`);
       return { success: false, error: "Erreur réseau ou serveur" };

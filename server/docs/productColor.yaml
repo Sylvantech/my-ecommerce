@@ -1,0 +1,112 @@
+paths:
+  /api/productColor/:
+    post:
+      summary: Créer une nouvelle couleur de produit
+      tags: [ProductColor]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  description: Nom de la couleur
+                hex_code:
+                  type: string
+                  maxLength: 7
+                  description: "Code hexadécimal (ex: #FFFFFF)"
+      responses:
+        '201':
+          description: Couleur de produit créée avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Couleur de produit créée avec succès"
+                  productColor:
+                    $ref: '#/components/schemas/ProductColor'
+        '400':
+          description: Données invalides
+        '401':
+          description: Non autorisé - Token manquant ou invalide
+        '403':
+          description: Accès refusé - Droits administrateur requis
+        '500':
+          description: Erreur serveur
+    get:
+      summary: Récupérer toutes les couleurs de produits
+      tags: [ProductColor]
+      responses:
+        '200':
+          description: Liste des couleurs de produits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  productColors:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductColor'
+        '500':
+          description: Erreur serveur
+
+  /api/productColor/{productColorId}:
+    get:
+      summary: Récupérer une couleur de produit par ID numérique
+      tags: [ProductColor]
+      parameters:
+        - in: path
+          name: productColorId
+          required: true
+          schema:
+            type: integer
+          description: ID numérique de la couleur de produit
+      responses:
+        '200':
+          description: Couleur de produit trouvée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  productColor:
+                    $ref: '#/components/schemas/ProductColor'
+        '404':
+          description: Couleur de produit non trouvée
+        '500':
+          description: Erreur serveur
+
+components:
+  schemas:
+    ProductColor:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique de la couleur
+          readOnly: true
+        name:
+          type: string
+          description: Nom de la couleur
+        hex_code:
+          type: string
+          description: "Code hexadécimal (ex: #FFFFFF)"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - name
