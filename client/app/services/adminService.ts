@@ -155,4 +155,29 @@ export const adminService = {
       return { success: false, error: "Erreur réseau ou serveur" };
     }
   },
+  getProductVariants: async (limit?: number) => {
+    try {
+      const body = limit && limit > 0 ? { limit } : {};
+      const res = await fetch("http://localhost:3000/api/productVariant/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: Object.keys(body).length > 0 ? JSON.stringify(body) : undefined,
+      });
+
+      if (!res.ok) {
+        return {
+          success: false,
+          error: "Erreur lors de la récupération des variants",
+        };
+      }
+
+      const data = await res.json();
+      return { success: true, data: data.variants };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
 };
