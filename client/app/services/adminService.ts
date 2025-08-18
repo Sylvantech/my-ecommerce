@@ -174,7 +174,6 @@ export const adminService = {
       }
 
       const data = await res.json();
-      console.log(data);
       return { success: true, data: data.variants };
     } catch (err) {
       console.error(`erreur: ${err}`);
