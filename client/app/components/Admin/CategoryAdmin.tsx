@@ -92,7 +92,7 @@ export default function CategoryAdmin({
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 flex justify-end items-center p-4 bg-black/50 w-full">
-          <div className="bg-white w-full max-w-sm p-6 flex flex-col gap-4 rounded-lg">
+          <div className="bg-white lg:w-3xl w-sm p-6 flex flex-col gap-4 rounded-lg">
             <div>
               <div className="flex justify-end">
                 <button
@@ -102,9 +102,9 @@ export default function CategoryAdmin({
                   X
                 </button>
               </div>
-              <h1 className="text-xl">Ajouter une nouvelle catégorie</h1>
+              <h1 className="text-xl">Modifier la catégorie</h1>
               <p className="text-gray-500 text-sm">
-                Créez une nouvelle catégorie pour organiser vos produits.
+                Modifiez les informations de la catégorie.
               </p>
             </div>
             <div>
