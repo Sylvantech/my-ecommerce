@@ -33,7 +33,7 @@ export default function Categories() {
     <div className="sm:ml-80 mr-3 flex flex-col gap-3">
       {isModalOpen && (
         <div className="fixed inset-0 flex justify-end items-center p-4 bg-black/50 w-full">
-          <div className="bg-white w-full max-w-sm p-6 flex flex-col gap-4 rounded-lg">
+          <div className="bg-white w-sm lg:w-3xl p-6 flex flex-col gap-4 rounded-lg">
             <div>
               <div className="flex justify-end">
                 <button
