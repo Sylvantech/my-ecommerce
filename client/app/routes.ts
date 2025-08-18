@@ -21,5 +21,6 @@ export default [
     route("admin", "routes/admin/_index.tsx"),
     route("admin/user", "routes/admin/user.tsx"),
     route("admin/categories", "routes/admin/categories.tsx"),
+    route("admin/colors", "routes/admin/colors.tsx"),
   ]),
 ] satisfies RouteConfig;
