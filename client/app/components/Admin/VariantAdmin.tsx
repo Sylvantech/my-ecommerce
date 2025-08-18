@@ -27,6 +27,7 @@ interface ProductVariant {
   updated_at: string;
 }
 
+
 export default function VariantAdmin({
   searchVariant,
   refresh,
