@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { adminService } from "~/services/admin/adminService";
+import { cartServiceAdmin } from "~/services/admin/cartServiceAdmin";
 import type {
   CartAdminProps,
   CartDoc,
@@ -26,7 +26,7 @@ export default function CartAdmin({
   async function load() {
     setLoading(true);
     setError(null);
-    const res = await adminService.getCarts();
+    const res = await cartServiceAdmin.getCarts();
     if (res.success) {
       setCarts(res.data || []);
     } else {
@@ -81,7 +81,7 @@ export default function CartAdmin({
     setViewCart(cart);
     setViewOpen(true);
     setViewLoading(true);
-    const res = await adminService.getCartProductsByCartId(cart._id);
+    const res = await cartServiceAdmin.getCartProductsByCartId(cart._id);
     if (res.success) {
       setViewProducts(res.data || []);
     } else {
@@ -91,7 +91,7 @@ export default function CartAdmin({
   };
 
   const handleDelete = async (id: string) => {
-    const res = await adminService.deleteCart(id);
+    const res = await cartServiceAdmin.deleteCart(id);
     if (res.success) {
       load();
     } else {
