@@ -24,6 +24,7 @@ export default function Categories() {
       }
     }
   };
+  
 
   const handleCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchCategory(e.target.value);
