@@ -1,27 +1,98 @@
 import { useEffect, useState } from "react";
 import VariantAdmin from "~/components/Admin/VariantAdmin";
+import { productSizeService } from "~/services/productSizeService";
+import type { ProductSize } from "~/types/productSize";
+import { productService } from "~/services/productService";
+import type { Product } from "~/types/product";
+import { productColorService } from "~/services/productColorService";
+import type { ProductColor } from "~/types/productColor";
 import { adminService } from "~/services/adminService";
 
 export default function Variants() {
   const [searchVariant, setSearchVariant] = useState("");
-  const [description, setDescription] = useState("");
-  const [name, setName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [sizeList, setSizeList] = useState<ProductSize[]>([]);
+  const [productList, setProductList] = useState<Product[]>([]);
+  const [productColorList, setproductColorList] = useState<ProductColor[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState("");
+  const [selectedSizeId, setSelectedSizeId] = useState("");
+  const [selectedColorId, setSelectedColorId] = useState("");
+  const [stock, setStock] = useState<number>(0);
+  const [variantSrc, setVariantSrc] = useState("");
 
-  // const handleSubmit = async () => {
-  //     if (name && description) {
-  //         const res = await adminService.createVariant(name, description);
-  //         if (res?.success) {
-  //             setIsModalOpen(false);
-  //             setName("");
-  //             setDescription("");
-  //             setRefresh(r => r + 1);
-  //         } else {
-  //             return res;
-  //         }
-  //     }
-  // };
+  const handleSubmit = async () => {
+    if (
+      selectedProductId &&
+      selectedSizeId &&
+      selectedColorId &&
+      stock >= 0 &&
+      variantSrc
+    ) {
+      const res = await adminService.createProductVariant(
+        selectedProductId,
+        selectedSizeId,
+        selectedColorId,
+        variantSrc,
+        stock,
+        true
+      );
+      if (res?.success) {
+        setIsModalOpen(false);
+        setSelectedProductId("");
+        setSelectedSizeId("");
+        setSelectedColorId("");
+        setStock(0);
+        setVariantSrc("");
+        setRefresh(r => r + 1);
+      } else {
+        console.error("Erreur lors de la création:", res?.error);
+      }
+    }
+  };
+
+  const fetchSizes = async () => {
+    try {
+      const response = await productSizeService.getAll();
+      if (response?.success && response.data) {
+        setSizeList(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching sizes:", error);
+    }
+  };
+
+  const fetchColors = async () => {
+    try {
+      const response = await productColorService.getAll();
+      if (response?.success && response.data && Array.isArray(response.data)) {
+        setproductColorList(response.data);
+      } else {
+        console.error("Response structure is incorrect:", response);
+        setproductColorList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching colors:", error);
+      setproductColorList([]);
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await productService.getAll();
+      if (response?.success && response.data) {
+        setProductList(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching sizes:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSizes();
+    fetchProducts();
+    fetchColors();
+  }, []);
 
   const handleVariant = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchVariant(e.target.value);
@@ -29,10 +100,9 @@ export default function Variants() {
 
   return (
     <div className="sm:ml-80 min-h-screen bg-gray-50 p-6">
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl transform transition-all">
+          <div className="bg-white w-full max-w-lg p-6 rounded-2xl shadow-2xl transform transition-all max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">
@@ -65,36 +135,216 @@ export default function Variants() {
             <div className="space-y-5">
               <div>
                 <label
-                  htmlFor="name"
+                  htmlFor="product"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
-                  Nom de la variante
+                  Produit Master
+                </label>
+                <div className="relative">
+                  <select
+                    id="product"
+                    value={selectedProductId}
+                    onChange={e => setSelectedProductId(e.target.value)}
+                    className="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
+                  >
+                    <option value="">Sélectionner un produit</option>
+                    {productList.map(product => (
+                      <option key={product._id} value={product._id}>
+                        {product.title}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                {selectedProductId && (
+                  <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                    {(() => {
+                      const selectedProduct = productList.find(
+                        p => p._id === selectedProductId
+                      );
+                      return selectedProduct?.src ? (
+                        <div className="flex items-center space-x-3">
+                          <img
+                            src={selectedProduct.src}
+                            alt={selectedProduct.title}
+                            className="w-12 h-12 rounded-lg object-cover"
+                          />
+                          <span className="text-sm text-gray-600">
+                            Image du produit
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-500">
+                          Aucune image disponible
+                        </span>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="size"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Taille
+                </label>
+                <div className="relative">
+                  <select
+                    id="size"
+                    value={selectedSizeId}
+                    onChange={e => setSelectedSizeId(e.target.value)}
+                    className="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
+                  >
+                    <option value="">Sélectionner une taille</option>
+                    {sizeList.map(size => (
+                      <option key={size._id} value={size._id}>
+                        EU {size.eu_size}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="color"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Couleur
+                </label>
+                <div className="relative">
+                  <select
+                    id="color"
+                    value={selectedColorId}
+                    onChange={e => setSelectedColorId(e.target.value)}
+                    className="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
+                  >
+                    <option value="">Sélectionner une couleur</option>
+                    {productColorList.map(color => (
+                      <option key={color._id} value={color._id}>
+                        {color.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                {selectedColorId && (
+                  <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                    {(() => {
+                      const selectedColor = productColorList.find(
+                        c => c._id === selectedColorId
+                      );
+                      return selectedColor ? (
+                        <div className="flex items-center space-x-3">
+                          <div
+                            className="w-8 h-8 rounded-full border-2 border-gray-200 shadow-sm"
+                            style={{ backgroundColor: selectedColor.hex_code }}
+                          />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">
+                              {selectedColor.name}
+                            </span>
+                            <span className="text-sm text-gray-500 ml-2">
+                              {selectedColor.hex_code}
+                            </span>
+                          </div>
+                        </div>
+                      ) : null;
+                    })()}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="stock"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Stock
                 </label>
                 <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Ex: Taille, Couleur, Matière..."
+                  type="number"
+                  id="stock"
+                  min="0"
+                  value={stock}
+                  onChange={e => setStock(parseInt(e.target.value))}
+                  className="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="Quantité en stock"
                 />
               </div>
 
               <div>
                 <label
-                  htmlFor="description"
+                  htmlFor="variantSrc"
                   className="block text-sm font-semibold text-gray-700 mb-2"
                 >
-                  Description
+                  Image de la variante
                 </label>
-                <textarea
-                  id="description"
-                  rows={4}
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
-                  placeholder="Description détaillée de la variante..."
+                <input
+                  type="url"
+                  id="variantSrc"
+                  value={variantSrc}
+                  onChange={e => setVariantSrc(e.target.value)}
+                  className="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="https://exemple.com/image.jpg"
                 />
+                {variantSrc && (
+                  <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                    <img
+                      src={variantSrc}
+                      alt="Aperçu variante"
+                      className="w-16 h-16 rounded-lg object-cover"
+                      onError={e => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -106,17 +356,23 @@ export default function Variants() {
                 Annuler
               </button>
               <button
-                disabled={!name || !description}
+                onClick={handleSubmit}
+                disabled={
+                  !selectedProductId ||
+                  !selectedSizeId ||
+                  !selectedColorId ||
+                  stock < 0 ||
+                  !variantSrc
+                }
                 className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
               >
-                Ajouter
+                Créer la variante
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Header Section */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
         <div className="flex items-center justify-between">
           <div>
@@ -145,7 +401,6 @@ export default function Variants() {
         </div>
       </div>
 
-      {/* Controls Section */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex-1 w-full sm:max-w-md">
@@ -153,7 +408,7 @@ export default function Variants() {
               htmlFor="search"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Rechercher par couleur
+              Rechercher
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -176,7 +431,7 @@ export default function Variants() {
                 id="search"
                 value={searchVariant}
                 onChange={handleVariant}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="text-black block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 placeholder="Rechercher une variante..."
               />
             </div>
@@ -204,7 +459,6 @@ export default function Variants() {
         </div>
       </div>
 
-      {/* Content Section */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 min-h-96">
         <VariantAdmin searchVariant={searchVariant} refresh={refresh} />
       </div>

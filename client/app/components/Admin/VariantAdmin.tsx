@@ -7,11 +7,11 @@ interface VariantAdminProps {
 }
 
 interface ProductVariant {
-  _id:string;
+  _id: string;
   id: number;
   product_id: {
     _id: string;
-    name: string;
+    title: string;
   };
   color_id: {
     _id: string;
@@ -27,7 +27,6 @@ interface ProductVariant {
   created_at: string;
   updated_at: string;
 }
-
 
 export default function VariantAdmin({
   searchVariant,
@@ -56,6 +55,7 @@ export default function VariantAdmin({
 
   async function getVariants() {
     const res = await adminService.getProductVariants();
+
     if (res.success) {
       setVariants(res.data);
     } else {
@@ -105,9 +105,10 @@ export default function VariantAdmin({
       }
     }
     deleteVariant();
-  };  const filtered = variants.filter(
+  };
+  const filtered = variants.filter(
     variant =>
-      variant.product_id?.name
+      variant.product_id?.title
         ?.toLowerCase()
         .includes((searchVariant || "").toLowerCase()) ||
       variant.color_id?.name
@@ -142,7 +143,7 @@ export default function VariantAdmin({
                     {variant.src ? (
                       <img
                         src={variant.src}
-                        alt={`${variant.product_id.name} - ${variant.color_id.name}`}
+                        alt={`${variant.product_id.title} - ${variant.color_id.name}`}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -170,7 +171,7 @@ export default function VariantAdmin({
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        {variant.product_id.name}
+                        Produit lié : {variant.product_id.title}
                       </h3>
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
@@ -292,7 +293,7 @@ export default function VariantAdmin({
                     {variant.src ? (
                       <img
                         src={variant.src}
-                        alt={`${variant.product_id.name} - ${variant.color_id.name}`}
+                        alt={`${variant.product_id.title} - ${variant.color_id.name}`}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -320,7 +321,7 @@ export default function VariantAdmin({
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        {variant.product_id.name}
+                        {variant.product_id.title}
                       </h3>
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
@@ -383,24 +384,7 @@ export default function VariantAdmin({
               </div>
 
               <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
-                <button className="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="mr-2"
-                  >
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                  Voir
-                </button>
+               
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleChange(variant)}
