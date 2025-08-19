@@ -299,4 +299,46 @@ export const adminService = {
       return { success: false, error: "Erreur réseau ou serveur" };
     }
   },
+  modifyProductVariant: async (
+    id: number,
+    color_id: string,
+    size_id: string,
+    src: string,
+    stock: number,
+    available: boolean
+  ) => {
+    const token = CookieHelper.getToken("AccesToken");
+    if (!token) {
+      return { success: false, error: "Token manquant" };
+    }
+    try {
+      const res = await fetch("http://localhost:3000/api/productVariant/", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          color_id,
+          size_id,
+          src,
+          stock,
+          available,
+        }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Token invalide ou expiré");
+        } else if (res.status === 403) {
+          throw new Error("Droits administrateur requis");
+        }
+      }
+      const data = await res.json();
+      return { success: true, data };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
 };

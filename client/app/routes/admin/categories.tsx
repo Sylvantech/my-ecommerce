@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CategoryAdmin from "~/components/Admin/CategoryAdmin";
 import { adminService } from "~/services/adminService";
 
