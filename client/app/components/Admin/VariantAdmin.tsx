@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { adminService } from "~/services/adminService";
+import { adminService } from "~/services/admin/adminService";
 import { productSizeService } from "~/services/productSizeService";
 import type { ProductSize } from "~/types/productSize";
 import { productColorService } from "~/services/productColorService";
