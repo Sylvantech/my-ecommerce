@@ -1,5 +1,5 @@
-import type { User } from "../types/userlist";
-import { CookieHelper } from "../utils/cookieHelper";
+import type { User } from "../../types/userlist";
+import { CookieHelper } from "../../utils/cookieHelper";
 export const adminService = {
   async authenticated(token: string) {
     try {
