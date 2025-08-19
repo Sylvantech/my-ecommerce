@@ -6,7 +6,7 @@ const Product = require("../models/Product.model");
 const reviewUtils = require("../utils/reviewApiUtils");
 const { verifyToken, verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const { user_id, product_id, rating, content } = req.body;
   const isValid = reviewUtils.checkInput(req);
   if (!isValid) {
@@ -16,11 +16,11 @@ router.post("/", async (req, res) => {
     });
   }
 
-  const pasBien = reviewUtils.checkObsenity(content);
+  const badWord = reviewUtils.checkObsenity(content);
 
-  if (pasBien) {
+  if (badWord) {
     return res.status(666).json({
-      error: "Et bah alors célestin ??",
+      error: "Votre message contient un langague non approprié",
     });
   }
 

@@ -1,10 +1,6 @@
 const leoProfanity = require("leo-profanity");
-
-// Charger le dictionnaire français
+leoProfanity.loadDictionary("en");
 leoProfanity.loadDictionary("fr");
-
-// Ou charger plusieurs langues
-// leoProfanity.loadDictionary(['en', 'fr']);
 
 function checkInput(req) {
   const { user_id, product_id, rating } = req.body;
