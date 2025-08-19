@@ -212,4 +212,48 @@ export const adminService = {
       return { success: false, error: "Erreur réseau ou serveur" };
     }
   },
+
+  getCarts: async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/cart/");
+      if (!res.ok) {
+        return {
+          success: false,
+          error: "Erreur lors de la récupération des paniers",
+        };
+      }
+      const data = await res.json();
+      return { success: true, data: data.carts };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
+
+  getCartProductsByCartId: async (cartId: string) => {
+    try {
+      const res = await fetch(
+        "http://localhost:3000/api/productCart/getByCartId",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cart_id: cartId }),
+        }
+      );
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        return {
+          success: false,
+          error:
+            err.error ||
+            "Erreur lors de la récupération des produits du panier",
+        };
+      }
+      const data = await res.json();
+      return { success: true, data: data.cart_products };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
 };
