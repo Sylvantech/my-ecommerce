@@ -6,7 +6,7 @@ const Product = require("../models/Product.model");
 const reviewUtils = require("../utils/reviewApiUtils");
 const { verifyToken, verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", async (req, res) => {
   const { user_id, product_id, rating, content } = req.body;
   const isValid = reviewUtils.checkInput(req);
   if (!isValid) {
@@ -167,8 +167,7 @@ router.patch("/", async (req, res) => {
       review.rating = rating;
     }
 
-    if(verified !== undefined){
-
+    if (verified !== undefined) {
       review.verified = verified;
     }
 

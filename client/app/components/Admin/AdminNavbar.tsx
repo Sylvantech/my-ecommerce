@@ -202,6 +202,15 @@ const Navbar = () => {
                     Reviews
                   </a>
                 </li>
+
+                <li>
+                  <a
+                    href="/admin/moderation"
+                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Modération reviews
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>

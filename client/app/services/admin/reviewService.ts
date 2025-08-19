@@ -1,73 +1,65 @@
-import type { Review } from "../../types/review";
-import { CookieHelper } from "../../utils/cookieHelper";
-
 import { apiClient } from "../apiClient";
 
 export const reviewServiceAdmin = {
-    getPendingReview: async () => {
-        try {
-            const res = await apiClient("http://localhost:3000/api/review/pending");
-            if (!res.ok) {
-                return {
-                    success: false,
-                    error: "Erreur lors de la récupération des review en attente de validation",
-                };
-            }
-            const data = await res.json();
-            console.log(data);
-            return { success: true, data: data.carts };
-        } catch (err) {
-            console.error(`erreur: ${err}`);
-            return { success: false, error: "Erreur réseau ou serveur" };
+  getPendingReview: async () => {
+    try {
+      const res = await apiClient("http://localhost:3000/api/review/pending");
+      if (!res.ok) {
+        return {
+          success: false,
+          error:
+            "Erreur lors de la récupération des review en attente de validation",
+        };
+      }
+      const data = await res.json();
+      return { success: true, data: data.review };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
+  verifyReview: async (id: number) => {
+    try {
+      const res = await apiClient("http://localhost:3000/api/review", {
+        method: "PATCH",
+        body: JSON.stringify({ id, verified: true }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Token invalide ou expiré");
+        } else if (res.status === 403) {
+          throw new Error("Droits administrateur requis");
         }
-    },
-
-    // getCartProductsByCartId: async (cartId: string) => {
-    //     try {
-    //         const res = await fetch(
-    //             "http://localhost:3000/api/productCart/getByCartId",
-    //             {
-    //                 method: "POST",
-    //                 headers: { "Content-Type": "application/json" },
-    //                 body: JSON.stringify({ cart_id: cartId }),
-    //             }
-    //         );
-    //         if (!res.ok) {
-    //             const err = await res.json().catch(() => ({}));
-    //             return {
-    //                 success: false,
-    //                 error:
-    //                     err.error ||
-    //                     "Erreur lors de la récupération des produits du panier",
-    //             };
-    //         }
-    //         const data = await res.json();
-    //         return { success: true, data: data.cart_products };
-    //     } catch (err) {
-    //         console.error(`erreur: ${err}`);
-    //         return { success: false, error: "Erreur réseau ou serveur" };
-    //     }
-    // },
-
-    // deleteCart: async (id: string) => {
-    //     try {
-    //         const res = await apiClient("http://localhost:3000/api/cart/", {
-    //             method: "DELETE",
-    //             body: JSON.stringify({ id }),
-    //         });
-    //         if (!res.ok) {
-    //             if (res.status === 401) {
-    //                 throw new Error("Token invalide ou expiré");
-    //             } else if (res.status === 403) {
-    //                 throw new Error("Droits administrateur requis");
-    //             }
-    //             const errMsg = await res.text();
-    //             throw new Error(errMsg || "Erreur lors de la suppression du panier");
-    //         }
-    //         return { success: true };
-    //     } catch (err) {
-    //         console.error(`erreur: ${err}`);
-    //         return { success: false, error: "Erreur réseau ou serveur" };
-    //     }
-    // },
+        const errMsg = await res.text();
+        throw new Error(
+          errMsg || "Erreur lors de la vérification de la review"
+        );
+      }
+      return { success: true };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
+  deleteReview: async (id: number) => {
+    try {
+      const res = await apiClient("http://localhost:3000/api/review", {
+        method: "DELETE",
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Token invalide ou expiré");
+        } else if (res.status === 403) {
+          throw new Error("Droits administrateur requis");
+        }
+        const errMsg = await res.text();
+        throw new Error(errMsg || "Erreur lors de la suppression de la review");
+      }
+      return { success: true };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
 };
