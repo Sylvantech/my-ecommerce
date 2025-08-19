@@ -1,3 +1,11 @@
+const leoProfanity = require("leo-profanity");
+
+// Charger le dictionnaire français
+leoProfanity.loadDictionary("fr");
+
+// Ou charger plusieurs langues
+// leoProfanity.loadDictionary(['en', 'fr']);
+
 function checkInput(req) {
   const { user_id, product_id, rating } = req.body;
 
@@ -28,4 +36,11 @@ function checkUpdateInput(req) {
   return true;
 }
 
-module.exports = { checkInput, checkUpdateInput };
+function checkObsenity(text) {
+  if (!text || typeof text !== "string") {
+    return false;
+  }
+  return leoProfanity.check(text);
+}
+
+module.exports = { checkInput, checkUpdateInput, checkObsenity };

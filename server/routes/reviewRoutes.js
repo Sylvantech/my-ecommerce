@@ -6,13 +6,21 @@ const Product = require("../models/Product.model");
 const reviewUtils = require("../utils/reviewApiUtils");
 const { verifyToken, verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", verifyToken, async (req, res) => {
-  const { user_id, product_id, rating } = req.body;
+router.post("/", async (req, res) => {
+  const { user_id, product_id, rating, content } = req.body;
   const isValid = reviewUtils.checkInput(req);
   if (!isValid) {
     return res.status(400).json({
       error:
         "Données invalides - user_id, product_id et rating (1-5) sont obligatoires",
+    });
+  }
+
+  const pasBien = reviewUtils.checkObsenity(content);
+
+  if (pasBien) {
+    return res.status(666).json({
+      error: "Et bah alors célestin ??",
     });
   }
 
@@ -42,6 +50,7 @@ router.post("/", verifyToken, async (req, res) => {
       user_id,
       product_id,
       rating,
+      content,
     });
     const review = await newReview.save();
 
@@ -53,6 +62,7 @@ router.post("/", verifyToken, async (req, res) => {
         product_id: review.product_id,
         rating: review.rating,
         created_at: review.created_at,
+        content: review.content,
       },
     });
   } catch (error) {
@@ -111,7 +121,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.patch("/", verifyAdmin, async (req, res) => {
-  const { id, rating } = req.body;
+  const { id, rating, content, verified } = req.body;
 
   const isValid = reviewUtils.checkUpdateInput(req);
 
@@ -143,6 +153,8 @@ router.patch("/", verifyAdmin, async (req, res) => {
         user_id: review.user_id,
         product_id: review.product_id,
         rating: review.rating,
+        content: review.content,
+        verified: review.verified,
         updated_at: review.updated_at,
       },
     });
