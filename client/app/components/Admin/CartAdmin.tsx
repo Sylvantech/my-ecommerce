@@ -183,9 +183,6 @@ export default function CartAdmin({
                         >
                           Voir
                         </button>
-                        <button className="px-3 py-1.5 border border-red-200 text-red-700 rounded-lg text-sm hover:bg-red-50">
-                          Supprimer
-                        </button>
                       </div>
                     </td>
                   </tr>
