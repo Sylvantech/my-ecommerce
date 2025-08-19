@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { productColor } from "~/services/admin/productColor";
+import { productColor } from "~/services/admin/productColorService";
 
 interface Color {
   id: number;
