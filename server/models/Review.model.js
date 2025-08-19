@@ -7,6 +7,13 @@ const reviewSchema = new mongoose.Schema(
       type: Number,
       unique: true,
     },
+    content: {
+      type: String,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     product_id: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
     rating: {
