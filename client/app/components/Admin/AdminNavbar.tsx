@@ -94,9 +94,18 @@ const Navbar = () => {
                     Produits
                   </a>
                 </li>
+
                 <li>
                   <a
-                    href="#"
+                    href="/admin/variants"
+                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Variants de produits
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/admin/categories"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Catégories
@@ -126,7 +135,7 @@ const Navbar = () => {
               <ul id="orders-menu" className="py-2 space-y-2">
                 <li>
                   <a
-                    href="#"
+                    href="/admin/cart"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Paniers

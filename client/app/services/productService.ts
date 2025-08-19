@@ -18,6 +18,7 @@ export const productService = {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const formatted: Product[] = data.products.map((item: any) => ({
+        _id: item._id,
         id: item.id,
         title: item.title,
         description: item.description,

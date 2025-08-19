@@ -79,10 +79,13 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const allCarts = await Cart.find();
+    const allCarts = await Cart.find().populate({
+      path: "user_id",
+    });
     if (!allCarts || allCarts.length === 0) {
       return res.status(404).json({
         error: "Il n'y a pas de paniers",
+        carts: [],
       });
     }
     return res.status(200).json({
