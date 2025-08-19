@@ -6,7 +6,7 @@ import { productService } from "~/services/productService";
 import type { Product } from "~/types/product";
 import { productColorService } from "~/services/productColorService";
 import type { ProductColor } from "~/types/productColor";
-import { adminService } from "~/services/adminService";
+import { adminService } from "~/services/admin/adminService";
 
 export default function Variants() {
   const [searchVariant, setSearchVariant] = useState("");

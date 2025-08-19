@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { User } from "../../types/userlist";
-import { adminService } from "../../services/adminService";
+import { adminService } from "../../services/admin/adminService";
 
 export default function UsersTable() {
   const [users, setUsers] = useState<User[]>([]);

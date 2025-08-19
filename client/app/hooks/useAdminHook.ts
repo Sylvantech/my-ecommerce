@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { adminService } from "~/services/adminService";
+import { adminService } from "~/services/admin/adminService";
 import { CookieHelper } from "~/utils/cookieHelper";
 
 export default function useAdminHook() {

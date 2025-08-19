@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { adminService } from "~/services/adminService";
+import { adminService } from "~/services/admin/adminService";
 
 interface CategoryAdminProps {
   searchCategory: string;
