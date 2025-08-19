@@ -127,6 +127,14 @@ const Navbar = () => {
                     Tailles
                   </a>
                 </li>
+                <li>
+                  <a
+                    href="/admin/colors"
+                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Couleurs
+                  </a>
+                </li>
               </ul>
             </li>
 

@@ -1,40 +1,26 @@
-import { useState } from "react";
-import CategoryAdmin from "~/components/Admin/CategoryAdmin";
-import { adminService } from "~/services/admin/adminService";
+import { useEffect, useState } from "react";
+import ColorsAdmin from "~/components/Admin/ColorsAdmin";
 
 export default function Categories() {
-  const [searchCategory, setSearchCategory] = useState("");
+  const [searchColor, setSearchColor] = useState("");
 
   const [description, setDescription] = useState("");
 
-  const [name, setName] = useState("");
+  const [name, setNameColor] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [refresh, setRefresh] = useState(0);
+  const [color, setColor] = useState("");
 
-  const handleSubmit = async () => {
-    if (name && description) {
-      const res = await adminService.createCategory(name, description);
-      if (res?.success) {
-        setIsModalOpen(false);
-        setRefresh(r => r + 1);
-      } else {
-        return res;
-      }
-    }
-  };
-  
-
-  const handleCategory = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchCategory(e.target.value);
+  const handleColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchColor(e.target.value);
   };
 
   return (
-    <div className="sm:ml-80 mr-3 flex flex-col gap-3">
+    <div className="sm:ml-80 mr-3 ml-3 flex flex-col gap-3 text-black">
       {isModalOpen && (
         <div className="fixed inset-0 flex justify-end items-center p-4 bg-black/50 w-full">
-          <div className="bg-white w-sm lg:w-3xl p-6 flex flex-col gap-4 rounded-lg">
+          <div className="bg-white w-full max-w-sm p-6 flex flex-col gap-4 rounded-lg">
             <div>
               <div className="flex justify-end">
                 <button
@@ -44,20 +30,40 @@ export default function Categories() {
                   X
                 </button>
               </div>
-              <h1 className="text-xl">Ajouter une nouvelle catégorie</h1>
-              <p className="text-gray-500 text-sm">
-                Créez une nouvelle catégorie pour organiser vos produits.
-              </p>
+              <div className="gap-3 flex flex-col">
+                <h1 className="text-xl">Ajouter une nouvelle couleur</h1>
+                <hr className="text-gray-300" />
+                <p className="text-gray-500 text-sm">
+                  Créez une nouvelle couleur pour vos chaussettes.
+                </p>
+              </div>
             </div>
             <div>
-              <h3>Nom de la catégorie</h3>
+              <h3>Nom de la couleur</h3>
               <input
                 className="shadow border border-gray-300 w-full rounded-lg p-1.5"
                 type="text"
                 name="name"
                 id="name"
-                placeholder="Ex: Chaussettes..."
-                onChange={e => setName(e.target.value)}
+                placeholder="Ex: Rouge Passion"
+                onChange={e => setNameColor(e.target.value)}
+              />
+            </div>
+            <h3>Code couleur (Hex)</h3>
+            <div className="flex gap-2 items-center">
+              <div className="border border-gray-300 p-2 w-20 bg-white flex justify-center items-center rounded-sm">
+                <div
+                  className="px-7 py-3 border border-gray-500 "
+                  style={{ backgroundColor: color }}
+                ></div>
+              </div>
+              <input
+                name={color}
+                id={color}
+                className="border border-gray-300 p-1.5 rounded-lg"
+                type="text"
+                value={color}
+                onChange={e => setColor(e.target.value)}
               />
             </div>
             <div>
@@ -66,7 +72,7 @@ export default function Categories() {
                 className="shadow p-2 border border-gray-300 w-full rounded-lg"
                 name="description"
                 id="description"
-                placeholder="Description de la catégorie..."
+                placeholder="Description de la couleur..."
                 value={description}
                 onChange={e => setDescription(e.target.value)}
               />
@@ -78,19 +84,16 @@ export default function Categories() {
               >
                 Annuler
               </button>
-              <button
-                onClick={handleSubmit}
-                className="bg-gray-400 hover:bg-black text-white p-2 rounded-lg text-sm"
-              >
+              <button className="bg-gray-400 hover:bg-black text-white p-2 rounded-lg text-sm">
                 Ajouter
               </button>
             </div>
           </div>
         </div>
       )}
-      <h1 className="text-3xl">Gestion des Catégories</h1>
+      <h1 className="text-3xl">Gestion des Couleurs</h1>
       <p className="text-gray-700 mb-6">
-        Organisez vos produits par catégories
+        Gérez la palette de couleurs de vos chaussettes
       </p>
       <div className="flex justify-between gap-2">
         <div className="flex-1 flex flex-row items-center border rounded-xl border-gray-200 gap-4 p-1">
@@ -115,10 +118,10 @@ export default function Categories() {
               type="text"
               name=""
               id=""
-              placeholder="Rechercher une catégorie..."
+              placeholder="Rechercher une couleur..."
               className="w-full"
-              onChange={handleCategory}
-              value={searchCategory}
+              onChange={handleColor}
+              value={searchColor}
             />
           </form>
         </div>
@@ -126,11 +129,11 @@ export default function Categories() {
           onClick={() => setIsModalOpen(true)}
           className="bg-black text-white text-sm p-1 rounded-lg flex justify-center items-center gap-1"
         >
-          <span className="text-xl">+</span> Ajouter une catégorie
+          <span className="text-xl">+</span> Ajouter une couleur
         </button>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <CategoryAdmin searchCategory={searchCategory} refresh={refresh} />
+        <ColorsAdmin searchColor={searchColor} />
       </div>
     </div>
   );
