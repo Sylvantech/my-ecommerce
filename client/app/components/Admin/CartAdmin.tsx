@@ -90,6 +90,15 @@ export default function CartAdmin({
     setViewLoading(false);
   };
 
+  const handleDelete = async (id: string) => {
+    const res = await adminService.deleteCart(id);
+    if (res.success) {
+      load();
+    } else {
+      setError(res.error || "Erreur lors de la suppression");
+    }
+  };
+
   const cartTotal = useMemo(() => {
     return viewProducts.reduce((sum, p) => {
       const price =
@@ -182,6 +191,12 @@ export default function CartAdmin({
                           className="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-50"
                         >
                           Voir
+                        </button>
+                        <button
+                          onClick={() => handleDelete(c._id)}
+                          className="px-3 py-1.5 border border-red-200 text-red-700 rounded-lg text-sm hover:bg-red-50"
+                        >
+                          Supprimer
                         </button>
                       </div>
                     </td>

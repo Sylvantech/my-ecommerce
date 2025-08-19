@@ -384,7 +384,6 @@ export default function VariantAdmin({
               </div>
 
               <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
-               
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleChange(variant)}
