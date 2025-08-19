@@ -7,7 +7,7 @@ interface VariantAdminProps {
 }
 
 interface ProductVariant {
-  _id:string;
+  _id: string;
   id: number;
   product_id: {
     _id: string;
@@ -27,7 +27,6 @@ interface ProductVariant {
   created_at: string;
   updated_at: string;
 }
-
 
 export default function VariantAdmin({
   searchVariant,
@@ -105,7 +104,8 @@ export default function VariantAdmin({
       }
     }
     deleteVariant();
-  };  const filtered = variants.filter(
+  };
+  const filtered = variants.filter(
     variant =>
       variant.product_id?.name
         ?.toLowerCase()

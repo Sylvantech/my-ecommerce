@@ -158,7 +158,6 @@ const Navbar = () => {
 
             {isAccountMenuOpen && (
               <div className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-100 py-3 z-20">
-
                 {isAdmin && (
                   <a
                     className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-50 hover:text-blue-600 transition-all duration-300 group"
