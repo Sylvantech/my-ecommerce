@@ -11,7 +11,7 @@ interface ProductVariant {
   id: number;
   product_id: {
     _id: string;
-    name: string;
+    title: string;
   };
   color_id: {
     _id: string;
@@ -55,6 +55,7 @@ export default function VariantAdmin({
 
   async function getVariants() {
     const res = await adminService.getProductVariants();
+
     if (res.success) {
       setVariants(res.data);
     } else {
@@ -107,7 +108,7 @@ export default function VariantAdmin({
   };
   const filtered = variants.filter(
     variant =>
-      variant.product_id?.name
+      variant.product_id?.title
         ?.toLowerCase()
         .includes((searchVariant || "").toLowerCase()) ||
       variant.color_id?.name
@@ -142,7 +143,7 @@ export default function VariantAdmin({
                     {variant.src ? (
                       <img
                         src={variant.src}
-                        alt={`${variant.product_id.name} - ${variant.color_id.name}`}
+                        alt={`${variant.product_id.title} - ${variant.color_id.name}`}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -170,7 +171,7 @@ export default function VariantAdmin({
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        {variant.product_id.name}
+                        Produit lié : {variant.product_id.title}
                       </h3>
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
@@ -292,7 +293,7 @@ export default function VariantAdmin({
                     {variant.src ? (
                       <img
                         src={variant.src}
-                        alt={`${variant.product_id.name} - ${variant.color_id.name}`}
+                        alt={`${variant.product_id.title} - ${variant.color_id.name}`}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -320,7 +321,7 @@ export default function VariantAdmin({
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        {variant.product_id.name}
+                        {variant.product_id.title}
                       </h3>
                       <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
