@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CategoryAdmin from "~/components/Admin/CategoryAdmin";
-import { adminService } from "~/services/adminService";
+import { adminService } from "~/services/admin/adminService";
 
 export default function Categories() {
   const [searchCategory, setSearchCategory] = useState("");
