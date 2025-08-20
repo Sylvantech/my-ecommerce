@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import ProductAdmin from "~/components/Admin/ProductAdmin";
+import { adminService } from "~/services/admin/adminService";
 
 export default function Product() {
   const [search, setSearch] = useState("");
@@ -7,6 +9,7 @@ export default function Product() {
   const [priceMax, setPriceMax] = useState("");
   const [isNewOnly, setIsNewOnly] = useState(false);
   const [isPromoOnly, setIsPromoOnly] = useState(false);
+  const [categories, setCategories] = useState<Array<{ id: number; name: string }>>([]);
 
   const handleResetFilters = () => {
     setSearch("");
@@ -16,6 +19,22 @@ export default function Product() {
     setIsNewOnly(false);
     setIsPromoOnly(false);
   };
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const res = await adminService.getCategories();
+      if (mounted && res.success && res.data) {
+        setCategories(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (res.data as any[]).map(c => ({ id: c.id, name: c.name }))
+        );
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
 
   return (
@@ -62,8 +81,12 @@ export default function Product() {
                 onChange={e => setCategoryIdFilter(e.target.value)}
                 className="w-full px-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="">Toutes (à connecter)</option>
-                {/* Options à remplir via service plus tard */}
+                <option value="">Toutes les catégories</option>
+                {categories.map(categorie => (
+                  <option key={categorie.id} value={String(categorie.id)}>
+                    {categorie.name}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -124,9 +147,16 @@ export default function Product() {
         </div>
       </div>
 
-      {/* Liste (placeholder) */}
-      <div className="bg-white rounded-2xl shadow-sm border border-dashed border-gray-300 min-h-96 flex items-center justify-center text-gray-500">
-        Ici s&apos;affichera la liste des produits.
+      {/* Liste */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <ProductAdmin
+          search={search}
+          categoryId={categoryIdFilter}
+          priceMin={priceMin}
+          priceMax={priceMax}
+          isNewOnly={isNewOnly}
+          isPromoOnly={isPromoOnly}
+        />
       </div>
     </div>
   );
