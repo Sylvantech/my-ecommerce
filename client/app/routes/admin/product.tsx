@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductAdmin from "~/components/Admin/ProductAdmin";
 import { adminService } from "~/services/admin/adminService";
+import { productServiceAdmin } from "~/services/admin/productServiceAdmin";
 
 export default function Product() {
   const [search, setSearch] = useState("");
@@ -9,7 +10,22 @@ export default function Product() {
   const [priceMax, setPriceMax] = useState("");
   const [isNewOnly, setIsNewOnly] = useState(false);
   const [isPromoOnly, setIsPromoOnly] = useState(false);
-  const [categories, setCategories] = useState<Array<{ id: number; name: string }>>([]);
+  const [categories, setCategories] = useState<Array<{ _id: string; id: number; name: string }>>([]);
+
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState(0);
+
+  const [pTitle, setPTitle] = useState("");
+  const [pDescription, setPDescription] = useState("");
+  const [pPrice, setPPrice] = useState("");
+  const [pCategoryObjectId, setPCategoryObjectId] = useState("");
+  const [pComposition, setPComposition] = useState("");
+  const [pWeight, setPWeight] = useState("");
+  const [pIsPromo, setPIsPromo] = useState(false);
+  const [pIsNew, setPIsNew] = useState(false);
+  const [pSrc, setPSrc] = useState("");
 
   const handleResetFilters = () => {
     setSearch("");
@@ -25,17 +41,74 @@ export default function Product() {
     (async () => {
       const res = await adminService.getCategories();
       if (mounted && res.success && res.data) {
-        setCategories(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (res.data as any[]).map(c => ({ id: c.id, name: c.name }))
-        );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mapped = (res.data as any[]).map(c => ({ _id: c._id, id: c.id, name: c.name }));
+        setCategories(mapped);
+        if (!pCategoryObjectId && mapped.length) {
+          setPCategoryObjectId(mapped[0]._id);
+        }
       }
     })();
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [pCategoryObjectId]);
 
+  const openCreate = () => {
+    setCreateError(null);
+    setIsCreateOpen(true);
+  };
+  const closeCreate = () => {
+    setIsCreateOpen(false);
+  };
+
+  const submitCreate = async () => {
+    setCreateError(null);
+    if (!pTitle.trim()) {
+      setCreateError("Le titre est requis");
+      return;
+    }
+    if (!pPrice || Number.isNaN(Number(pPrice))) {
+      setCreateError("Le prix est requis et doit être un nombre");
+      return;
+    }
+    if (!pCategoryObjectId) {
+      setCreateError("La catégorie est requise");
+      return;
+    }
+
+    setCreateLoading(true);
+    const payload = {
+      title: pTitle.trim(),
+      description: pDescription.trim() || undefined,
+      price: Number(pPrice),
+      category_id: pCategoryObjectId,
+      composition: pComposition.trim() || undefined,
+      weight_in_gr: pWeight ? Number(pWeight) : undefined,
+      is_promo: pIsPromo || undefined,
+      is_new: pIsNew || undefined,
+      src: pSrc.trim() || undefined,
+    } as const;
+
+    const res = await productServiceAdmin.createProduct(payload);
+    setCreateLoading(false);
+    if (!res.success) {
+      setCreateError(res.error || "Erreur lors de la création");
+      return;
+    }
+
+    setPTitle("");
+    setPDescription("");
+    setPPrice("");
+    setPComposition("");
+    setPWeight("");
+    setPIsPromo(false);
+    setPIsNew(false);
+    setPSrc("");
+
+    setRefresh(r => r + 1);
+    setIsCreateOpen(false);
+  };
 
   return (
     <div className="sm:ml-80 min-h-screen bg-gray-50 p-6 text-black">
@@ -176,7 +249,10 @@ export default function Product() {
             >
               Réinitialiser
             </button>
-            <button className="inline-flex items-center px-5 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-sm">
+            <button
+              className="inline-flex items-center px-5 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-sm"
+              onClick={openCreate}
+            >
               <svg
                 className="w-5 h-5 mr-2"
                 fill="none"
@@ -199,6 +275,7 @@ export default function Product() {
       {/* Liste */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
         <ProductAdmin
+          key={refresh}
           search={search}
           categoryId={categoryIdFilter}
           priceMin={priceMin}
@@ -207,6 +284,122 @@ export default function Product() {
           isPromoOnly={isPromoOnly}
         />
       </div>
+
+      {isCreateOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+          <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between p-5 border-b border-gray-200">
+              <h3 className="text-xl font-semibold text-gray-900">Ajouter un produit</h3>
+              <button onClick={closeCreate} className="p-2 rounded-lg hover:bg-gray-100">✕</button>
+            </div>
+
+            <div className="p-5 space-y-4">
+              {createError && (
+                <div className="p-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg">
+                  {createError}
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                  <input
+                    value={pTitle}
+                    onChange={e => setPTitle(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    placeholder="Nom du produit"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Prix (€)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={pPrice}
+                    onChange={e => setPPrice(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    placeholder="19.99"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                  <textarea
+                    value={pDescription}
+                    onChange={e => setPDescription(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    rows={3}
+                    placeholder="Description courte..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                  <select
+                    value={pCategoryObjectId}
+                    onChange={e => setPCategoryObjectId(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg"
+                  >
+                    <option value="">Sélectionner...</option>
+                    {categories.map(c => (
+                      <option key={c._id} value={c._id}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Composition</label>
+                  <input
+                    value={pComposition}
+                    onChange={e => setPComposition(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    placeholder="100% coton"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Poids (g)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={pWeight}
+                    onChange={e => setPWeight(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    placeholder="200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Image (URL)</label>
+                  <input
+                    value={pSrc}
+                    onChange={e => setPSrc(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    placeholder="https://.../image.jpg"
+                  />
+                </div>
+                <div className="flex items-center gap-6 sm:col-span-2">
+                  <label className="flex items-center gap-2 text-sm text-gray-700">
+                    <input type="checkbox" checked={pIsNew} onChange={e => setPIsNew(e.target.checked)} />
+                    Nouveau
+                  </label>
+                  <label className="flex items-center gap-2 text-sm text-gray-700">
+                    <input type="checkbox" checked={pIsPromo} onChange={e => setPIsPromo(e.target.checked)} />
+                    En promo
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t flex justify-end gap-2">
+              <button onClick={closeCreate} className="px-4 py-2 border rounded-lg">Annuler</button>
+              <button
+                onClick={submitCreate}
+                disabled={createLoading}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-60"
+              >
+                {createLoading ? "En cours..." : "Créer"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
