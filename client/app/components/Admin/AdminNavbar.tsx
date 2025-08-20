@@ -96,7 +96,7 @@ const Navbar = () => {
               <ul id="products-menu" className="py-2 space-y-2">
                 <li>
                   <a
-                    href="#"
+                    href="/admin/product"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Produits
