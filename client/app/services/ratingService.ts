@@ -8,13 +8,15 @@ interface RatingData {
 
 export const fetchRating = async (productId: number): Promise<RatingData> => {
   try {
-    const res = await fetch(`http://localhost:3000/api/product/getReview`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: productId }),
-    });
+    const res = await fetch(
+      `http://localhost:3000/api/review/productReview/${productId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!res.ok) {
       throw new Error("Échec du fetch des reviews");

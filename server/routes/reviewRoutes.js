@@ -73,6 +73,46 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/productReview/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const product = await Product.findOne({ id: id });
+
+    if (!product) {
+      return res.status(404).json({
+        error: "le produit n'existe pas",
+      });
+    }
+
+    const reviews = await Review.find({
+      product_id: product._id,
+      verified: true,
+    })
+      .populate("user_id", "-password")
+      .populate("product_id");
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({
+        error: "Aucune review trouvée pour ce produit",
+      });
+    }
+
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / reviews.length;
+
+    return res.status(200).json({
+      reviews: reviews,
+      average: parseFloat(averageRating.toFixed(2)),
+      count: reviews.length,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération des reviews",
+      details: error.message,
+    });
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     const reviews = await Review.find({ verified: true })
@@ -119,30 +159,6 @@ router.get("/pending", verifyAdmin, async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la récupération des review",
-      details: error.message,
-    });
-  }
-});
-
-router.get("/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const review = await Review.findOne({ id: id })
-      .populate("user_id", "-password")
-      .populate("product_id");
-
-    if (!review) {
-      return res.status(404).json({
-        error: "Les reviews n'ont pas été trouvées",
-      });
-    }
-
-    return res.status(200).json({
-      review: review,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      error: "Erreur lors de la récupération des reviews",
       details: error.message,
     });
   }

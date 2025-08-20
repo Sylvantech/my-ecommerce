@@ -161,7 +161,7 @@ export default function HomeRating() {
   ];
 
   return (
-    <section className="relative z-10 py-16 px-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <section className="relative z-10 py-16 px-6 ">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h3 className="text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">

@@ -1,29 +1,12 @@
 import { useEffect, useState } from "react";
 import { fetchRating } from "~/services/ratingService";
 import type { Review } from "~/types/review";
+import type { Product } from "~/types/product";
+import type { User } from "~/types/userlist";
 
 interface PopulatedReview extends Omit<Review, "user_id" | "product_id"> {
-  user_id:
-    | string
-    | {
-        _id: string;
-        username: string;
-        email: string;
-        role: string;
-        reduction: number;
-        is_active: boolean;
-        created_at: string;
-        updated_at: string;
-        id: string;
-        __v: number;
-      };
-  product_id:
-    | string
-    | {
-        _id: string;
-        title: string;
-        src: string;
-      };
+  user_id: string | User;
+  product_id: string | Product;
 }
 
 interface RatingData {
@@ -84,6 +67,8 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
       try {
         setLoading(true);
         const data = await fetchRating(productId);
+
+        console.log(data);
         setRatingData(data as RatingData);
         setError(null);
       } catch (err) {
