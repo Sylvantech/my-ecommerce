@@ -1,93 +1,114 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ColorsAdmin from "~/components/Admin/ColorsAdmin";
+import { productColor } from "~/services/admin/productColorService";
 
 export default function Categories() {
   const [searchColor, setSearchColor] = useState("");
 
-  const [description, setDescription] = useState("");
-
-  const [name, setNameColor] = useState("");
+  const [nameColor, setNameColor] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [hexColor, setHexColor] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [color, setColor] = useState("");
-
-  const handleColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchColor = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchColor(e.target.value);
   };
 
+  const handleColor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError("");
+    setHexColor(e.target.value);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError("");
+      setSuccess("");
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [success, error]);
+
+  const handleSubmit = async () => {
+    setError("");
+    setSuccess("");
+    if (!nameColor.trim() || !hexColor.trim()) {
+      setError("Veuillez remplir tous les champs.");
+      return;
+    }
+    try {
+      const res = await productColor.createColor(nameColor, hexColor);
+      if (res.success) {
+        setIsModalOpen(false);
+        setNameColor("");
+        setHexColor("");
+        setSuccess("Couleur ajoutée !");
+      } else {
+        setError("Erreur inattendue.");
+      }
+    } catch (err) {
+      return `A rencontré un problème de type ${err}`;
+    }
+  };
   return (
     <div className="sm:ml-80 mr-3 ml-3 flex flex-col gap-3 text-black">
       {isModalOpen && (
-        <div className="fixed inset-0 flex justify-end items-center p-4 bg-black/50 w-full">
-          <div className="bg-white w-full max-w-sm p-6 flex flex-col gap-4 rounded-lg">
-            <div>
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="text-sm text-gray-700"
-                >
-                  X
-                </button>
-              </div>
-              <div className="gap-3 flex flex-col">
-                <h1 className="text-xl">Ajouter une nouvelle couleur</h1>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-lg p-6 rounded-2xl shadow-2xl transform transition-all max-h-[90vh] overflow-y-auto">
+            <div className="flex flex-col justify-between items-start mb-6">
+              <div className="flex flex-col gap-5">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Ajouter une nouvelle couleur
+                </h2>
                 <hr className="text-gray-300" />
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-600 mt-1">
                   Créez une nouvelle couleur pour vos chaussettes.
                 </p>
+                <div className="flex flex-col gap-2">
+                  <h3>Nom de la couleur</h3>
+                  <input
+                    className="w-full border border-gray-300 p-1.5 rounded-lg"
+                    type="text"
+                    name="nameColor"
+                    id="nameColor"
+                    placeholder="Ex: Rouge Passion"
+                    value={nameColor}
+                    onChange={e => setNameColor(e.target.value)}
+                  />
+                  <h3>Code couleur (Hex)</h3>
+                  <div className="w-full border border-gray-300 rounded-lg flex justify-center items-center p-0.5">
+                    <input
+                      className="w-full h-10"
+                      type="color"
+                      name="hexColor"
+                      id="hexColor"
+                      value={hexColor}
+                      onChange={handleColor}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-            <div>
-              <h3>Nom de la couleur</h3>
-              <input
-                className="shadow border border-gray-300 w-full rounded-lg p-1.5"
-                type="text"
-                name="name"
-                id="name"
-                placeholder="Ex: Rouge Passion"
-                onChange={e => setNameColor(e.target.value)}
-              />
-            </div>
-            <h3>Code couleur (Hex)</h3>
-            <div className="flex gap-2 items-center">
-              <div className="border border-gray-300 p-2 w-20 bg-white flex justify-center items-center rounded-sm">
-                <div
-                  className="px-7 py-3 border border-gray-500 "
-                  style={{ backgroundColor: color }}
-                ></div>
-              </div>
-              <input
-                name={color}
-                id={color}
-                className="border border-gray-300 p-1.5 rounded-lg"
-                type="text"
-                value={color}
-                onChange={e => setColor(e.target.value)}
-              />
-            </div>
-            <div>
-              <h3>Description</h3>
-              <textarea
-                className="shadow p-2 border border-gray-300 w-full rounded-lg"
-                name="description"
-                id="description"
-                placeholder="Description de la couleur..."
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-              />
-            </div>
-            <div className="flex justify-end gap-3">
+
+            <div className="space-y-5"></div>
+
+            <div className="flex gap-3 mt-8">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="border border-gray-200 p-2 rounded-lg text-sm"
+                className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium"
               >
                 Annuler
               </button>
-              <button className="bg-gray-400 hover:bg-black text-white p-2 rounded-lg text-sm">
-                Ajouter
+              <button
+                className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+                onClick={handleSubmit}
+              >
+                Valider
               </button>
             </div>
+            <p className="text-red-600 flex justify-center items-center pt-5">
+              {error}
+            </p>
           </div>
         </div>
       )}
@@ -120,7 +141,7 @@ export default function Categories() {
               id=""
               placeholder="Rechercher une couleur..."
               className="w-full"
-              onChange={handleColor}
+              onChange={handleSearchColor}
               value={searchColor}
             />
           </form>
@@ -132,6 +153,7 @@ export default function Categories() {
           <span className="text-xl">+</span> Ajouter une couleur
         </button>
       </div>
+      <p className="text-red-500 block">{success}</p>
       <div className="flex flex-col items-center justify-center">
         <ColorsAdmin searchColor={searchColor} />
       </div>
