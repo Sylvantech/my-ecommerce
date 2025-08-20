@@ -68,7 +68,7 @@ export default function ProductAdmin({
                 <th className="p-3 text-right text-sm font-semibold border-b border-gray-200">Prix</th>
                 <th className="p-3 text-center text-sm font-semibold border-b border-gray-200">Étiquettes</th>
                 <th className="p-3 text-left text-sm font-semibold border-b border-gray-200">Créé</th>
-                <th className="p-3 text-left text-sm font-semibold border-b border-gray-200">MAJ</th>
+                <th className="p-3 text-left text-sm font-semibold border-b border-gray-200">Mise à jour le</th>
                 <th className="p-3 text-center text-sm font-semibold border-b border-gray-200">Actions</th>
               </tr>
             </thead>
