@@ -37,4 +37,27 @@ export const productColor = {
       return { success: false, error: err };
     }
   },
+  deleteColor: async (id: number) => {
+    try {
+      const res = await apiClient("http://localhost:3000/api/productColor", {
+        method: "DELETE",
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Token invalide ou expiré");
+        } else if (res.status === 403) {
+          throw new Error("Droits administrateur requis");
+        } else {
+          return { success: false, error: "Erreur lors de la suppression" };
+        }
+      }
+      const data = res.json();
+
+      return { success: true, data };
+    } catch (err) {
+      console.error(err);
+      return { success: false, error: err };
+    }
+  },
 };
