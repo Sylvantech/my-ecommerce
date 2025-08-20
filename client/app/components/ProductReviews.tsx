@@ -68,7 +68,6 @@ export default function ProductReviews({ productId }: ProductReviewsProps) {
         setLoading(true);
         const data = await fetchRating(productId);
 
-        console.log(data);
         setRatingData(data as RatingData);
         setError(null);
       } catch (err) {
