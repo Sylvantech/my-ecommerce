@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import StarRating from "~/components/StarRating";
+import ProductReviews from "~/components/ProductReviews";
 import { productService } from "~/services/productService";
 import { productSizeService } from "~/services/productSizeService";
 import { cartService } from "~/services/cartService";
@@ -535,6 +536,9 @@ export default function Product() {
           </div>
         </div>
       </div>
+
+      {/* Section des avis produit */}
+      <ProductReviews productId={product.id} />
     </div>
   );
 }

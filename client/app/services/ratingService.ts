@@ -31,3 +31,32 @@ export const fetchRating = async (productId: number): Promise<RatingData> => {
     };
   }
 };
+
+export const fetchAllRating = async (): Promise<{
+  reviews: Review[];
+  averageRating: number;
+  totalReviews: number;
+}> => {
+  try {
+    const res = await fetch(`http://localhost:3000/api/review/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Échec du fetch des reviews");
+    }
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    console.error("Erreur fetchAllRating:", error);
+    return {
+      reviews: [],
+      averageRating: 0,
+      totalReviews: 0,
+    };
+  }
+};

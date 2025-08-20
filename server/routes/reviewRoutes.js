@@ -6,7 +6,7 @@ const Product = require("../models/Product.model");
 const reviewUtils = require("../utils/reviewApiUtils");
 const { verifyToken, verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/",verifyToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const { user_id, product_id, rating, content } = req.body;
   const isValid = reviewUtils.checkInput(req);
   if (!isValid) {
@@ -75,28 +75,33 @@ router.post("/",verifyToken, async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const review = await Review.find()
+    const reviews = await Review.find({ verified: true })
       .populate("user_id", "-password")
       .populate("product_id");
 
-    if (!review) {
+    if (!reviews || reviews.length === 0) {
       return res.status(404).json({
-        error: "La review n'a pas été trouvée",
+        error: "Aucune review trouvée",
       });
     }
 
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / reviews.length;
+
     return res.status(200).json({
-      review: review,
+      reviews: reviews,
+      averageRating: parseFloat(averageRating.toFixed(2)),
+      totalReviews: reviews.length,
     });
   } catch (error) {
     return res.status(500).json({
-      error: "Erreur lors de la récupération de la review",
+      error: "Erreur lors de la récupération des reviews",
       details: error.message,
     });
   }
 });
 
-router.get("/pending",verifyAdmin, async (req, res) => {
+router.get("/pending", verifyAdmin, async (req, res) => {
   try {
     const review = await Review.find({ verified: false })
       .populate("user_id", "-password")
@@ -143,8 +148,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.patch("/",verifyAdmin, async (req, res) => {
-  const { id, rating, content, verified } = req.body;
+router.patch("/", verifyAdmin, async (req, res) => {
+  const { id, rating, verified } = req.body;
 
   const isValid = reviewUtils.checkUpdateInput(req);
 
