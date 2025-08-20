@@ -6,7 +6,7 @@ const Product = require("../models/Product.model");
 const reviewUtils = require("../utils/reviewApiUtils");
 const { verifyToken, verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", async (req, res) => {
+router.post("/",verifyToken, async (req, res) => {
   const { user_id, product_id, rating, content } = req.body;
   const isValid = reviewUtils.checkInput(req);
   if (!isValid) {
@@ -96,7 +96,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/pending", async (req, res) => {
+router.get("/pending",verifyAdmin, async (req, res) => {
   try {
     const review = await Review.find({ verified: false })
       .populate("user_id", "-password")
@@ -143,7 +143,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.patch("/", async (req, res) => {
+router.patch("/",verifyAdmin, async (req, res) => {
   const { id, rating, content, verified } = req.body;
 
   const isValid = reviewUtils.checkUpdateInput(req);
