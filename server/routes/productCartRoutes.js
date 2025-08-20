@@ -78,7 +78,10 @@ router.post("/getByCartId", async (req, res) => {
   try {
     const productCarts = await ProductCart.find({ cart_id: cart_id }).populate([
       { path: "product_id" },
-      { path: "variant_id", populate: [{ path: "color_id" }, { path: "size_id" }] },
+      {
+        path: "variant_id",
+        populate: [{ path: "color_id" }, { path: "size_id" }],
+      },
     ]);
 
     if (productCarts.length === 0) {

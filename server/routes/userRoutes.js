@@ -184,13 +184,24 @@ router.put("/", async (req, res) => {
     }
 
     const updateData = {};
-    if (username) {updateData.username = username;}
-    if (email) {updateData.email = email;}
-    if (password) {updateData.password = password;}
-    if (role && ["user", "admin"].includes(role)) {updateData.role = role;}
-    if (reduction !== undefined)
-      {updateData.reduction = Math.max(0, Number(reduction));}
-    if (is_active !== undefined) {updateData.is_active = Boolean(is_active);}
+    if (username) {
+      updateData.username = username;
+    }
+    if (email) {
+      updateData.email = email;
+    }
+    if (password) {
+      updateData.password = password;
+    }
+    if (role && ["user", "admin"].includes(role)) {
+      updateData.role = role;
+    }
+    if (reduction !== undefined) {
+      updateData.reduction = Math.max(0, Number(reduction));
+    }
+    if (is_active !== undefined) {
+      updateData.is_active = Boolean(is_active);
+    }
 
     const updatedUser = await User.findOneAndUpdate({ id: id }, updateData, {
       new: true,

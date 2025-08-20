@@ -213,50 +213,6 @@ export const adminService = {
     }
   },
 
-  getCarts: async () => {
-    try {
-      const res = await fetch("http://localhost:3000/api/cart/");
-      if (!res.ok) {
-        return {
-          success: false,
-          error: "Erreur lors de la récupération des paniers",
-        };
-      }
-      const data = await res.json();
-      return { success: true, data: data.carts };
-    } catch (err) {
-      console.error(`erreur: ${err}`);
-      return { success: false, error: "Erreur réseau ou serveur" };
-    }
-  },
-
-  getCartProductsByCartId: async (cartId: string) => {
-    try {
-      const res = await fetch(
-        "http://localhost:3000/api/productCart/getByCartId",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cart_id: cartId }),
-        }
-      );
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        return {
-          success: false,
-          error:
-            err.error ||
-            "Erreur lors de la récupération des produits du panier",
-        };
-      }
-      const data = await res.json();
-      return { success: true, data: data.cart_products };
-    } catch (err) {
-      console.error(`erreur: ${err}`);
-      return { success: false, error: "Erreur réseau ou serveur" };
-    }
-  },
-
   createProductVariant: async (
     product_id: string,
     size_id: string,
@@ -280,6 +236,48 @@ export const adminService = {
           product_id,
           size_id,
           color_id,
+          src,
+          stock,
+          available,
+        }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Token invalide ou expiré");
+        } else if (res.status === 403) {
+          throw new Error("Droits administrateur requis");
+        }
+      }
+      const data = await res.json();
+      return { success: true, data };
+    } catch (err) {
+      console.error(`erreur: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
+  modifyProductVariant: async (
+    id: number,
+    color_id: string,
+    size_id: string,
+    src: string,
+    stock: number,
+    available: boolean
+  ) => {
+    const token = CookieHelper.getToken("AccesToken");
+    if (!token) {
+      return { success: false, error: "Token manquant" };
+    }
+    try {
+      const res = await fetch("http://localhost:3000/api/productVariant/", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          color_id,
+          size_id,
           src,
           stock,
           available,

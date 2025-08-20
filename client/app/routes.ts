@@ -21,5 +21,7 @@ export default [
     route("admin/variants", "routes/admin/variants.tsx"),
     route("admin/cart", "routes/admin/cart.tsx"),
     route("admin/colors", "routes/admin/colors.tsx"),
+    route("admin/product", "routes/admin/product.tsx"),
+    route("admin/moderation", "routes/admin/moderation.tsx"),
   ]),
 ] satisfies RouteConfig;

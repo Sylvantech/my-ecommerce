@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { adminService } from "~/services/admin/adminService";
+import { cartServiceAdmin } from "~/services/admin/cartServiceAdmin";
 import type {
   CartAdminProps,
   CartDoc,
@@ -26,7 +26,7 @@ export default function CartAdmin({
   async function load() {
     setLoading(true);
     setError(null);
-    const res = await adminService.getCarts();
+    const res = await cartServiceAdmin.getCarts();
     if (res.success) {
       setCarts(res.data || []);
     } else {
@@ -81,13 +81,22 @@ export default function CartAdmin({
     setViewCart(cart);
     setViewOpen(true);
     setViewLoading(true);
-    const res = await adminService.getCartProductsByCartId(cart._id);
+    const res = await cartServiceAdmin.getCartProductsByCartId(cart._id);
     if (res.success) {
       setViewProducts(res.data || []);
     } else {
       setViewProducts([]);
     }
     setViewLoading(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    const res = await cartServiceAdmin.deleteCart(id);
+    if (res.success) {
+      load();
+    } else {
+      setError(res.error || "Erreur lors de la suppression");
+    }
   };
 
   const cartTotal = useMemo(() => {
@@ -182,6 +191,12 @@ export default function CartAdmin({
                           className="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-50"
                         >
                           Voir
+                        </button>
+                        <button
+                          onClick={() => handleDelete(c._id)}
+                          className="px-3 py-1.5 border border-red-200 text-red-700 rounded-lg text-sm hover:bg-red-50"
+                        >
+                          Supprimer
                         </button>
                       </div>
                     </td>

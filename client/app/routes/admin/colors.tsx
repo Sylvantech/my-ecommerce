@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ColorsAdmin from "~/components/Admin/ColorsAdmin";
 import { productColor } from "~/services/admin/productColorService";
 

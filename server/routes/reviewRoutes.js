@@ -6,13 +6,21 @@ const Product = require("../models/Product.model");
 const reviewUtils = require("../utils/reviewApiUtils");
 const { verifyToken, verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/", verifyToken, async (req, res) => {
-  const { user_id, product_id, rating } = req.body;
+router.post("/",verifyToken, async (req, res) => {
+  const { user_id, product_id, rating, content } = req.body;
   const isValid = reviewUtils.checkInput(req);
   if (!isValid) {
     return res.status(400).json({
       error:
         "Données invalides - user_id, product_id et rating (1-5) sont obligatoires",
+    });
+  }
+
+  const badWord = reviewUtils.checkObsenity(content);
+
+  if (badWord) {
+    return res.status(666).json({
+      error: "Votre message contient un langague non approprié",
     });
   }
 
@@ -42,6 +50,7 @@ router.post("/", verifyToken, async (req, res) => {
       user_id,
       product_id,
       rating,
+      content,
     });
     const review = await newReview.save();
 
@@ -53,6 +62,7 @@ router.post("/", verifyToken, async (req, res) => {
         product_id: review.product_id,
         rating: review.rating,
         created_at: review.created_at,
+        content: review.content,
       },
     });
   } catch (error) {
@@ -86,6 +96,29 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/pending",verifyAdmin, async (req, res) => {
+  try {
+    const review = await Review.find({ verified: false })
+      .populate("user_id", "-password")
+      .populate("product_id");
+
+    if (!review) {
+      return res.status(404).json({
+        error: "Aucune review en attente",
+      });
+    }
+
+    return res.status(200).json({
+      review: review,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération des review",
+      details: error.message,
+    });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
@@ -110,8 +143,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.patch("/", verifyAdmin, async (req, res) => {
-  const { id, rating } = req.body;
+router.patch("/",verifyAdmin, async (req, res) => {
+  const { id, rating, content, verified } = req.body;
 
   const isValid = reviewUtils.checkUpdateInput(req);
 
@@ -134,6 +167,10 @@ router.patch("/", verifyAdmin, async (req, res) => {
       review.rating = rating;
     }
 
+    if (verified !== undefined) {
+      review.verified = verified;
+    }
+
     await review.save();
 
     res.status(200).json({
@@ -143,6 +180,8 @@ router.patch("/", verifyAdmin, async (req, res) => {
         user_id: review.user_id,
         product_id: review.product_id,
         rating: review.rating,
+        content: review.content,
+        verified: review.verified,
         updated_at: review.updated_at,
       },
     });

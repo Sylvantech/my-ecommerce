@@ -4,6 +4,7 @@ const { verifyAdmin } = require("../middleware/authMiddleware");
 const Cart = require("../models/Cart.model");
 const User = require("../models/User.model");
 const mongoose = require("mongoose");
+const ProductCart = require("../models/ProductCart.model");
 
 router.post("/", async (req, res) => {
   const { user_id = null, anonymous_user_id = null } = req.body;
@@ -170,6 +171,8 @@ router.delete("/", verifyAdmin, async (req, res) => {
     });
   }
   try {
+    await ProductCart.deleteMany({ cart_id: cartExists._id });
+
     await Cart.findOneAndDelete({ _id: id });
     res.status(200).json({
       message: "Panier supprimé avec succès",

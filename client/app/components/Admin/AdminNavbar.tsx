@@ -42,7 +42,6 @@ const Navbar = () => {
         aria-label="Sidebar"
       >
         <div className="h-full px-3 py-4 overflow-y-auto">
-          {/* Optional close button for mobile */}
           <div className="flex justify-end sm:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(false)}
@@ -52,8 +51,18 @@ const Navbar = () => {
             </button>
           </div>
 
+          <div className="mb-4 pb-4 border-b border-gray-300 dark:border-gray-600">
+            <a
+              href="/"
+              className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+            >
+              <span className="flex-1 ms-3 text-left whitespace-nowrap">
+                🏠 Retour à l&apos;accueil
+              </span>
+            </a>
+          </div>
+
           <ul className="space-y-2 font-medium">
-            {/* Utilisateurs */}
             <li>
               <button
                 type="button"
@@ -75,7 +84,6 @@ const Navbar = () => {
               </ul>
             </li>
 
-            {/* Produits */}
             <li>
               <button
                 type="button"
@@ -88,7 +96,7 @@ const Navbar = () => {
               <ul id="products-menu" className="py-2 space-y-2">
                 <li>
                   <a
-                    href="#"
+                    href="/admin/product"
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Produits
@@ -130,7 +138,6 @@ const Navbar = () => {
               </ul>
             </li>
 
-            {/* Commandes */}
             <li>
               <button
                 type="button"
@@ -193,6 +200,15 @@ const Navbar = () => {
                     className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Reviews
+                  </a>
+                </li>
+
+                <li>
+                  <a
+                    href="/admin/moderation"
+                    className="block pl-11 pr-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Modération reviews
                   </a>
                 </li>
               </ul>

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { adminService } from "~/services/admin/adminService";
-
+import { productSizeService } from "~/services/productSizeService";
+import type { ProductSize } from "~/types/productSize";
+import { productColorService } from "~/services/productColorService";
+import type { ProductColor } from "~/types/productColor";
 interface VariantAdminProps {
   searchVariant?: string;
   refresh: number;
@@ -41,6 +44,8 @@ export default function VariantAdmin({
   const [available, setAvailable] = useState<boolean>(true);
   const [id, setId] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sizeList, setSizeList] = useState<ProductSize[]>([]);
+  const [productColorList, setproductColorList] = useState<ProductColor[]>([]);
 
   const handleChange = (variant: ProductVariant) => {
     setIsModalOpen(true);
@@ -63,28 +68,55 @@ export default function VariantAdmin({
     }
   }
 
-  // const handleSubmit = async () => {
-  //     if (productId && colorId && sizeId && src && id) {
-  //         const res = await adminService.modifyProductVariant(
-  //             id,
-  //             productId,
-  //             colorId,
-  //             sizeId,
-  //             src,
-  //             stock,
-  //             available
-  //         );
-  //         if (res?.success) {
-  //             setIsModalOpen(false);
-  //             await getVariants();
-  //         } else {
-  //             return res;
-  //         }
-  //     }
-  // };
+  const fetchSizes = async () => {
+    try {
+      const response = await productSizeService.getAll();
+      if (response?.success && response.data) {
+        setSizeList(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching sizes:", error);
+    }
+  };
+
+  const fetchColors = async () => {
+    try {
+      const response = await productColorService.getAll();
+      if (response?.success && response.data && Array.isArray(response.data)) {
+        setproductColorList(response.data);
+      } else {
+        console.error("Response structure is incorrect:", response);
+        setproductColorList([]);
+      }
+    } catch (error) {
+      console.error("Error fetching colors:", error);
+      setproductColorList([]);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (productId && colorId && sizeId && src && id) {
+      const res = await adminService.modifyProductVariant(
+        id,
+        colorId,
+        sizeId,
+        src,
+        stock,
+        available
+      );
+      if (res?.success) {
+        setIsModalOpen(false);
+        await getVariants();
+      } else {
+        return res;
+      }
+    }
+  };
 
   useEffect(() => {
     getVariants();
+    fetchSizes();
+    fetchColors();
   }, []);
 
   useEffect(() => {
@@ -121,6 +153,282 @@ export default function VariantAdmin({
 
   return (
     <div className="w-full">
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-lg p-6 rounded-2xl shadow-2xl transform transition-all max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Modifier la Variante
+                </h2>
+                <p className="text-gray-600 mt-1">
+                  Modifiez les propriétés de la variante #{id}.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-5">
+              <div>
+                <label
+                  htmlFor="editColor"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Couleur
+                </label>
+                <div className="relative">
+                  <select
+                    id="editColor"
+                    value={colorId}
+                    onChange={e => setColorId(e.target.value)}
+                    className="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
+                  >
+                    <option value="">Sélectionner une couleur</option>
+                    {Array.isArray(productColorList) &&
+                      productColorList.map(color => (
+                        <option key={color._id} value={color._id}>
+                          {color.name}
+                        </option>
+                      ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                {colorId && Array.isArray(productColorList) && (
+                  <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                    {(() => {
+                      const selectedColor = productColorList.find(
+                        c => c._id === colorId
+                      );
+                      return selectedColor ? (
+                        <div className="flex items-center space-x-3">
+                          <div
+                            className="w-8 h-8 rounded-full border-2 border-gray-200 shadow-sm"
+                            style={{ backgroundColor: selectedColor.hex_code }}
+                          />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">
+                              {selectedColor.name}
+                            </span>
+                            <span className="text-sm text-gray-500 ml-2">
+                              {selectedColor.hex_code}
+                            </span>
+                          </div>
+                        </div>
+                      ) : null;
+                    })()}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="editSize"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Taille
+                </label>
+                <div className="relative">
+                  <select
+                    id="editSize"
+                    value={sizeId}
+                    onChange={e => setSizeId(e.target.value)}
+                    className="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
+                  >
+                    <option value="">Sélectionner une taille</option>
+                    {sizeList.map(size => (
+                      <option key={size._id} value={size._id}>
+                        EU {size.eu_size}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg
+                      className="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="editStock"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Stock
+                </label>
+                <input
+                  type="number"
+                  id="editStock"
+                  min="0"
+                  value={stock}
+                  onChange={e => setStock(parseInt(e.target.value) || 0)}
+                  className="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="Quantité en stock"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Disponibilité
+                </label>
+                <div className="flex gap-4">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="availability"
+                      checked={available === true}
+                      onChange={() => setAvailable(true)}
+                      className="sr-only"
+                    />
+                    <div
+                      className={`flex items-center px-4 py-3 rounded-xl border-2 transition-all ${
+                        available === true
+                          ? "border-green-500 bg-green-50 text-green-700"
+                          : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+                      }`}
+                    >
+                      <div
+                        className={`w-4 h-4 rounded-full mr-3 flex items-center justify-center border-2 ${
+                          available === true
+                            ? "border-green-500 bg-green-500"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        {available === true && (
+                          <div className="w-2 h-2 rounded-full bg-white"></div>
+                        )}
+                      </div>
+                      <span className="font-medium">Disponible</span>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="availability"
+                      checked={available === false}
+                      onChange={() => setAvailable(false)}
+                      className="sr-only"
+                    />
+                    <div
+                      className={`flex items-center px-4 py-3 rounded-xl border-2 transition-all ${
+                        available === false
+                          ? "border-red-500 bg-red-50 text-red-700"
+                          : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+                      }`}
+                    >
+                      <div
+                        className={`w-4 h-4 rounded-full mr-3 flex items-center justify-center border-2 ${
+                          available === false
+                            ? "border-red-500 bg-red-500"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        {available === false && (
+                          <div className="w-2 h-2 rounded-full bg-white"></div>
+                        )}
+                      </div>
+                      <span className="font-medium">Indisponible</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="editSrc"
+                  className="block text-sm font-semibold text-gray-700 mb-2"
+                >
+                  Image de la variante
+                </label>
+                <input
+                  type="url"
+                  id="editSrc"
+                  value={src}
+                  onChange={e => setSrc(e.target.value)}
+                  className="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="https://exemple.com/image.jpg"
+                />
+                {src && (
+                  <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={src}
+                        alt="Aperçu variante"
+                        className="w-16 h-16 rounded-lg object-cover"
+                        onError={e => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                      <span className="text-sm text-gray-600">
+                        Aperçu de l&apos;image
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-8">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={!colorId || !sizeId || !src}
+                className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
+              >
+                Sauvegarder
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row justify-around gap-4 mb-6">
         <div className="px-6 py-4 flex flex-col justify-center bg-white border border-gray-200 rounded-xl w-full shadow-sm hover:shadow-md transition-shadow">
           <h2 className="text-gray-600 text-sm font-medium uppercase tracking-wide">
@@ -132,7 +440,7 @@ export default function VariantAdmin({
         </div>
       </div>
       {filtered.length > 0
-        ? filtered.map((variant, index) => (
+        ? filtered.map(variant => (
             <div
               key={variant.id}
               className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 mb-4 overflow-hidden"
@@ -147,7 +455,7 @@ export default function VariantAdmin({
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                      <div className="text-black w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -282,7 +590,7 @@ export default function VariantAdmin({
               </div>
             </div>
           ))
-        : variants.map((variant, index) => (
+        : variants.map(variant => (
             <div
               key={variant.id}
               className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 mb-4 overflow-hidden"
@@ -297,7 +605,7 @@ export default function VariantAdmin({
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                      <div className="text-blue-400 w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -384,7 +692,6 @@ export default function VariantAdmin({
               </div>
 
               <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
-               
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleChange(variant)}
