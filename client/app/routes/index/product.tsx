@@ -537,7 +537,6 @@ export default function Product() {
         </div>
       </div>
 
-      {/* Section des avis produit */}
       <ProductReviews productId={product.id} />
     </div>
   );
