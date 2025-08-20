@@ -155,7 +155,7 @@ export default function Categories() {
       </div>
       <p className="text-red-500 block">{success}</p>
       <div className="flex flex-col items-center justify-center">
-        <ColorsAdmin searchColor={searchColor} />
+        <ColorsAdmin searchColor={searchColor} addedColor={success} />
       </div>
     </div>
   );

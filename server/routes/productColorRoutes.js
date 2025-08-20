@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const ProductColor = require("../models/ProductColor.model");
+
 const { verifyAdmin } = require("../middleware/authMiddleware");
+const ProductVariant = require("../models/ProductVariant.model");
 
 router.post("/", verifyAdmin, async (req, res) => {
   const { name, hex_code } = req.body;
@@ -78,5 +80,41 @@ router.get("/:productColorId", async (req, res) => {
     });
   }
 });
+
+
+router.delete("/", verifyAdmin, async (req, res) => {
+  const id = req.body.id;
+  if (!id || !Number.isInteger(Number(id))) {
+    return res.status(400).json({
+      error: "Veuillez fournir un ID valide",
+    });
+  }
+  const colorExists = await ProductColor.findOne({ id: id });
+  if (!colorExists) {
+    return res.status(500).json({
+      error: "Cette couleur n'existe pas",
+    });
+  }
+
+  const products = await ProductVariant.findOne({ color_id: colorExists._id });
+
+  if (products) {
+    return res.status(409).json({
+      error: "Cette couleur est reliée a un produit ! ",
+    });
+  }
+  try {
+    await ProductColor.findOneAndDelete({ id: id });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la suppression de la couleur ",
+      details: error.message,
+    });
+  }
+  res.status(200).json({
+    message: "Couleur supprimée avec succès",
+  });
+});
+
 
 module.exports = router;
