@@ -20,9 +20,6 @@ export const productColor = {
     try {
       const res = await apiClient("http://localhost:3000/api/productColor", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ name, hex_code }),
       });
 
