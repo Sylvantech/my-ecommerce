@@ -9,6 +9,7 @@ interface ProductAdminProps {
   priceMax?: string;
   isNewOnly?: boolean;
   isPromoOnly?: boolean;
+  refresh?: number;
 }
 
 export default function ProductAdmin({
