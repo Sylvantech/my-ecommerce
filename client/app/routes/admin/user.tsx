@@ -10,19 +10,6 @@ export default function UserList() {
 
         <div className="p-4 bg-white">
           <table className="w-full border-collapse text-center">
-            <thead>
-              <tr className="bg-gray-200 text-gray-700">
-                <th className="p-2 border border-gray-300">ID</th>
-                <th className="p-2 border border-gray-300">Name</th>
-                <th className="p-2 border border-gray-300">Email</th>
-                <th className="p-2 border border-gray-300">Status</th>
-                <th className="p-2 border border-gray-300">Role</th>
-                <th className="p-2 border border-gray-300">Created at</th>
-                <th className="p-2 border border-gray-300">Updated at</th>
-                <th className="p-2 border border-gray-300">Reduction</th>
-                <th className="p-2 border border-gray-300">Action</th>
-              </tr>
-            </thead>
             <UserFetch />
           </table>
         </div>
