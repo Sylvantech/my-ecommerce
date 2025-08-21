@@ -282,6 +282,7 @@ export default function Product() {
           priceMax={priceMax}
           isNewOnly={isNewOnly}
           isPromoOnly={isPromoOnly}
+          onDeleted={() => setRefresh(r => r + 1)}
         />
       </div>
 

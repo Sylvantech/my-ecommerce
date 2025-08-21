@@ -168,4 +168,26 @@ router.patch("/", verifyAdmin, async (req, res) => {
   }
 });
 
+router.delete("/", verifyAdmin, async (req, res) => {
+  const { id } = req.body;
+  if (!id || !Number.isInteger(Number(id))) {
+    return res.status(400).json({ error: "Veuillez fournir un ID valide" });
+  }
+
+  try {
+    const product = await Product.findOne({ id: id });
+    if (!product) {
+      return res.status(404).json({ error: "Produit non trouvé" });
+    }
+
+    await Product.findOneAndDelete({ id: id });
+    return res.status(200).json({ message: "Produit supprimé avec succès" });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la suppression du produit",
+      details: error.message,
+    });
+  }
+});
+
 module.exports = router;
