@@ -164,7 +164,7 @@ export default function UsersTable() {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-xl p-6 w-96 shadow-lg relative">
-            <h2 className="text-xl font-bold mb-4">
+            <h2 className="text-xl text-black font-bold mb-4">
               {editingUser ? "Modifier l'utilisateur" : "Créer un utilisateur"}
             </h2>
             <input
