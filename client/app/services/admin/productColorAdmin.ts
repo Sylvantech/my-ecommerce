@@ -1,6 +1,6 @@
 import { apiClient } from "../apiClient";
 
-export const productColor = {
+export const productColorAdmin = {
   getColors: async () => {
     try {
       const res = await fetch("http://localhost:3000/api/productColor");
@@ -55,6 +55,27 @@ export const productColor = {
       const data = res.json();
 
       return { success: true, data };
+    } catch (err) {
+      console.error(err);
+      return { success: false, error: err };
+    }
+  },
+  editColor: async (id: number, name: string, hex: string) => {
+    try {
+      const res = await apiClient("http://localhost:3000/api/productColor", {
+        method: "PUT",
+        body: JSON.stringify({ id, name, hex }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Token invalide ou expiré");
+        } else if (res.status === 403) {
+          throw new Error("Droits administrateur requis");
+        } else {
+          return { success: false, error: "Erreur lors de la modification" };
+        }
+      }
+      return { success: true };
     } catch (err) {
       console.error(err);
       return { success: false, error: err };

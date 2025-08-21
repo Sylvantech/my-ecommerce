@@ -9,7 +9,9 @@ export default function Product() {
   const [priceMax, setPriceMax] = useState("");
   const [isNewOnly, setIsNewOnly] = useState(false);
   const [isPromoOnly, setIsPromoOnly] = useState(false);
-  const [categories, setCategories] = useState<Array<{ id: number; name: string }>>([]);
+  const [categories, setCategories] = useState<
+    Array<{ id: number; name: string }>
+  >([]);
 
   const handleResetFilters = () => {
     setSearch("");
@@ -35,7 +37,6 @@ export default function Product() {
       mounted = false;
     };
   }, []);
-
 
   return (
     <div className="sm:ml-80 min-h-screen bg-gray-50 p-6 text-black">
