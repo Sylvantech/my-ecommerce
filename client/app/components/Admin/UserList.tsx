@@ -6,8 +6,6 @@ export default function UsersTable() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  //state pour modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [username, setUsername] = useState("");
@@ -164,30 +162,30 @@ export default function UsersTable() {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-xl p-6 w-96 shadow-lg relative">
-            <h2 className="text-xl font-bold mb-4">
+            <h2 className="text-xl text-black font-bold mb-4">
               {editingUser ? "Modifier l'utilisateur" : "Créer un utilisateur"}
             </h2>
             <input
-              className="w-full mb-2 p-2 border rounded"
+              className="text-black w-full mb-2 p-2 border rounded"
               placeholder="Nom d'utilisateur"
               value={username}
               onChange={e => setUsername(e.target.value)}
             />
             <input
-              className="w-full mb-2 p-2 border rounded"
+              className="text-black w-full mb-2 p-2 border rounded"
               placeholder="Email"
               value={email}
               onChange={e => setEmail(e.target.value)}
             />
             <input
               type="password"
-              className="w-full mb-2 p-2 border rounded"
+              className="text-black w-full mb-2 p-2 border rounded"
               placeholder="Mot de passe"
               value={password}
               onChange={e => setPassword(e.target.value)}
             />
             <select
-              className="w-full mb-4 p-2 border rounded"
+              className="text-black w-full mb-4 p-2 border rounded"
               value={role}
               onChange={e => setRole(e.target.value)}
             >
