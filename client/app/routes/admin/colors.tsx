@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ColorsAdmin from "~/components/Admin/ColorsAdmin";
-import { productColor } from "~/services/admin/productColorService";
+import { productColorAdmin } from "~/services/admin/productColorAdmin";
 
 export default function Categories() {
   const [searchColor, setSearchColor] = useState("");
@@ -37,7 +37,7 @@ export default function Categories() {
       return;
     }
     try {
-      const res = await productColor.createColor(nameColor, hexColor);
+      const res = await productColorAdmin.createColor(nameColor, hexColor);
       if (res.success) {
         setIsModalOpen(false);
         setNameColor("");
