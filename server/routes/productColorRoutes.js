@@ -134,14 +134,6 @@ router.put("/", async (req, res) => {
     });
   }
 
-  const products = await ProductVariant.findOne({ color_id: colorExists._id });
-
-  if (products) {
-    return res.status(409).json({
-      error: "Cette couleur est reliée a un produit ! ",
-    });
-  }
-
   const updateData = {};
   if (name && hex) {
     updateData.name = name;
