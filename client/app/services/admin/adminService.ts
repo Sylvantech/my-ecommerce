@@ -297,4 +297,96 @@ export const adminService = {
       return { success: false, error: "Erreur réseau ou serveur" };
     }
   },
+    
+  createUser: async (
+    username: string,
+    email: string,
+    password: string,
+    role?: string
+  ) => {
+    const token = CookieHelper.getToken("AccesToken");
+    if (!token) {
+      return { success: false, error: "Token manquant" };
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/user/register", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password, role }),
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("Token invalide ou expiré");
+        if (res.status === 403) throw new Error("Droits administrateur requis");
+      }
+
+      const data = await res.json();
+      return { success: true, data };
+    } catch (err) {
+      console.error(`Erreur createUser: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
+
+  updateUser: async (user: Partial<User> & { id: number }) => {
+    const token = CookieHelper.getToken("AccesToken");
+    if (!token) {
+      return { success: false, error: "Token manquant" };
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/user/", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("Token invalide ou expiré");
+        if (res.status === 403) throw new Error("Droits administrateur requis");
+      }
+
+      const data = await res.json();
+      return { success: true, data };
+    } catch (err) {
+      console.error(`Erreur updateUser: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
+
+  deleteUser: async (id: number) => {
+    const token = CookieHelper.getToken("AccesToken");
+    if (!token) {
+      return { success: false, error: "Token manquant" };
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/user/", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("Token invalide ou expiré");
+        if (res.status === 403) throw new Error("Droits administrateur requis");
+      }
+
+      const data = await res.json();
+      return { success: true, data };
+    } catch (err) {
+      console.error(`Erreur deleteUser: ${err}`);
+      return { success: false, error: "Erreur réseau ou serveur" };
+    }
+  },
 };
