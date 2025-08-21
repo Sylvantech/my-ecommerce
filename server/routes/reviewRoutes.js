@@ -73,44 +73,37 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  try {
-    const review = await Review.find()
-      .populate("user_id", "-password")
-      .populate("product_id");
-
-    if (!review) {
-      return res.status(404).json({
-        error: "La review n'a pas été trouvée",
-      });
-    }
-
-    return res.status(200).json({
-      review: review,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      error: "Erreur lors de la récupération de la review",
-      details: error.message,
-    });
-  }
-});
-
-router.get("/:id", async (req, res) => {
+router.get("/productReview/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const review = await Review.findOne({ id: id })
-      .populate("user_id", "-password")
-      .populate("product_id");
+    const product = await Product.findOne({ id: id });
 
-    if (!review) {
+    if (!product) {
       return res.status(404).json({
-        error: "Les reviews n'ont pas été trouvées",
+        error: "le produit n'existe pas",
       });
     }
 
+    const reviews = await Review.find({
+      product_id: product._id,
+      verified: true,
+    })
+      .populate("user_id", "-password")
+      .populate("product_id");
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({
+        error: "Aucune review trouvée pour ce produit",
+      });
+    }
+
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / reviews.length;
+
     return res.status(200).json({
-      review: review,
+      reviews: reviews,
+      average: parseFloat(averageRating.toFixed(2)),
+      count: reviews.length,
     });
   } catch (error) {
     return res.status(500).json({
@@ -120,8 +113,59 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const reviews = await Review.find({ verified: true })
+      .populate("user_id", "-password")
+      .populate("product_id");
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({
+        error: "Aucune review trouvée",
+      });
+    }
+
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / reviews.length;
+
+    return res.status(200).json({
+      reviews: reviews,
+      averageRating: parseFloat(averageRating.toFixed(2)),
+      totalReviews: reviews.length,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération des reviews",
+      details: error.message,
+    });
+  }
+});
+
+router.get("/pending", verifyAdmin, async (req, res) => {
+  try {
+    const review = await Review.find({ verified: false })
+      .populate("user_id", "-password")
+      .populate("product_id");
+
+    if (!review) {
+      return res.status(404).json({
+        error: "Aucune review en attente",
+      });
+    }
+
+    return res.status(200).json({
+      review: review,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la récupération des review",
+      details: error.message,
+    });
+  }
+});
+
 router.patch("/", verifyAdmin, async (req, res) => {
-  const { id, rating, content, verified } = req.body;
+  const { id, rating, verified } = req.body;
 
   const isValid = reviewUtils.checkUpdateInput(req);
 
@@ -142,6 +186,10 @@ router.patch("/", verifyAdmin, async (req, res) => {
 
     if (rating !== undefined) {
       review.rating = rating;
+    }
+
+    if (verified !== undefined) {
+      review.verified = verified;
     }
 
     await review.save();

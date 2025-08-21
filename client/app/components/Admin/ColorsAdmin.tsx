@@ -11,10 +11,18 @@ interface Color {
 
 interface ColorsAdminProps {
   searchColor: string;
+  addedColor: string;
 }
 
-export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
+export default function ColorsAdmin({
+  searchColor,
+  addedColor,
+}: ColorsAdminProps) {
   const [fetchColors, setFetchColors] = useState<Color[]>([]);
+
+  const [error, setError] = useState("");
+
+  const [errorId, setErrorId] = useState(Number);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -30,8 +38,31 @@ export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
   }
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setError("");
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [error]);
+
+  useEffect(() => {
     getColors();
   }, []);
+
+  useEffect(() => {
+    if (addedColor && addedColor !== "") {
+      getColors();
+    }
+  }, [addedColor]);
+
+  const handleDelete = async (id: number) => {
+    const res = await productColor.deleteColor(id);
+    if (res.success === true) {
+      return getColors();
+    } else {
+      setError("Erreur lors de la suppression");
+      setErrorId(id);
+    }
+  };
 
   const handleChange = (getColor: string, getHex: string) => {
     setIsModalOpen(true);
@@ -47,7 +78,7 @@ export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
     <div className="w-full flex flex-col gap-5">
       <div className="pl-3 flex flex-col justify-around bg-white border-2 border-gray-200 rounded-xl h-30">
         <h2 className="text-gray-700">Total Couleurs</h2>
-        <p className="text-2xl">{2}</p>
+        <p className="text-2xl">{fetchColors && fetchColors.length}</p>
       </div>
       <div className="flex flex-col gap-3 mb-3">
         {isModalOpen && (
@@ -165,7 +196,10 @@ export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
                       <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"></path>
                     </svg>
                   </button>
-                  <button className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center hover:bg-red-200">
+                  <button
+                    onClick={() => handleDelete(color.id)}
+                    className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center hover:bg-red-200"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -187,6 +221,9 @@ export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
                   </button>
                 </div>
               </div>
+              <p className="text-red-500">
+                {error && color.id === errorId && error}
+              </p>
             </div>
           ))}
       </div>
