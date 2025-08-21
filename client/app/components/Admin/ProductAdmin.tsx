@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import useProductListHook from "~/hooks/useProductListHook";
 import type { Product } from "~/types/product";
+import { productServiceAdmin } from "~/services/admin/productServiceAdmin";
 
 interface ProductAdminProps {
   search?: string;
@@ -10,6 +11,7 @@ interface ProductAdminProps {
   isNewOnly?: boolean;
   isPromoOnly?: boolean;
   refresh?: number;
+  onDeleted?: () => void;
 }
 
 export default function ProductAdmin({
@@ -19,6 +21,7 @@ export default function ProductAdmin({
   priceMax = "",
   isNewOnly = false,
   isPromoOnly = false,
+  onDeleted,
 }: ProductAdminProps) {
   const { products, loading, error } = useProductListHook();
 
@@ -64,6 +67,15 @@ export default function ProductAdmin({
     isNewOnly,
     isPromoOnly,
   ]);
+
+  async function handleDelete(p: Product) {
+    const res = await productServiceAdmin.deleteProduct(p.id);
+    if (!res.success) {
+      alert(res.error || "Suppression impossible");
+      return;
+    }
+    onDeleted?.();
+  }
 
   if (loading) return <div className="p-6">Chargement...</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
@@ -187,6 +199,12 @@ export default function ProductAdmin({
                     <div className="flex items-center justify-center gap-2">
                       <button className="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-50">
                         Modifier
+                      </button>
+                      <button
+                        onClick={() => handleDelete(p)}
+                        className="px-3 py-1.5 border border-red-200 text-red-700 rounded-lg text-sm hover:bg-red-50"
+                      >
+                        Supprimer
                       </button>
                     </div>
                   </td>
