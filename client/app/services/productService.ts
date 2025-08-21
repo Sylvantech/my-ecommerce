@@ -81,6 +81,7 @@ export const productService = {
       const item = data.product;
 
       const formatted: Product = {
+        _id: item._id,
         id: item.id,
         title: item.title,
         description: item.description,
