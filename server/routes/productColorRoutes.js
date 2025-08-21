@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const ProductColor = require("../models/ProductColor.model");
+
 const { verifyAdmin } = require("../middleware/authMiddleware");
+const ProductVariant = require("../models/ProductVariant.model");
 
 router.post("/", verifyAdmin, async (req, res) => {
   const { name, hex_code } = req.body;
@@ -74,6 +76,100 @@ router.get("/:productColorId", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Erreur lors de la récupération de la couleur du produit",
+      details: error.message,
+    });
+  }
+});
+
+
+router.delete("/", verifyAdmin, async (req, res) => {
+  const id = req.body.id;
+  if (!id || !Number.isInteger(Number(id))) {
+    return res.status(400).json({
+      error: "Veuillez fournir un ID valide",
+    });
+  }
+  const colorExists = await ProductColor.findOne({ id: id });
+  if (!colorExists) {
+    return res.status(500).json({
+      error: "Cette couleur n'existe pas",
+    });
+  }
+
+  const products = await ProductVariant.findOne({ color_id: colorExists._id });
+
+  if (products) {
+    return res.status(409).json({
+      error: "Cette couleur est reliée a un produit ! ",
+    });
+  }
+
+  try {
+    await ProductColor.findOneAndDelete({ id: id });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la suppression de la couleur",
+      details: error.message,
+    });
+  }
+  res.status(200).json({
+    message: "Couleur supprimée avec succès",
+  });
+});
+
+
+
+router.put("/", async (req, res) => {
+  const { id, name, hex } = req.body;
+  if (!id || !Number.isInteger(Number(id))) {
+    return res.status(400).json({
+      error: "Veuillez fournir un ID valide",
+    });
+  }
+
+  const colorExists = await ProductColor.findOne({ id: id });
+  if (!colorExists) {
+    return res.status(500).json({
+      error: "Cette couleur n'existe pas",
+    });
+  }
+
+  const updateData = {};
+  if (name && hex) {
+    updateData.name = name;
+    updateData.hex_code = hex;
+  }
+
+  if (await ProductVariant.findOne({ name: name })) {
+    return res.status(400).json({
+      error: "Ce nom de couleur est déjà pris",
+    });
+  }
+
+  if (await ProductVariant.findOne({ hex_code: hex })) {
+    return res.status(400).json({
+      error: "Ce hex_code de couleur est déjà pris",
+    });
+  }
+
+  try {
+    const updatedProductColor = await ProductColor.findOneAndUpdate(
+      { id: id },
+      updateData,
+      { new: true }
+    );
+    if (!updatedProductColor) {
+      return res.status(404).json({
+        error: "La couleur n'a pas été trouvée",
+      });
+    }
+    return res.status(200).json({
+      message: "Couleur mise à jour avec succès",
+      ProductVariant: updatedProductColor,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Erreur lors de la mise à jour de la couleur",
       details: error.message,
     });
   }

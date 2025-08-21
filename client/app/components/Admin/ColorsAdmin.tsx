@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { productColor } from "~/services/admin/productColorService";
+import { productColorAdmin } from "~/services/admin/productColorAdmin";
 
 interface Color {
   id: number;
@@ -11,43 +11,85 @@ interface Color {
 
 interface ColorsAdminProps {
   searchColor: string;
+  addedColor: string;
 }
 
-export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
+export default function ColorsAdmin({
+  searchColor,
+  addedColor,
+}: ColorsAdminProps) {
   const [fetchColors, setFetchColors] = useState<Color[]>([]);
+
+  const [error, setError] = useState("");
+
+  const [errorId, setErrorId] = useState(Number);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [nameColor, setNameColor] = useState("");
 
-  const [color, setColor] = useState("");
+  const [hex, setHex] = useState("");
+
+  const [colorId, setColorId] = useState(Number);
 
   async function getColors() {
-    const res = await productColor.getColors();
+    const res = await productColorAdmin.getColors();
     if (res?.success) {
       setFetchColors(res.data.productColors);
     }
   }
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setError("");
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [error]);
+
+  useEffect(() => {
     getColors();
   }, []);
 
-  const handleChange = (getColor: string, getHex: string) => {
-    setIsModalOpen(true);
-    setNameColor(getColor);
-    setColor(getHex);
+  useEffect(() => {
+    if (addedColor && addedColor !== "") {
+      getColors();
+    }
+  }, [addedColor]);
+
+  const handleDelete = async (id: number) => {
+    const res = await productColorAdmin.deleteColor(id);
+    if (res.success === true) {
+      return getColors();
+    } else {
+      setError("Erreur lors de la suppression");
+      setErrorId(id);
+    }
   };
 
-  const filteredColors = fetchColors.filter(color =>
-    color.name.toLowerCase().includes(searchColor.toLowerCase())
+  const handleChange = (id: number, name: string, hex: string) => {
+    setIsModalOpen(true);
+    setColorId(id);
+    setNameColor(name);
+    setHex(hex);
+  };
+
+  const handleSubmit = async () => {
+    const res = await productColorAdmin.editColor(colorId, nameColor, hex);
+    if (res.success === true) {
+      setIsModalOpen(false);
+      getColors();
+    }
+  };
+
+  const filteredColors = fetchColors.filter(hex =>
+    hex.name.toLowerCase().includes(searchColor.toLowerCase())
   );
 
   return (
     <div className="w-full flex flex-col gap-5">
       <div className="pl-3 flex flex-col justify-around bg-white border-2 border-gray-200 rounded-xl h-30">
         <h2 className="text-gray-700">Total Couleurs</h2>
-        <p className="text-2xl">{2}</p>
+        <p className="text-2xl">{fetchColors && fetchColors.length}</p>
       </div>
       <div className="flex flex-col gap-3 mb-3">
         {isModalOpen && (
@@ -80,20 +122,14 @@ export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
                 />
               </div>
               <h3>Code couleur (Hex)</h3>
-              <div className="flex gap-2 items-center">
-                <div className="border border-gray-300 p-2 w-20 bg-white flex justify-center items-center rounded-sm">
-                  <div
-                    className="px-7 py-3 border border-gray-500 "
-                    style={{ backgroundColor: color }}
-                  ></div>
-                </div>
+              <div className="w-full border border-gray-300 rounded-lg flex justify-center items-center p-0.5">
                 <input
-                  name={color}
-                  id={color}
-                  className="border border-gray-300 p-1.5 rounded-lg"
-                  type="text"
-                  value={color}
-                  onChange={e => setColor(e.target.value)}
+                  name={hex}
+                  id={hex}
+                  className="w-full h-10"
+                  type="color"
+                  value={hex}
+                  onChange={e => setHex(e.target.value)}
                 />
               </div>
               <div className="flex justify-end gap-3">
@@ -103,7 +139,10 @@ export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
                 >
                   Annuler
                 </button>
-                <button className="bg-gray-400 hover:bg-black text-white p-2 rounded-lg text-sm">
+                <button
+                  className="bg-gray-400 hover:bg-black text-white p-2 rounded-lg text-sm"
+                  onClick={handleSubmit}
+                >
                   Modifier
                 </button>
               </div>
@@ -111,42 +150,41 @@ export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
           </div>
         )}
         {filteredColors.length > 0 &&
-          filteredColors.map(color => (
+          filteredColors.map(hex => (
             <div
-              key={color.id}
+              key={hex.id}
               className="bg-white flex flex-col p-3 h-55 rounded-xl text-gray-700 gap-2 w-full mb-3 shadow"
             >
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 border-2 border-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
                   <div
                     className="h-7 w-7 rounded-full"
-                    style={{ backgroundColor: color.hex_code }}
+                    style={{ backgroundColor: hex.hex_code }}
                   ></div>
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="text-black">{color.name}</h3>
+                  <h3 className="text-black">{hex.name}</h3>
                   <div className="flex justify-center items-center gap-3">
-                    <p>{color.hex_code}</p>
-                    <p>ID: {color.id}</p>
+                    <p>{hex.hex_code}</p>
+                    <p>ID: {hex.id}</p>
                   </div>
                 </div>
               </div>
               <div className="flex text-sm">
                 <p>
-                  Créée:{" "}
-                  {new Date(color.created_at).toLocaleDateString("fr-FR")}
+                  Créée: {new Date(hex.created_at).toLocaleDateString("fr-FR")}
                   <span className="mx-2.5">•</span>
                 </p>
                 <p>
                   Modifiée:{" "}
-                  {new Date(color.updated_at).toLocaleDateString("fr-FR")}
+                  {new Date(hex.updated_at).toLocaleDateString("fr-FR")}
                 </p>
               </div>
               <hr className="text-gray-100" />
               <div className="flex justify-end">
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleChange(color.name, color.hex_code)}
+                    onClick={() => handleChange(hex.id, hex.name, hex.hex_code)}
                     className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center hover:bg-red-200"
                   >
                     <svg
@@ -165,7 +203,10 @@ export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
                       <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"></path>
                     </svg>
                   </button>
-                  <button className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center hover:bg-red-200">
+                  <button
+                    onClick={() => handleDelete(hex.id)}
+                    className="border border-gray-200 p-1.5 rounded-lg w-10 flex justify-center items-center hover:bg-red-200"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -187,6 +228,9 @@ export default function ColorsAdmin({ searchColor }: ColorsAdminProps) {
                   </button>
                 </div>
               </div>
+              <p className="text-red-500">
+                {error && hex.id === errorId && error}
+              </p>
             </div>
           ))}
       </div>
